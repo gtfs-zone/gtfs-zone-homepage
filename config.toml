@@ -6,10 +6,8 @@ theme = "daisy"
 title = "Daisy Theme"
 description = "Example / demo page for the Daisy theme for Zola."
 
-# Whether to automatically compile all Sass files in the sass directory
 compile_sass = false
-
-# Whether to build a search index to be used later on by a JavaScript library
+minify_html = true
 build_search_index = true
 
 default_language = "en"
@@ -26,8 +24,6 @@ taxonomies = [
 index_format = "elasticlunr_json"
 
 [markdown]
-# Whether to do syntax highlighting
-# Theme can be customised by setting the `highlight_theme` variable to a theme supported by Zola
 highlight_code = true
 highlight_theme = "css"
 
@@ -41,7 +37,7 @@ links = [
     { url = "sitemap.xml", i18n_key = "sitemap", no_translation = true },
 ]
 
-notice = '<a href="https://www.winterstein.biz">Adrian Winterstein</a><br />Powered by <a href="https://getzola.org">Zola</a>, <a href="https://tailwindcss.com">TailwindCSS</a> & <a href="https://daisyui.com">DaisyUI</a>'
+notice = '<a href="https://www.winterstein.biz">Adrian Winterstein</a><br>Powered by <a href="https://getzola.org">Zola</a>, <a href="https://tailwindcss.com">TailwindCSS</a> & <a href="https://daisyui.com">DaisyUI</a>'
 
 [extra.navbar]
 links = [

@@ -5,7 +5,7 @@ date = "2025-03-30"
 authors = ["Adrian Winterstein"]
 
 [taxonomies]
-tags=['documentation']
+tags=['Documentation']
 +++
 
 The following is supported to be used in the markdown files of any website using the Daisy theme.
@@ -30,7 +30,7 @@ All six HTML heading types `<h1>` to `<h6>` are supported:
 ##### H5
 ###### H6
 
-<br />
+<br>
 
 ## Text Formatting
 
@@ -128,7 +128,7 @@ With the target of the citation to be added where it is supposed to appear (e.g.
 | Third Row Left  | Third Row Right  |
 | Fourth Row Left | Fourth Row Right |
 
-<br />
+<br>
 
 You can surround large tables with `<figure></figure>` to enable horizontal scrolling:
 
@@ -193,7 +193,7 @@ Foldable text is possible with the use of some HTML in the markdown file:
 
 ---
 
-<br />
+<br>
 
 And at the end of the page, the citation from the blockquote above was added:
 

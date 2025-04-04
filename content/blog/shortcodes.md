@@ -5,7 +5,7 @@ date = "2025-03-30"
 authors = ["Adrian Winterstein"]
 
 [taxonomies]
-tags=['documentation']
+tags=['Documentation']
 +++
 
 The Daisy theme adds certain [shortcodes](https://www.getzola.org/documentation/content/shortcodes/) that you can use in the markdown files of your website.

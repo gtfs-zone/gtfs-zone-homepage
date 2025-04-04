@@ -5,7 +5,7 @@ date = '2025-03-02'
 authors = ["John Doe"]
 
 [taxonomies]
-tags=['example']
+tags=['Example']
 +++
 
 Dies ist nur ein Beispiel-Post ohne Inhalt.

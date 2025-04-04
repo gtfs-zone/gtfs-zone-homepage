@@ -5,7 +5,7 @@ date = "2025-03-30"
 authors = ["Adrian Winterstein"]
 
 [taxonomies]
-tags=['documentation']
+tags=['Documentation']
 +++
 
 In den Markdown-Dateien einer auf dem Daisy-Theme basierenden Webseite können alle auf dieser Seite beschriebenen Dinge verwendet werden.
@@ -30,7 +30,7 @@ Alle sechs HTML Überschriften `<h1>` bis `<h6>` werden unterstützt:
 ##### H5
 ###### H6
 
-<br />
+<br>
 
 ## Textformatierung
 
@@ -128,7 +128,7 @@ Das Ziel des Beleglinks muss dann dort hinzugefügt werden, wo es erscheinen sol
 | Dritte Zeile Links | Dritte Zeile Rechts |
 | Vierte Zeile Links | Vierte Zeile Rechts |
 
-<br />
+<br>
 
 Breite Tabellen können mit `<figure></figure>` umgeben werden, um horizontales Scrolling zu aktivieren:
 
@@ -192,7 +192,7 @@ Ausklappbarer Text ist mit eingebettetem HTML in den Markdown-Dateien möglich:
 
 ---
 
-<br />
+<br>
 
 Der Beleg von dem Zitat oben wurde am Ende des Seite eingefügt:
 

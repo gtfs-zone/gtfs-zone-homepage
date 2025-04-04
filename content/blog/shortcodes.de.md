@@ -5,7 +5,7 @@ date = "2025-03-30"
 authors = ["Adrian Winterstein"]
 
 [taxonomies]
-tags=['documentation']
+tags=['Documentation']
 +++
 
 Das Daisy-Theme enthält einige  [Shortcodes](https://www.getzola.org/documentation/content/shortcodes/), die in den Markdown-Dateien für Zola verwendet werden können.
