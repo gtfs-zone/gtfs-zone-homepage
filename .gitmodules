@@ -1,3 +1,3 @@
 [submodule "themes/daisy"]
 	path = themes/daisy
-	url = https://github.com/awinterstein/zola-theme-daisy.git
+	url = https://codeberg.org/winterstein/zola-theme-daisy.git
