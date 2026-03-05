@@ -1,8 +1,8 @@
 +++
-title = "gtfs.zone — The GTFS Toolbox"
+title = "A public option for transit software"
 +++
 
-<p class="text-xl mb-6">Open tools for GTFS and GTFS Realtime. Build, manage, and monitor transit data feeds.</p>
+<p class="text-xl mb-6">An open toolbox for GTFS and GTFS Realtime. Build, manage, and monitor transit data feeds.</p>
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
 

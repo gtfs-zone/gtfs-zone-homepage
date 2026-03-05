@@ -3,7 +3,7 @@ base_url = "https://gtfs.zone"
 theme = "daisy"
 
 title = "gtfs.zone"
-description = "Open tools for GTFS and GTFS Realtime"
+description = "A public option for transit software"
 
 compile_sass = false
 minify_html = true
