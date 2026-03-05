@@ -1,54 +1,40 @@
-# The URL the site will be built for
-base_url = "https://zola-daisy.winterstein.biz"
+base_url = "https://gtfs.zone"
 
 theme = "daisy"
 
-title = "Daisy Theme"
-description = "Example / demo page for the Daisy theme for Zola."
+title = "gtfs.zone"
+description = "Open tools for GTFS and GTFS Realtime"
 
 compile_sass = false
 minify_html = true
-build_search_index = true
+build_search_index = false
 
 default_language = "en"
 
-# Whether to generate RSS feeds for the website pages
-generate_feeds = true
-
-taxonomies = [
-    { name = "tags", paginate_by = 2, feed = true },
-    { name = "movies-directors", paginate_by = 2, feed = true },
-]
-
-[search]
-index_format = "elasticlunr_json"
+generate_feeds = false
 
 [markdown.highlighting]
 light_theme = "github-light"
 dark_theme = "github-dark"
 
 [extra]
-# Put all your custom variables here
-enable_theme_switching = true
 
 [extra.footer]
 links = [
-    { url = "about", i18n_key = "about" },
+    { url = "realtime-setup", i18n_key = "realtime_setup" },
     { url = "sitemap.xml", i18n_key = "sitemap", no_translation = true },
 ]
 
-notice = '<a href="https://www.winterstein.biz">Adrian Winterstein</a><br>Powered by <a href="https://getzola.org">Zola</a>, <a href="https://tailwindcss.com">TailwindCSS</a> & <a href="https://daisyui.com">DaisyUI</a>'
+notice = '<a href="https://gtfs.zone">gtfs.zone</a>'
 
 [extra.navbar]
 links = [
-    { url = "blog", i18n_key = "posts" },
-    { url = "tags", i18n_key = "tags" },
-    { url = "movies", i18n_key = "movies" },
+    { url = "realtime-setup", i18n_key = "realtime_setup" },
 ]
 
 [extra.social]
-codeberg = "https://codeberg.org/winterstein/zola-theme-daisy"
-github = "https://github.com/awinterstein/zola-theme-daisy"
+codeberg = "https://git.kcfam.us/gtfs.zone"
+github = ""
 gitlab = ""
 stackoverflow = ""
 mastodon = ""
@@ -62,33 +48,3 @@ phone = ""
 
 [extra.favicon]
 svg = "favicon.svg"
-
-[languages.de]
-title = "Daisy Theme"
-description = "Beispiel- und Demoseite des Daisy-Themas für Zola."
-
-# Whether to generate RSS feeds for the website pages
-generate_feeds = true
-
-# Whether to build a search index to be used later on by a JavaScript library
-build_search_index = true
-
-taxonomies = [
-    { name = "tags", paginate_by = 2, feed = true },
-    { name = "movies-directors", paginate_by = 2, feed = true },
-]
-
-[languages.hu]
-title = "Daisy Theme"
-description = "A Daisy elnevezésű Zola-témával készült, demonstrációs célú weboldal."
-
-# Whether to generate RSS feeds for the website pages
-generate_feeds = true
-
-# Whether to build a search index to be used later on by a JavaScript library
-build_search_index = true
-
-taxonomies = [
-    { name = "tags", paginate_by = 2, feed = true },
-    { name = "movies-directors", paginate_by = 2, feed = true },
-]

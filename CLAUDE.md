@@ -29,17 +29,30 @@ git submodule update --init --recursive
 
 ## Architecture
 
-- **`config.toml`** — site configuration: base URL, languages (en/de/hu), taxonomies (`tags`, `movies-directors`), navbar/footer links, social links
-- **`content/`** — Markdown content files; multilingual pages use `.de.md` / `.hu.md` suffixes
-- **`i18n/`** — Translation strings (`en.toml`, `de.toml`, `hu.toml`)
+- **`config.toml`** — site configuration: base URL, taxonomies, navbar/footer links, social links
+- **`content/`** — Markdown content files
+- **`i18n/`** — Translation strings (`en.toml`)
 - **`static/`** — Static assets (favicon, etc.)
 - **`themes/daisy/`** — Theme submodule; do not edit directly unless intentional
 
 ## Content Structure
 
-Content sections: `blog/`, `movies/` (uses `movies-directors` taxonomy), plus top-level pages (`about`, `_index`). Each section and page can have language variants.
+Top-level pages only: `_index.md` (home), `realtime-setup.md`.
 
 ## Deployment
 
 - Netlify: auto-deploys via `zola build` (see `netlify.toml`)
 - CI: Forgejo workflow (`.forgejo/workflows/check.yml`) runs `zola check` and verifies CSS is up to date
+
+## Theme Usage
+
+**Always use theme-native elements when writing content HTML.** The content renders inside a `max-w-2xl xl:max-w-4xl mx-auto` container provided by `base.html`. Do not write full-width hero sections or custom layouts that assume more width.
+
+Key theme patterns to reuse:
+- **Cards**: `card card-border bg-base-200 grow basis-0 max-w-100 shadow-xl transform transition duration-500 hover:scale-103` with `card-body`, `card-title`, `card-actions justify-end`
+- **Card grid**: `grid grid-cols-1 md:grid-cols-2 gap-4`
+- **Buttons**: `btn btn-primary`, `btn btn-secondary`
+- **Badges**: `badge badge-warning`, `badge badge-neutral`, `badge badge-sm`
+- **Shortcodes**: `badge_primary`, `badge_warning`, `badge_neutral`, `badge_success`, `badge_error`, `badge_info`, `badge_secondary`, `badge_accent`, `icon`
+
+See `themes/daisy/templates/macros/content.html` for the full `cards` macro and other reusable patterns.

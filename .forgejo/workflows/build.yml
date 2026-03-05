@@ -1,0 +1,35 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: alpine-3.23
+
+    steps:
+      - name: Install dependencies
+        run: |
+          apk add --no-cache nodejs npm git curl tar
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Install latest Zola
+        run: |
+          curl -sL https://github.com/getzola/zola/releases/download/v0.22.1/zola-v0.22.1-x86_64-unknown-linux-musl.tar.gz \
+            | tar xz -C /usr/local/bin
+
+      - name: Build
+        run: zola build
+
+      - name: Deploy
+        run: |
+          echo "Copying build to /sites/landing-zone.kcfam.us"
+          mkdir -p /sites/landing-zone.kcfam.us
+          rm -rf /sites/landing-zone.kcfam.us/*
+          cp -vr public/. /sites/landing-zone.kcfam.us/
