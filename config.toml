@@ -40,11 +40,11 @@ links = [
 
 [extra.social]
 codeberg = "https://git.kcfam.us/gtfs.zone"
-github = ""
+github = "https://github.com/maxtkc/"
 gitlab = ""
 stackoverflow = ""
-mastodon = ""
-linkedin = ""
+mastodon = "https://better.boston/@maxtkc"
+linkedin = "https://www.linkedin.com/company/gtfs-zone"
 instagram = ""
 youtube = ""
 signal = ""
