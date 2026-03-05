@@ -23,9 +23,9 @@ taxonomies = [
 [search]
 index_format = "elasticlunr_json"
 
-[markdown]
-highlight_code = true
-highlight_theme = "css"
+[markdown.highlighting]
+light_theme = "github-light"
+dark_theme = "github-dark"
 
 [extra]
 # Put all your custom variables here
