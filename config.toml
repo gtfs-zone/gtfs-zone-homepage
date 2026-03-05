@@ -7,7 +7,7 @@ description = "Open tools for GTFS and GTFS Realtime"
 
 compile_sass = false
 minify_html = true
-build_search_index = false
+build_search_index = true
 
 default_language = "en"
 
@@ -17,7 +17,13 @@ generate_feeds = false
 light_theme = "github-light"
 dark_theme = "github-dark"
 
+[search]
+index_format = "elasticlunr_json"
+
 [extra]
+enable_theme_switching = true
+daisyui_theme_light = "light"
+daisyui_theme_dark = "dark"
 
 [extra.footer]
 links = [

@@ -29,7 +29,7 @@ jobs:
 
       - name: Deploy
         run: |
-          echo "Copying build to /sites/landing-zone.kcfam.us"
-          mkdir -p /sites/landing-zone.kcfam.us
-          rm -rf /sites/landing-zone.kcfam.us/*
-          cp -vr public/. /sites/landing-zone.kcfam.us/
+          echo "Copying build to /sites/gtfs.zone"
+          mkdir -p /sites/gtfs.zone
+          rm -rf /sites/gtfs.zone/*
+          cp -vr public/. /sites/gtfs.zone/
