@@ -18,10 +18,10 @@ title = "A public option for transit software"
 
   <div class="card card-border bg-base-200 grow basis-0 max-w-100 shadow-xl transform transition duration-500 hover:scale-103">
     <div class="card-body grow">
-      <h2 class="card-title">manage.gtfs.zone <span class="badge badge-warning badge-sm">alpha</span></h2>
+      <h2 class="card-title">manage.rt.gtfs.zone <span class="badge badge-warning badge-sm">alpha</span></h2>
       <p>Manager for realtime GTFS feeds — publish trip updates, vehicle positions, and service alerts.</p>
       <div class="card-actions justify-end">
-        <a href="https://manage.gtfs.zone" class="btn btn-secondary" target="_blank" rel="noopener">Open</a>
+        <a href="https://manage.rt.gtfs.zone" class="btn btn-secondary" target="_blank" rel="noopener">Open</a>
       </div>
     </div>
   </div>
