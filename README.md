@@ -15,6 +15,10 @@ zola serve
 
 The site will be available at `http://127.0.0.1:1111` with live reload.
 
+## Repository
+
+Source hosted at [git.kcfam.us](https://git.kcfam.us/gtfs.zone/-/projects/3).
+
 ## Deployment
 
 Automatically deployed via Forgejo CI on push to `main`. The workflow builds
