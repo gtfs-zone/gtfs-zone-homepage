@@ -15,9 +15,10 @@ jobs:
           apk add --no-cache nodejs npm git curl tar
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: true
+          github-server-url: https://git.kcfam.us
 
       - name: Install latest Zola
         run: |
