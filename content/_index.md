@@ -8,10 +8,10 @@ title = "A public option for transit software"
 
   <div class="card card-border bg-base-200 grow basis-0 max-w-100 shadow-xl transform transition duration-500 hover:scale-103">
     <div class="card-body grow">
-      <h2 class="card-title">editor.gtfs.zone <span class="badge badge-warning badge-sm">alpha</span></h2>
+      <h2 class="card-title">edit.gtfs.zone <span class="badge badge-warning badge-sm">alpha</span></h2>
       <p>Static GTFS editor for creating and modifying transit feed data directly in your browser.</p>
       <div class="card-actions justify-end">
-        <a href="https://editor.gtfs.zone" class="btn btn-secondary" target="_blank" rel="noopener">Open</a>
+        <a href="https://edit.gtfs.zone" class="btn btn-secondary" target="_blank" rel="noopener">Open</a>
       </div>
     </div>
   </div>
