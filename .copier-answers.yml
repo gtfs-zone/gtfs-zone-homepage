@@ -1,0 +1,7 @@
+# Changes here will be overwritten by Copier; do not edit manually.
+_commit: 5f023dc
+_src_path: /home/maxtkc/Documents/bare-chassis
+description: Static site for gtfs.zone
+project_name: Landing Zone
+project_slug: landing-zone
+project_type: static_site

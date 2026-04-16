@@ -56,3 +56,7 @@ Key theme patterns to reuse:
 - **Shortcodes**: `badge_primary`, `badge_warning`, `badge_neutral`, `badge_success`, `badge_error`, `badge_info`, `badge_secondary`, `badge_accent`, `icon`
 
 See `themes/daisy/templates/macros/content.html` for the full `cards` macro and other reusable patterns.
+
+## Important Rules
+
+- Never add Co-Authored-By trailers to commit messages
