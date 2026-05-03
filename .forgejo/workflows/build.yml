@@ -1,3 +1,4 @@
+
 name: Build
 
 on:
@@ -34,3 +35,4 @@ jobs:
           mkdir -p /sites/gtfs.zone
           rm -rf /sites/gtfs.zone/*
           cp -vr public/. /sites/gtfs.zone/
+
