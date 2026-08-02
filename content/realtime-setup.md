@@ -16,50 +16,36 @@ title = "GTFS Realtime Test Setup Guide"
 
 1. In the admin UI, create a new **Feed**.
 
-### Create a Driver
+### Create a Tracker
 
-1. Create a new **Driver**.
-2. Save the **username** and **password** — you will need them later.
+1. Create a new **Tracker**.
+2. Give it a **nickname** — this is the public label that appears in the feed
+   (e.g. `Bus 12`). It is *not* a secret.
+3. On save, the tracker is assigned a random **Tracker ID** (a pet-name such as
+   `gently-tender-oyster`). This ID is the device's **secret credential** — treat
+   it like a password and do not share it. There is no separate password.
 
-## 3. Install OwnTracks
+## 3. Install the Traccar Client
 
-Install OwnTracks on your phone:
+Install the Traccar Client app on your phone:
 
-- Website: <https://owntracks.org/>
-- iOS: <https://itunes.apple.com/us/app/mqttitude/id692424691?mt=8>
-- Android: <https://play.google.com/store/apps/details?id=org.owntracks.android>
+- Website: <https://www.traccar.org/client/>
+- iOS: <https://apps.apple.com/us/app/traccar-client/id843156974>
+- Android: <https://play.google.com/store/apps/details?id=org.traccar.client>
 
-After installing:
+## 4. Provision the Device
 
-1. Open the app.
-2. Go to **Preferences → Connection**.
-
-## 4. Configure MQTT Connection
-
-Set the following values exactly:
-
-| Setting | Value |
-|--------|-------|
-| Mode | MQTT |
-| Host | mqtt.gtfs.zone |
-| Port | 443 |
-| Client ID | anything |
-| Use WebSockets | No |
-| Device ID | **GTFS Trip ID** |
-| Tracker ID | anything |
-| Username | *(driver username from UI)* |
-| Password | *(driver password from UI)* |
-| TLS | Yes |
-| Client certificate | Not set |
-| Keepalive | 180 |
-| Clean Session | Leave default |
-
+1. In the admin UI, open the tracker's detail page and find the **Traccar
+   Provisioning** section.
+2. **Scan the QR code** with your phone to configure the Traccar Client in one
+   step, or copy the **Config URL** and open it on the device.
+3. This sets the server URL and the device identifier (the secret Tracker ID)
+   automatically — you do not type a username or password.
 
 ## 5. Finish
 
-1. Save the configuration.
-2. Ensure OwnTracks has location permission.
-3. Start tracking.
+1. Ensure the Traccar Client has location permission.
+2. Toggle **tracking on** in the app.
 
 ## 6. Download the Feed
 
@@ -68,6 +54,9 @@ Vehicle positions will be available at:
 ```
 https://rt.gtfs.zone/feed_name/vehicle_positions.pb
 ```
+
+The feed labels each vehicle by its tracker **nickname** — the secret Tracker ID
+is never published.
 
 ## 7. Helpful Resources
 
