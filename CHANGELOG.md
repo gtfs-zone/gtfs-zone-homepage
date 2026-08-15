@@ -1,3 +1,9 @@
+## v0.2.1 (2026-08-15)
+
+### Fix
+
+- smooth the hero map zoom on scroll
+
 ## v0.2.0 (2026-08-15)
 
 ### Feat
