@@ -1,0 +1,437 @@
+<!-- Body markup. Inlined into index.html at build time. All copy is present as
+     real text, so the page reads fine with JS disabled.
+
+     `@feeds` is expanded from src/content/feeds.ts by the vite plugin, so the
+     editor chips and the visualizer chips are built from one feed list.
+     Every external anchor here gets target="_blank"
+     rel="noopener noreferrer" stamped on it by the same plugin, which fails the
+     build if an anchor somehow escapes. -->
+
+<div class="stage" data-scene="hero-map"></div>
+
+<!-- Same swap markup as the editor and the visualizer, so the control reads the
+     same across all three sites. Checked means light. -->
+<label class="theme-toggle swap swap-rotate" title="Toggle light and dark">
+  <input type="checkbox" class="theme-controller" value="light" />
+  <span class="sr-only-desc">Toggle light and dark</span>
+  <svg class="swap-on h-6 w-6 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z" />
+  </svg>
+  <svg class="swap-off h-6 w-6 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z" />
+  </svg>
+</label>
+
+<main class="page">
+  <!-- Section 0: hero -->
+  <section id="hero" class="section min-h-screen flex items-center">
+    <div class="mx-auto w-full max-w-5xl px-6">
+      <div id="hero-overlay" class="plate max-w-2xl p-8 md:p-10">
+        <div class="flex items-center gap-3">
+          <img src="/logo.svg" alt="" width="40" height="40" class="h-10 w-10" />
+          <span class="text-2xl font-semibold tracking-tight">gtfs.zone</span>
+        </div>
+        <h1 class="mt-6 text-3xl md:text-5xl font-semibold tracking-tight leading-tight">
+          Tools for publishing transit data.
+        </h1>
+        <p class="lede mt-4 text-base md:text-lg max-w-xl">
+          Open source software for building, checking, and publishing GTFS Schedule and GTFS
+          Realtime feeds.
+        </p>
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          <a class="btn btn-primary" href="https://edit.gtfs.zone">Open the editor</a>
+          <a class="btn btn-outline" href="https://viz.rt.gtfs.zone">Browse realtime feeds</a>
+        </div>
+      </div>
+      <p id="scroll-cue" class="mono mt-10 text-xs tracking-[0.3em] uppercase lede">Scroll</p>
+    </div>
+  </section>
+
+  <!-- Section 1: what is GTFS -->
+  <section id="what-is-gtfs" class="section py-32">
+    <div class="mx-auto w-full max-w-3xl px-6 reveal">
+      <p class="eyebrow">What is GTFS?</p>
+      <h2 class="mt-4 text-2xl md:text-4xl font-semibold tracking-tight">
+        A community-driven open standard for rider-facing transit information.
+      </h2>
+      <p class="lede mt-5 text-base md:text-lg">
+        Over 10,000 agencies in 100+ countries publish GTFS. It is a simple data structure that any
+        app developer can consume, which is why adopting it puts an agency&rsquo;s service in front
+        of a wide audience without a custom integration per app.
+      </p>
+      <p class="mt-6">
+        <a class="link" href="https://gtfs.org">Learn more at gtfs.org</a>
+      </p>
+      <dl class="mt-10 grid gap-6 sm:grid-cols-2">
+        <div>
+          <dt class="font-semibold">Improved rider experience</dt>
+          <dd class="lede mt-1 text-sm">
+            Accurate schedules and real-time updates, so riders wait less and decide better.
+          </dd>
+        </div>
+        <div>
+          <dt class="font-semibold">Global reach</dt>
+          <dd class="lede mt-1 text-sm">
+            Consistent data across agencies and regions makes multi-agency trips work.
+          </dd>
+        </div>
+        <div>
+          <dt class="font-semibold">Simple to use</dt>
+          <dd class="lede mt-1 text-sm">
+            A plain data structure, easy to produce and to consume.
+          </dd>
+        </div>
+        <div>
+          <dt class="font-semibold">Open source community</dt>
+          <dd class="lede mt-1 text-sm">
+            The standard keeps evolving through community collaboration.
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- Section 2: scheduled information -->
+  <section id="scheduled" class="section pin-track">
+    <div class="pin">
+      <div class="mx-auto w-full max-w-6xl px-6 grid gap-10 md:grid-cols-2 items-center">
+        <div>
+          <p class="eyebrow">GTFS Schedule</p>
+          <h2 class="mt-4 text-2xl md:text-4xl font-semibold tracking-tight">
+            The foundation: static, rider-facing service information.
+          </h2>
+          <p class="lede mt-4">
+            GTFS Schedule describes the service an agency runs, in a form every major mapping app
+            already reads.
+          </p>
+          <ul class="mt-6 space-y-3">
+            <li>
+              <span class="font-semibold">Routes and stops</span>
+              <span class="lede"> &mdash; exactly where to catch the bus or the train.</span>
+            </li>
+            <li>
+              <span class="font-semibold">Schedules and frequencies</span>
+              <span class="lede"> &mdash; clear timetables riders can plan against.</span>
+            </li>
+            <li>
+              <span class="font-semibold">Fares</span>
+              <span class="lede"> &mdash; journey costs shown upfront in apps.</span>
+            </li>
+            <li>
+              <span class="font-semibold">Flexible services</span>
+              <span class="lede"> &mdash; demand-responsive transportation.</span>
+            </li>
+            <li>
+              <span class="font-semibold">Pathways</span>
+              <span class="lede">
+                &mdash; station interiors, down to which elevator reaches which platform.</span
+              >
+            </li>
+          </ul>
+          <p class="mt-8">
+            <a class="btn btn-outline" href="https://gtfs.org/documentation/schedule/reference/"
+              >View the spec</a
+            >
+          </p>
+        </div>
+        <div data-scene="timetable"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: realtime information -->
+  <section id="realtime" class="section pin-track pin-track-long">
+    <div class="pin">
+      <div class="mx-auto w-full max-w-6xl px-6 grid gap-8 md:grid-cols-2 items-center">
+        <div>
+          <p class="eyebrow">GTFS Realtime</p>
+          <h2 class="mt-4 text-2xl md:text-4xl font-semibold tracking-tight">
+            Live updates that keep riders informed.
+          </h2>
+          <p class="lede mt-4">
+            GTFS Realtime covers the parts of transit that change during the day.
+          </p>
+          <ul class="mt-6 space-y-3">
+            <li>
+              <span class="font-semibold">Vehicle positions</span>
+              <span class="lede">
+                &mdash; where the vehicle actually is right now, so nobody stands at a stop
+                wondering.</span
+              >
+            </li>
+            <li>
+              <span class="font-semibold">Trip updates</span>
+              <span class="lede">
+                &mdash; a more accurate arrival time, so connections are not missed.</span
+              >
+            </li>
+            <li>
+              <span class="font-semibold">Service alerts</span>
+              <span class="lede">
+                &mdash; notice of disruptions on the network, in time to change plans.</span
+              >
+            </li>
+          </ul>
+          <p class="mt-8">
+            <a class="btn btn-outline" href="https://gtfs.org/documentation/realtime/reference/"
+              >View the spec</a
+            >
+          </p>
+        </div>
+        <div data-scene="realtime-phone"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 4: the editor -->
+  <section id="editor" class="section py-32">
+    <div class="mx-auto w-full max-w-4xl px-6">
+      <div class="reveal">
+        <p class="eyebrow">The editor</p>
+        <h2 class="mt-4 text-2xl md:text-4xl font-semibold tracking-tight">
+          The Swiss army knife of GTFS.
+        </h2>
+        <p class="lede mt-4">
+          Upload a GTFS file, find what is broken, fix it, export it back. Runs in the browser.
+          Nothing is uploaded anywhere, and there is no account.
+        </p>
+      </div>
+      <div class="mt-10" data-scene="editor-tools"></div>
+      <div class="mt-6" data-scene="editor-cta" data-scene-track="self"></div>
+      <div class="mt-10">
+        <a class="btn btn-primary btn-lg" href="https://edit.gtfs.zone">Open the editor</a>
+        <p class="lede mt-8 text-sm">Or open a real feed straight away</p>
+        <!-- @feeds editor -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 5: the visualizer -->
+  <section id="visualizer" class="section py-32">
+    <div class="mx-auto w-full max-w-4xl px-6">
+      <div class="reveal">
+        <p class="eyebrow">The visualizer</p>
+        <h2 class="mt-4 text-2xl md:text-4xl font-semibold tracking-tight">
+          Inspect any GTFS Realtime feed on a map.
+        </h2>
+        <p class="lede mt-4">
+          Point it at a static feed and its realtime endpoints and watch vehicle positions, trip
+          updates, and service alerts against the schedule they claim to follow. Any agency&rsquo;s
+          feed, not just ours. Nothing to install.
+        </p>
+        <ul class="lede mt-6 list-disc space-y-2 pl-5">
+          <li>Vehicles on a live map, matched to their route and trip.</li>
+          <li>Trip updates read against the static schedule.</li>
+          <li>Service alerts, with the entities they affect.</li>
+          <li>
+            A catalog of ready-to-load example feeds, and a shareable link that reproduces a whole
+            session.
+          </li>
+        </ul>
+      </div>
+      <div class="mt-10" data-scene="visualizer-inspector"></div>
+      <div class="mt-10">
+        <a class="btn btn-primary btn-lg" href="https://viz.rt.gtfs.zone">Browse realtime feeds</a>
+        <p class="lede mt-8 text-sm">Or open a real feed straight away</p>
+        <!-- @feeds visualizer -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 6: the manager -->
+  <section id="manager" class="section pin-track">
+    <div class="pin">
+      <div class="mx-auto w-full max-w-6xl px-6 grid gap-10 md:grid-cols-2 items-center">
+        <div>
+          <p class="eyebrow">The manager</p>
+          <h2 class="mt-4 text-2xl md:text-4xl font-semibold tracking-tight">
+            Management software for running a realtime feed.
+          </h2>
+          <p class="lede mt-4">
+            <span class="mono">manage.rt.gtfs.zone</span> is where an agency runs its feed: define
+            feeds, add drivers, track vehicles, and publish service alerts. The public GTFS-RT
+            endpoints update from it directly.
+          </p>
+          <ul class="mt-6 space-y-3 text-sm">
+            <li>
+              <span class="font-semibold">Feeds</span>
+              <span class="lede">
+                &mdash; one agency, one or many feeds, each with its static source and its public
+                endpoints.</span
+              >
+            </li>
+            <li>
+              <span class="font-semibold">Service alerts</span>
+              <span class="lede">
+                &mdash; header, description, cause, effect, severity, active period, and the routes
+                or stops affected. Published to the alerts feed.</span
+              >
+            </li>
+            <li>
+              <span class="font-semibold">Vehicle tracking</span>
+              <span class="lede">
+                &mdash; drivers with their own credentials, positions arriving from a phone or a
+                tracker and served as vehicle positions.</span
+              >
+            </li>
+            <li>
+              <span class="font-semibold">Trip updates</span>
+              <span class="lede">
+                &mdash; delay against the scheduled trip, derived from those positions.</span
+              >
+            </li>
+          </ul>
+          <div class="mt-8">
+            <a class="btn btn-primary" href="https://manage.rt.gtfs.zone">Sign in to the manager</a>
+          </div>
+        </div>
+        <div>
+          <div data-scene="alert-broadcast"></div>
+          <div class="mt-6">
+            <p class="eyebrow">Tracking hardware</p>
+            <ul class="lede mt-3 space-y-2 text-sm">
+              <li>
+                Built on <a class="link" href="https://www.traccar.org/">Traccar</a>, the open source
+                GPS tracking platform.
+              </li>
+              <li>
+                Compatible with a vast array of GPS trackers, from low-cost units to premium brands
+                &mdash;
+                <a class="link" href="https://www.traccar.org/devices/"
+                  >see the supported device list</a
+                >.
+              </li>
+              <li>
+                A driver&rsquo;s phone works too, so an agency can start with no hardware at all.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 7: publish -->
+  <section id="publish" class="section py-32">
+    <div class="mx-auto w-full max-w-5xl px-6">
+      <div class="reveal max-w-2xl">
+        <p class="eyebrow">Publish</p>
+        <h2 class="mt-4 text-2xl md:text-4xl font-semibold tracking-tight">
+          Deliver to millions of pockets.
+        </h2>
+        <p class="lede mt-4">
+          One feed reaches every major mapping app, and drops straight into your own site.
+        </p>
+      </div>
+      <div class="mt-10" data-scene="publish"></div>
+    </div>
+  </section>
+
+  <!-- Section 8: open source -->
+  <section id="open-source" class="section py-32">
+    <div class="mx-auto w-full max-w-5xl px-6">
+      <div class="reveal max-w-2xl">
+        <p class="eyebrow">Open source</p>
+        <h2 class="mt-4 text-2xl md:text-4xl font-semibold tracking-tight">
+          Open source from the start.
+        </h2>
+      </div>
+      <ul class="mt-10 grid gap-8 md:grid-cols-3">
+        <li>
+          <svg
+            class="os-glyph"
+            viewBox="0 0 32 32"
+            width="32"
+            height="32"
+            aria-hidden="true"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M16 3 5 7v9c0 6.2 4.5 11.1 11 13 6.5-1.9 11-6.8 11-13V7Z" />
+            <path d="m11 16 3.5 3.5L21 13" />
+          </svg>
+          <p class="mt-4 font-semibold">Secure</p>
+          <p class="lede mt-1 text-sm">Audited in the open.</p>
+        </li>
+        <li>
+          <svg
+            class="os-glyph"
+            viewBox="0 0 32 32"
+            width="32"
+            height="32"
+            aria-hidden="true"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect x="4" y="5" width="24" height="9" rx="2" />
+            <rect x="4" y="18" width="24" height="9" rx="2" />
+            <path d="M9 9.5h.01M9 22.5h.01M13 9.5h6M13 22.5h6" />
+          </svg>
+          <p class="mt-4 font-semibold">Reliable</p>
+          <p class="lede mt-1 text-sm">Run it yourself. There is no vendor to lock you in.</p>
+        </li>
+        <li>
+          <svg
+            class="os-glyph"
+            viewBox="0 0 32 32"
+            width="32"
+            height="32"
+            aria-hidden="true"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="11" r="4.5" />
+            <circle cx="22" cy="13" r="3.5" />
+            <path d="M4 25c0-4.4 3.6-7 8-7s8 2.6 8 7" />
+            <path d="M22 19c3.4 0 6 2 6 5.5" />
+          </svg>
+          <p class="mt-4 font-semibold">Community-oriented</p>
+          <p class="lede mt-1 text-sm">Communal software for communal transit.</p>
+        </li>
+      </ul>
+      <p class="mt-10">
+        <a class="btn btn-outline" href="https://git.kcfam.us/gtfs.zone">
+          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" fill="currentColor">
+            <path
+              fill-rule="evenodd"
+              d="M11.75 2.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm-2.25.75a2.25 2.25 0 1 1 3 2.122V6A2.5 2.5 0 0 1 10 8.5H6a1 1 0 0 0-1 1v1.128a2.251 2.251 0 1 1-1.5 0V5.372a2.25 2.25 0 1 1 1.5 0v1.836A2.492 2.492 0 0 1 6 7h4a1 1 0 0 0 1-1v-.628A2.25 2.25 0 0 1 9.5 3.25ZM4.25 12a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM3.5 3.25a.75.75 0 1 1 1.5 0 .75.75 0 0 1-1.5 0Z"
+            />
+          </svg>
+          View the source
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Section 9: get in touch -->
+  <section id="contact" class="section py-32">
+    <div class="mx-auto w-full max-w-3xl px-6">
+      <p class="eyebrow">Get in touch</p>
+      <h2 class="mt-4 text-2xl md:text-4xl font-semibold tracking-tight">Get in touch.</h2>
+      <p class="lede mt-4">If you run transit and want your riders to see it, write to us.</p>
+      <p class="mt-6 text-xl md:text-2xl">
+        <a class="mono" href="mailto:inquiry@gtfs.zone">inquiry@gtfs.zone</a>
+      </p>
+    </div>
+  </section>
+
+  <footer class="section border-t px-6 py-10" style="border-color: var(--grid)">
+    <div class="mx-auto flex w-full max-w-3xl flex-wrap items-center gap-6 text-sm">
+      <a href="https://edit.gtfs.zone">Editor</a>
+      <a href="https://viz.rt.gtfs.zone">Visualizer</a>
+      <a href="https://manage.rt.gtfs.zone">Manager</a>
+      <a href="https://git.kcfam.us/gtfs.zone">Source</a>
+      <a href="https://gtfs.org">gtfs.org</a>
+      <span class="lede ml-auto">gtfs.zone</span>
+    </div>
+  </footer>
+</main>

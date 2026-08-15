@@ -1,0 +1,89 @@
+// Deep-link chips. One feed entry produces two links, so the editor list and
+// the visualizer list cannot drift.
+//
+// Both schemes are confirmed against the deployed builds, not just the source:
+//   editor      #load=<staticUrl>                      (coloring-book page-state-manager)
+//   visualizer  #static=…&rt_vp=…&rt_tu=…&rt_al=…&cors= (test-track feed-url)
+//
+// `cors` is a compact flag list: `s` proxies the static source, `r` proxies the
+// realtime sources. The per-feed values are copied from test-track's
+// examples.ts, which records which hosts actually send CORS headers.
+// raw.githubusercontent.com does, so Columbia County's static half is `s`-less;
+// cdn.mbta.com, content.amtrak.com and rt.gtfs.zone do not.
+
+export interface RealtimeTriple {
+  vehiclePositions: string;
+  tripUpdates: string;
+  serviceAlerts: string;
+}
+
+export interface FeedChip {
+  name: string;
+  descriptor: string;
+  feedUrl: string;
+  realtime: RealtimeTriple;
+  /** Proxy the static source. */
+  staticCors: boolean;
+  /** Proxy the realtime sources. */
+  realtimeCors: boolean;
+}
+
+const EDITOR = 'https://edit.gtfs.zone';
+const VISUALIZER = 'https://viz.rt.gtfs.zone';
+const RT = 'https://rt.gtfs.zone';
+
+function ours(feed: string): RealtimeTriple {
+  return {
+    vehiclePositions: `${RT}/${feed}/vehicle_positions.pb`,
+    tripUpdates: `${RT}/${feed}/trip_updates.pb`,
+    serviceAlerts: `${RT}/${feed}/service_alerts.pb`,
+  };
+}
+
+export const feeds: FeedChip[] = [
+  {
+    name: 'MBTA',
+    descriptor: 'Large and complete. Exercises nearly every GTFS feature.',
+    feedUrl: 'https://cdn.mbta.com/MBTA_GTFS.zip',
+    realtime: {
+      vehiclePositions: 'https://cdn.mbta.com/realtime/VehiclePositions.pb',
+      tripUpdates: 'https://cdn.mbta.com/realtime/TripUpdates.pb',
+      serviceAlerts: 'https://cdn.mbta.com/realtime/Alerts.pb',
+    },
+    staticCors: true,
+    realtimeCors: true,
+  },
+  {
+    name: 'Amtrak',
+    descriptor: 'A national network, and a genuinely messy feed.',
+    feedUrl: 'https://content.amtrak.com/content/gtfs/GTFS.zip',
+    realtime: ours('amtrak'),
+    staticCors: true,
+    realtimeCors: true,
+  },
+  {
+    name: 'Columbia County',
+    descriptor: "What a small rural agency's feed actually looks like.",
+    feedUrl:
+      'https://raw.githubusercontent.com/columbia-county-ny-transit/gtfs-generator/refs/heads/main/columbia_county_gtfs.zip',
+    realtime: ours('columbia-county'),
+    staticCors: false,
+    realtimeCors: true,
+  },
+];
+
+export function editorLink(feed: FeedChip): string {
+  return `${EDITOR}/#load=${feed.feedUrl}`;
+}
+
+export function visualizerLink(feed: FeedChip): string {
+  const cors = [feed.staticCors ? 's' : '', feed.realtimeCors ? 'r' : ''].filter(Boolean);
+  const params = new URLSearchParams({
+    static: feed.feedUrl,
+    rt_vp: feed.realtime.vehiclePositions,
+    rt_tu: feed.realtime.tripUpdates,
+    rt_al: feed.realtime.serviceAlerts,
+  });
+  if (cors.length > 0) params.set('cors', cors.join(','));
+  return `${VISUALIZER}/#${params.toString()}`;
+}

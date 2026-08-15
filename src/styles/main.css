@@ -1,0 +1,179 @@
+/* Tailwind CSS v4 with DaisyUI plugin */
+@import 'tailwindcss';
+@import './tokens-night.css';
+@import './tokens-blueprint.css';
+@source "../../*.html";
+@source "../**/*.{ts,html}";
+
+@plugin "daisyui" {
+  themes:
+    light --default,
+    night --prefersdark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  overscroll-behavior-y: none;
+}
+
+/* The persistent background network sits behind every section. */
+.stage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.page {
+  position: relative;
+  z-index: 1;
+}
+
+/* Sits above both the background network and the page content. */
+.theme-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 2;
+  padding: 0.5rem;
+  border-radius: var(--corner-radius);
+  border: 1px solid var(--grid);
+  background: color-mix(in oklab, var(--bg) 82%, transparent);
+  color: var(--ink);
+  backdrop-filter: blur(6px);
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent);
+}
+
+.section {
+  position: relative;
+}
+
+/* Sticky scenes pin for the length of their scrub track. */
+.pin-track {
+  height: 250vh;
+}
+
+.pin-track-long {
+  height: 300vh;
+}
+
+.pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Mobile stacks the side-by-side scenes, so the scrub distance shortens. */
+@media (max-width: 767px) {
+  .pin-track {
+    height: 180vh;
+  }
+
+  .pin-track-long {
+    height: 220vh;
+  }
+
+  .pin {
+    height: auto;
+    min-height: 100vh;
+    padding: 4rem 0;
+  }
+}
+
+.scene-active {
+  will-change: transform, opacity;
+}
+
+.plate {
+  background: color-mix(in oklab, var(--bg) 82%, transparent);
+  border: 1px solid var(--grid);
+  border-radius: var(--corner-radius);
+  backdrop-filter: blur(6px);
+}
+
+.eyebrow {
+  color: var(--accent);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.lede {
+  color: var(--ink-muted);
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+}
+
+/* Open-source section glyphs: same stroke language as the canvas scenes. */
+.os-glyph {
+  color: var(--accent);
+}
+
+.chip {
+  border: 1px solid var(--grid);
+  border-radius: var(--corner-radius);
+  background: var(--bg-elevated);
+  color: var(--ink);
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.chip:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+:where(a, button, .chip):focus-visible,
+.theme-toggle:has(:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.sr-only-desc {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Pre-JS reveal state. Without JS everything stays visible. */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.js .reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .js .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

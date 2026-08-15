@@ -1,0 +1,23 @@
+/* Dark theme tokens. Selected by the moon toggle, or by system preference. */
+[data-theme='night'] {
+  --bg: #06080a;
+  --bg-elevated: #0e1319;
+  --ink: #e8eef2;
+  --ink-muted: #93a3ae;
+  --accent: #87c540;
+  --accent-text: #a6dc68; /* lightened for text use against near-black */
+  --grid: #1b232b;
+
+  --route-1: #87c540;
+  --route-2: #4fc3f7;
+  --route-3: #ffb74d;
+  --route-4: #e57373;
+  --route-5: #ba9df0;
+  --route-6: #4dd0b1;
+
+  --stroke-hairline: 0.75;
+  --stroke-route: 2.6;
+  --stroke-emphasis: 4;
+  --glow-radius: 6;
+  --corner-radius: 10px;
+}

@@ -1,10 +1,9 @@
-
-name: Build
+name: Build and Deploy
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'v*'
 
 jobs:
   build:
@@ -13,26 +12,27 @@ jobs:
     steps:
       - name: Install dependencies
         run: |
-          apk add --no-cache nodejs npm git curl tar
+          apk add --no-cache nodejs npm git
+          npm install -g pnpm@11.20.0
 
       - name: Checkout
         uses: actions/checkout@v6
         with:
-          submodules: true
+          fetch-depth: 0
           github-server-url: https://git.kcfam.us
 
-      - name: Install latest Zola
-        run: |
-          curl -sL https://github.com/getzola/zola/releases/download/v0.22.1/zola-v0.22.1-x86_64-unknown-linux-musl.tar.gz \
-            | tar xz -C /usr/local/bin
+      - name: Install node modules
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
 
       - name: Build
-        run: zola build
+        run: pnpm build
 
       - name: Deploy
         run: |
           echo "Copying build to /sites/gtfs.zone"
           mkdir -p /sites/gtfs.zone
           rm -rf /sites/gtfs.zone/*
-          cp -vr public/. /sites/gtfs.zone/
-
+          cp -vr dist/. /sites/gtfs.zone/

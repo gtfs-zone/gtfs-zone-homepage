@@ -1,0 +1,23 @@
+/* Light theme tokens. Warm paper, hairlines, engineering drawing. */
+[data-theme='light'] {
+  --bg: #f6f2e9;
+  --bg-elevated: #fffdf7;
+  --ink: #1d2430;
+  --ink-muted: #5d6976;
+  --accent: #5f9022; /* darkened from #87c540 to clear 4.5:1 on paper */
+  --accent-text: #4a7019;
+  --grid: #d8d1c2;
+
+  --route-1: #5f9022;
+  --route-2: #1f6f9b;
+  --route-3: #b8761a;
+  --route-4: #b0453f;
+  --route-5: #6a4fa3;
+  --route-6: #17796a;
+
+  --stroke-hairline: 0.5;
+  --stroke-route: 2.5;
+  --stroke-emphasis: 3.2;
+  --glow-radius: 0;
+  --corner-radius: 2px;
+}

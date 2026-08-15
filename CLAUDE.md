@@ -4,59 +4,72 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-This is a [Zola](https://www.getzola.org/) static site using the [daisy theme](https://codeberg.org/awinterstein/zola-theme-daisy) (a Git submodule at `themes/daisy`), built on TailwindCSS and DaisyUI.
+The gtfs.zone homepage: a scroll-driven single page built with Vite, TypeScript,
+Tailwind v4, DaisyUI, and d3. No framework. Deployed to `https://gtfs.zone`.
+
+This repo was a Zola site through v0.0.x. Nothing of that setup remains.
 
 ## Commands
 
 ```bash
-# Serve locally with live reload
-zola serve
-
-# Build the site
-zola build
-
-# Check links and configuration
-zola check
-
-# Rebuild TailwindCSS (when theme CSS changes)
-tailwindcss -i themes/daisy/src/css/main.css -o themes/daisy/static/css/main.css --minify
-```
-
-After cloning, initialize the theme submodule:
-```bash
-git submodule update --init --recursive
+pnpm dev         # http://localhost:8080
+pnpm build
+pnpm typecheck
+pnpm bake        # re-bake public/data/network-night.json from a GTFS feed
 ```
 
 ## Architecture
 
-- **`config.toml`** — site configuration: base URL, taxonomies, navbar/footer links, social links
-- **`content/`** — Markdown content files
-- **`i18n/`** — Translation strings (`en.toml`)
-- **`static/`** — Static assets (favicon, etc.)
-- **`themes/daisy/`** — Theme submodule; do not edit directly unless intentional
+- **`index.html`** — the only page. Head only; the body is inlined at build time.
+- **`src/page.html`** — the body markup. All copy is real text, so the page reads
+  with JS disabled.
+- **`vite.config.ts`** — a build plugin with three passes: inline `@include`,
+  expand `@feeds` chips from `src/content/feeds.ts`, then stamp
+  `target="_blank" rel="noopener noreferrer"` on every external anchor and **fail
+  the build** if one escapes.
+- **`src/content/links.ts`** — the canonical URL table. `copy.ts` imports its
+  hrefs from there. Never hardcode a product URL elsewhere.
+- **`src/engine/`** — one rAF ticker, a scroll store, section progress, and the
+  scene registry.
+- **`src/scenes/`** — one file per scene. `render(p)` must be idempotent and
+  depend only on `p`.
+- **`src/net/`** — geometry sources and the vehicle sim.
+- **`src/theme/`** — palette token reader and the theme controller.
 
-## Content Structure
+## Themes
 
-Top-level pages only: `_index.md` (home), `realtime-setup.md`.
+One page, two themes on `<html data-theme>`: `night` and `light`. The toggle is
+the moon `swap swap-rotate` control shared with the editor and the visualizer,
+and it shares their `theme` localStorage key.
 
-## Deployment
+- Tokens live in `src/styles/tokens-night.css` and `tokens-blueprint.css`, keyed
+  off `[data-theme=...]`.
+- Behavioral differences live in the `VariantConfig` map in `src/main.ts`.
+- Both themes use the same `GeoSource` geometry. A theme change must never change
+  what the page shows, only how it looks.
 
-- Netlify: auto-deploys via `zola build` (see `netlify.toml`)
-- CI: Forgejo workflow (`.forgejo/workflows/check.yml`) runs `zola check` and verifies CSS is up to date
+Scenes read palette values in `mount()` and bake them into DOM attributes, so a
+theme change calls `stopEngine()` and remounts everything. If you add a scene,
+give it a working `destroy()`.
 
-## Theme Usage
+## Rules
 
-**Always use theme-native elements when writing content HTML.** The content renders inside a `max-w-2xl xl:max-w-4xl mx-auto` container provided by `base.html`. Do not write full-width hero sections or custom layouts that assume more width.
+- Scenes never hardcode colors. Read them from `Palette` (`src/theme/palette.ts`),
+  which resolves CSS custom properties.
+- Do not add a second HTML entry point without a reason; the single-page shape is
+  deliberate.
+- Never add Co-Authored-By trailers to commit messages.
 
-Key theme patterns to reuse:
-- **Cards**: `card card-border bg-base-200 grow basis-0 max-w-100 shadow-xl transform transition duration-500 hover:scale-103` with `card-body`, `card-title`, `card-actions justify-end`
-- **Card grid**: `grid grid-cols-1 md:grid-cols-2 gap-4`
-- **Buttons**: `btn btn-primary`, `btn btn-secondary`
-- **Badges**: `badge badge-warning`, `badge badge-neutral`, `badge badge-sm`
-- **Shortcodes**: `badge_primary`, `badge_warning`, `badge_neutral`, `badge_success`, `badge_error`, `badge_info`, `badge_secondary`, `badge_accent`, `icon`
+## Releasing
 
-See `themes/daisy/templates/macros/content.html` for the full `cards` macro and other reusable patterns.
+Deploys fire on `v*` tags, not on pushes to `main`.
 
-## Important Rules
+```bash
+cz bump                  # bumps package.json + CHANGELOG.md, commits, tags
+git push --follow-tags
+```
 
-- Never add Co-Authored-By trailers to commit messages
+`cz bump` refuses to run off `main`. Commit messages must be conventional
+commits; `.pre-commit-config.yaml` enforces this via a commitizen commit-msg hook.
+`.forgejo/workflows/build.yml` typechecks, builds, and copies `dist/` to
+`/sites/gtfs.zone`.
