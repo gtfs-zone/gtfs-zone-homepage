@@ -10,6 +10,9 @@ import { buildFleet, simulate, type Vehicle } from '../net/vehicle-sim';
 
 const REVEAL_SECONDS = 1.2;
 const ROUTE_STAGGER = 0.18;
+// The hero zooms to 1.15. The layer is rendered that much larger and scaled
+// down toward 1, so the compositor never has to re-raster at a bigger scale.
+const OVERSCAN = 1.15;
 
 export class HeroMapScene implements Scene {
   private ctx!: SceneContext;
@@ -22,6 +25,12 @@ export class HeroMapScene implements Scene {
   private fleet: Vehicle[] = [];
   private width = 0;
   private height = 0;
+  // Per-frame write guards: the DOM is only touched when a value actually moves.
+  private lastTransform = '';
+  private lastOpacity = -1;
+  private lastRouteOpacity = -1;
+  private revealDone = false;
+  private stopLit: Uint8Array = new Uint8Array(0);
 
   mount(root: HTMLElement, ctx: SceneContext): void {
     this.ctx = ctx;
@@ -29,8 +38,16 @@ export class HeroMapScene implements Scene {
       .append('svg')
       .attr('aria-hidden', 'true')
       .attr('preserveAspectRatio', 'xMidYMid slice')
-      .style('width', '100%')
-      .style('height', '100%');
+      .style('position', 'absolute')
+      .style('left', `${((1 - OVERSCAN) / 2) * 100}%`)
+      .style('top', `${((1 - OVERSCAN) / 2) * 100}%`)
+      .style('width', `${OVERSCAN * 100}%`)
+      .style('height', `${OVERSCAN * 100}%`)
+      // The hero zoom rides a CSS transform on a promoted layer, so scaling
+      // never re-runs the glow filter over the route geometry.
+      .style('transform-origin', '50% 50%')
+      .style('will-change', 'transform, opacity')
+      .style('backface-visibility', 'hidden');
 
     const defs = this.svg.append('defs');
     if (ctx.variant.glow) {
@@ -57,14 +74,20 @@ export class HeroMapScene implements Scene {
   }
 
   resize(v: Viewport): void {
-    this.width = v.width;
-    this.height = v.height;
+    // Local space is the oversized layer, so one user unit stays one CSS pixel.
+    this.width = v.width * OVERSCAN;
+    this.height = v.height * OVERSCAN;
     this.svg.attr('viewBox', `0 0 ${this.width} ${this.height}`);
     // The hero crops to a tighter box on mobile rather than shrinking the network.
-    this.ctx.network.fit(this.width, this.height, v.isMobile ? -this.width * 0.25 : 40);
+    this.ctx.network.fit(this.width, this.height, v.isMobile ? -this.width * 0.25 : 40 * OVERSCAN);
     this.drawGrid();
     this.drawRoutes();
     this.drawStops();
+    // Geometry moved under them, so let the next frame rewrite everything.
+    this.revealDone = false;
+    this.lastRouteOpacity = -1;
+    this.lastTransform = '';
+    this.lastOpacity = -1;
   }
 
   private drawGrid(): void {
@@ -143,47 +166,73 @@ export class HeroMapScene implements Scene {
       .attr('stroke', variant.name === 'night' ? 'none' : palette.ink)
       .attr('stroke-width', palette.strokeHairline * 2)
       .attr('fill-opacity', variant.name === 'night' ? 0.55 : 1);
+
+    this.stopLit = new Uint8Array(stops.length).fill(255);
   }
 
   render(p: SceneProgress): void {
     const { variant, palette, reducedMotion } = this.ctx;
 
-    // Hero scrub: one viewport of scroll, descending into the network.
-    const heroP = clamp01(scrollState.y / Math.max(1, scrollState.viewport));
-    const scale = 1 + heroP * 0.15;
-    const drift = -heroP * 60;
-    this.mapGroup.attr(
-      'transform',
-      `translate(${this.width / 2} ${this.height / 2}) scale(${scale}) translate(${-this.width / 2} ${
-        -this.height / 2 + drift
-      })`
-    );
+    // Hero scrub: one viewport of scroll, descending into the network. Driven
+    // off the damped scroll position so wheel notches do not land as jumps.
+    const y = scrollState.ySmooth;
+    const heroP = clamp01(y / Math.max(1, scrollState.viewport));
+    const scale = (1 + heroP * 0.15) / OVERSCAN;
+    const drift = -heroP * 60 * OVERSCAN;
+    const transform = `scale(${scale.toFixed(4)}) translateY(${drift.toFixed(2)}px)`;
+    if (transform !== this.lastTransform) {
+      this.lastTransform = transform;
+      this.svg.style('transform', transform);
+    }
 
     // Past the hero the network recedes and becomes the page's ground.
-    const recede = clamp01((scrollState.y - scrollState.viewport * 0.6) / (scrollState.viewport * 0.8));
+    const recede = clamp01((y - scrollState.viewport * 0.6) / (scrollState.viewport * 0.8));
     const bodyOpacity = 1 - recede * 0.72;
 
     // The last section slows and dims the network to a stop.
     const tail = clamp01(
-      (scrollState.y - (scrollState.height - scrollState.viewport * 1.8)) / (scrollState.viewport * 1.2)
+      (y - (scrollState.height - scrollState.viewport * 1.8)) / (scrollState.viewport * 1.2)
     );
-    this.svg.style('opacity', String(bodyOpacity * (1 - tail * 0.6)));
+    const opacity = bodyOpacity * (1 - tail * 0.6);
+    if (Math.abs(opacity - this.lastOpacity) > 0.002) {
+      this.lastOpacity = opacity;
+      this.svg.style('opacity', opacity.toFixed(3));
+    }
 
     // Draw-in reveal, staggered by route. Instant under reduced motion.
-    this.routeGroup.selectAll<SVGPathElement, { id: string }>('path').each((d, i, nodes) => {
-      const len = this.lengths.get(d.id) ?? 0;
-      if (len === 0) return;
-      const routeIndex = i % Math.max(1, this.lengths.size);
-      const t = reducedMotion
-        ? 1
-        : clamp01((p.elapsed - routeIndex * ROUTE_STAGGER) / REVEAL_SECONDS);
-      const eased = 1 - Math.pow(1 - t, 3);
-      const el = nodes[i];
-      el.style.strokeDasharray = `${len}`;
-      el.style.strokeDashoffset = `${len * (1 - eased)}`;
-      // Routes desaturate slightly as text sections take over.
-      el.style.strokeOpacity = `${1 - recede * 0.25}`;
-    });
+    // Dash writes stop once every route is fully drawn; rewriting them each
+    // frame invalidates the whole path, glow underlay included.
+    const routeOpacity = 1 - recede * 0.25;
+    const opacityChanged = Math.abs(routeOpacity - this.lastRouteOpacity) > 0.004;
+    if (opacityChanged) this.lastRouteOpacity = routeOpacity;
+
+    if (!this.revealDone || opacityChanged) {
+      let allDrawn = true;
+      this.routeGroup.selectAll<SVGPathElement, { id: string }>('path').each((d, i, nodes) => {
+        const len = this.lengths.get(d.id) ?? 0;
+        if (len === 0) return;
+        const el = nodes[i];
+        if (opacityChanged) {
+          // Routes desaturate slightly as text sections take over.
+          el.style.strokeOpacity = routeOpacity.toFixed(3);
+        }
+        if (this.revealDone) return;
+        const routeIndex = i % Math.max(1, this.lengths.size);
+        const t = reducedMotion
+          ? 1
+          : clamp01((p.elapsed - routeIndex * ROUTE_STAGGER) / REVEAL_SECONDS);
+        if (t < 1) {
+          allDrawn = false;
+          const eased = 1 - Math.pow(1 - t, 3);
+          el.style.strokeDasharray = `${len}`;
+          el.style.strokeDashoffset = `${len * (1 - eased)}`;
+        } else {
+          el.style.strokeDasharray = '';
+          el.style.strokeDashoffset = '';
+        }
+      });
+      if (allDrawn) this.revealDone = true;
+    }
 
     const elapsed = reducedMotion ? 0 : Math.max(0, p.elapsed - REVEAL_SECONDS * 0.4);
     const states = simulate(this.ctx.network, this.fleet, {
@@ -208,17 +257,24 @@ export class HeroMapScene implements Scene {
         (d) => `translate(${d.x} ${d.y}) rotate(${d.bearing}) translate(${-size / 2} ${-size * 0.31})`
       );
 
-    // Stops brighten as a vehicle approaches.
+    // Stops brighten as a vehicle approaches. Squared distances, and the fill is
+    // only rewritten when a stop crosses a step, so most frames touch no stop.
     if (variant.name === 'night') {
+      const radiusSq = 60 * 60;
       this.stopGroup.selectAll<SVGCircleElement, { x: number; y: number }>('circle').each((d, i, nodes) => {
-        let nearest = Infinity;
+        let nearestSq = Infinity;
         for (const s of states) {
-          const dist = Math.hypot(s.x - d.x, s.y - d.y);
-          if (dist < nearest) nearest = dist;
+          const dx = s.x - d.x;
+          const dy = s.y - d.y;
+          const distSq = dx * dx + dy * dy;
+          if (distSq < nearestSq) nearestSq = distSq;
         }
-        const near = clamp01(1 - nearest / 60);
+        const near = nearestSq >= radiusSq ? 0 : clamp01(1 - Math.sqrt(nearestSq) / 60);
+        const step = Math.round(near * 10);
+        if (this.stopLit[i] === step) return;
+        this.stopLit[i] = step;
         nodes[i].setAttribute('fill', near > 0.4 ? palette.accent : palette.inkMuted);
-        nodes[i].setAttribute('fill-opacity', String(0.45 + near * 0.55));
+        nodes[i].setAttribute('fill-opacity', (0.45 + (step / 10) * 0.55).toFixed(2));
       });
     }
   }
