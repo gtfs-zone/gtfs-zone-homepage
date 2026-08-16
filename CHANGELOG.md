@@ -1,3 +1,9 @@
+## v0.4.0 (2026-08-16)
+
+### Feat
+
+- **page**: stamp the build version into the footer
+
 ## v0.3.1 (2026-08-16)
 
 ### Perf
