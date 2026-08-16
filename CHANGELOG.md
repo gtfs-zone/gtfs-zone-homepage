@@ -1,3 +1,9 @@
+## v0.5.0 (2026-08-16)
+
+### Feat
+
+- **debug**: add query-string overrides for the hero map's per-frame work
+
 ## v0.4.0 (2026-08-16)
 
 ### Feat
