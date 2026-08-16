@@ -25,6 +25,8 @@ export const icons: Record<string, string> = {
   feeds: '<path d="m12 3 9 4.8-9 4.8-9-4.8L12 3Z"/><path d="m3 12.8 9 4.8 9-4.8"/>',
   'vehicle-tracking':
     '<rect x="5" y="4" width="14" height="13" rx="2.5"/><path d="M5 11.5h14"/><circle cx="8.6" cy="14.3" r="1"/><circle cx="15.4" cy="14.3" r="1"/><path d="M8 17v2M16 17v2"/>',
+  people:
+    '<circle cx="9.5" cy="9" r="2.8"/><path d="M4 19a5.5 5.5 0 0 1 11 0"/><path d="M16 6.5a2.8 2.8 0 0 1 0 5.4"/><path d="M17 14.2A5.5 5.5 0 0 1 20 19"/>',
 
   // Tracking hardware
   satellite:

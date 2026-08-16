@@ -127,7 +127,7 @@ export const copy = {
   manager: {
     eyebrow: 'The manager',
     heading: 'Management software for running a realtime feed.',
-    body: 'manage.rt.gtfs.zone is where an agency runs its feed: define feeds, add drivers, track vehicles, and publish service alerts. The public GTFS-RT endpoints update from it directly.',
+    body: 'manage.rt.gtfs.zone is where an agency runs its feed: define feeds, register trackers, watch vehicles, and publish service alerts. The public GTFS-RT endpoints update from it directly.',
     features: [
       {
         title: 'Feeds',
@@ -139,11 +139,15 @@ export const copy = {
       },
       {
         title: 'Vehicle tracking',
-        body: 'Drivers with their own credentials, positions arriving from a phone or a tracker and served as vehicle positions.',
+        body: 'One tracker per vehicle, provisioned by scanning a QR code. Positions arrive from a phone or a GPS unit and are served as vehicle positions.',
       },
       {
         title: 'Trip updates',
-        body: 'Delay against the scheduled trip, derived from those positions.',
+        body: 'Delay against the scheduled trip, derived from those positions. A tracker can be tied to its trip by a day and time rule, so the match happens on the server.',
+      },
+      {
+        title: 'Shared feeds',
+        body: 'Hand a colleague a feed by email address. They sign in as themselves and see the same feeds, trackers, and alerts.',
       },
     ],
     hardwareLabel: 'Tracking hardware',

@@ -285,7 +285,7 @@
           </h2>
           <p class="lede mt-4">
             <span class="mono">manage.rt.gtfs.zone</span> is where an agency runs its feed: define
-            feeds, add drivers, track vehicles, and publish service alerts. The public GTFS-RT
+            feeds, register trackers, watch vehicles, and publish service alerts. The public GTFS-RT
             endpoints update from it directly.
           </p>
           <ul class="mt-6 space-y-3 text-sm">
@@ -314,8 +314,8 @@
               <div>
                 <span class="font-semibold">Vehicle tracking:</span>
                 <span class="lede">
-                  drivers with their own credentials, positions arriving from a phone or a
-                  tracker and served as vehicle positions.</span
+                  one tracker per vehicle, provisioned by scanning a QR code. Positions arrive
+                  from a phone or a GPS unit and are served as vehicle positions.</span
                 >
               </div>
             </li>
@@ -324,7 +324,18 @@
               <div>
                 <span class="font-semibold">Trip updates:</span>
                 <span class="lede">
-                  delay against the scheduled trip, derived from those positions.</span
+                  delay against the scheduled trip, derived from those positions. A tracker can be
+                  tied to its trip by a day and time rule, so the match happens on the server.</span
+                >
+              </div>
+            </li>
+            <li class="flex gap-3">
+              <!-- @icon people -->
+              <div>
+                <span class="font-semibold">Shared feeds:</span>
+                <span class="lede">
+                  hand a colleague a feed by email address. They sign in as themselves and see the
+                  same feeds, trackers, and alerts.</span
                 >
               </div>
             </li>
@@ -358,7 +369,8 @@
               <li class="flex gap-3">
                 <!-- @icon phone -->
                 <div>
-                  A driver&rsquo;s phone works too, so an agency can start with no hardware at all.
+                  A phone running the Traccar Client app works too, so an agency can start with no
+                  hardware at all.
                 </div>
               </li>
             </ul>
