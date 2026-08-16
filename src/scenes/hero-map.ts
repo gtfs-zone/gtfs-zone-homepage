@@ -54,25 +54,10 @@ export class HeroMapScene implements Scene {
       .style('width', `${OVERSCAN * 100}%`)
       .style('height', `${OVERSCAN * 100}%`)
       // The hero zoom rides a CSS transform on a promoted layer, so scaling
-      // never re-runs the glow filter over the route geometry.
+      // never reflows the route geometry.
       .style('transform-origin', '50% 50%')
       .style('will-change', 'transform, opacity')
       .style('backface-visibility', 'hidden');
-
-    const defs = this.svg.append('defs');
-    if (ctx.variant.glow) {
-      const f = defs
-        .append('filter')
-        .attr('id', 'hero-glow')
-        .attr('x', '-30%')
-        .attr('y', '-30%')
-        .attr('width', '160%')
-        .attr('height', '160%');
-      f.append('feGaussianBlur').attr('stdDeviation', ctx.palette.glowRadius).attr('result', 'b');
-      const merge = f.append('feMerge');
-      merge.append('feMergeNode').attr('in', 'b');
-      merge.append('feMergeNode').attr('in', 'SourceGraphic');
-    }
 
     this.mapGroup = this.svg.append('g');
     if (ctx.variant.showGrid) this.mapGroup.append('g').attr('class', 'hero-grid');
@@ -127,20 +112,6 @@ export class HeroMapScene implements Scene {
 
     const routes = this.ctx.network.routes();
     const weight = palette.strokeRoute * variant.strokeWeightScale;
-
-    // Glow underlay, then the crisp stroke on top.
-    this.routeGroup
-      .selectAll<SVGPathElement, (typeof routes)[number]>('path.route-glow')
-      .data(variant.glow ? routes : [], (d) => d.id)
-      .join('path')
-      .attr('class', 'route-glow')
-      .attr('d', (d) => path(d.points))
-      .attr('fill', 'none')
-      .attr('stroke', (d) => d.color)
-      .attr('stroke-width', weight * 3)
-      .attr('stroke-linecap', 'round')
-      .attr('stroke-opacity', 0.18)
-      .attr('filter', 'url(#hero-glow)');
 
     const main = this.routeGroup
       .selectAll<SVGPathElement, (typeof routes)[number]>('path.route')
@@ -213,9 +184,7 @@ export class HeroMapScene implements Scene {
       this.svg.style('opacity', opacity.toFixed(3));
     }
 
-    // Routes desaturate slightly as text sections take over. Scoped to the crisp
-    // strokes: writing to the glow underlays would re-run the blur over
-    // near-fullscreen paths on every scroll frame.
+    // Routes desaturate slightly as text sections take over.
     const routeOpacity = 1 - recede * 0.45;
     if (Math.abs(routeOpacity - this.lastRouteOpacity) > 0.004) {
       this.lastRouteOpacity = routeOpacity;
@@ -223,17 +192,16 @@ export class HeroMapScene implements Scene {
     }
 
     // Draw-in reveal, staggered by route. Instant under reduced motion. Dash
-    // writes stop once every route is fully drawn, glow underlay included.
+    // writes stop once every route is fully drawn.
     if (!this.revealDone) {
       let allDrawn = true;
-      this.routeGroup.selectAll<SVGPathElement, { id: string }>('path').each((d, i, nodes) => {
+      this.routeGroup.selectAll<SVGPathElement, { id: string }>('path.route').each((d, i, nodes) => {
         const len = this.lengths.get(d.id) ?? 0;
         if (len === 0) return;
         const el = nodes[i];
-        const routeIndex = i % Math.max(1, this.lengths.size);
         const t = reducedMotion
           ? 1
-          : clamp01((p.elapsed - routeIndex * ROUTE_STAGGER) / REVEAL_SECONDS);
+          : clamp01((p.elapsed - i * ROUTE_STAGGER) / REVEAL_SECONDS);
         if (t < 1) {
           allDrawn = false;
           const eased = 1 - Math.pow(1 - t, 3);

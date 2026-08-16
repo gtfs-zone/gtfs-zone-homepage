@@ -12,7 +12,6 @@ export interface Palette {
   strokeHairline: number;
   strokeRoute: number;
   strokeEmphasis: number;
-  glowRadius: number;
 }
 
 function readVar(styles: CSSStyleDeclaration, name: string): string {
@@ -38,6 +37,5 @@ export function readPalette(el: HTMLElement = document.documentElement): Palette
     strokeHairline: readNum(s, '--stroke-hairline', 0.75),
     strokeRoute: readNum(s, '--stroke-route', 2.5),
     strokeEmphasis: readNum(s, '--stroke-emphasis', 4),
-    glowRadius: readNum(s, '--glow-radius', 0),
   };
 }

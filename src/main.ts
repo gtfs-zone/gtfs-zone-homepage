@@ -5,7 +5,6 @@
 // and the VariantConfig below.
 
 import { initPage, mountScenes } from './bootstrap';
-import { applyFlags, initFlags } from './debug/flags';
 import type { VariantConfig } from './engine/scene';
 import { GeoSource } from './net/geo-source';
 import { ThemeController, type ThemeName } from './theme/theme-controller';
@@ -15,7 +14,6 @@ const VARIANTS: Record<ThemeName, VariantConfig> = {
     name: 'night',
     vehicleGlyph: 'capsule',
     showGrid: false,
-    glow: true,
     strokeWeightScale: 1,
     groundOpacity: 0.16,
     fleetPerRoute: 3,
@@ -26,7 +24,6 @@ const VARIANTS: Record<ThemeName, VariantConfig> = {
     name: 'blueprint',
     vehicleGlyph: 'square',
     showGrid: true,
-    glow: false,
     strokeWeightScale: 1,
     groundOpacity: 0.09,
     fleetPerRoute: 2,
@@ -39,14 +36,13 @@ const theme = new ThemeController();
 
 async function start(): Promise<void> {
   initPage();
-  initFlags();
 
   const network = await GeoSource.load('/data/network-night.json');
 
   // Remount on every theme change: scenes bake palette values into DOM
   // attributes at mount time, so they cannot be repainted in place.
-  theme.onChange((next) => mountScenes(applyFlags(VARIANTS[next]), network));
-  mountScenes(applyFlags(VARIANTS[theme.getCurrentTheme()]), network);
+  theme.onChange((next) => mountScenes(VARIANTS[next], network));
+  mountScenes(VARIANTS[theme.getCurrentTheme()], network);
 }
 
 // The toggle must work even if geometry never loads, so it initializes first
