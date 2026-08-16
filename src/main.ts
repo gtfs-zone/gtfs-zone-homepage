@@ -17,6 +17,7 @@ const VARIANTS: Record<ThemeName, VariantConfig> = {
     showGrid: false,
     glow: true,
     strokeWeightScale: 1,
+    groundOpacity: 0.16,
   },
   light: {
     name: 'blueprint',
@@ -25,6 +26,7 @@ const VARIANTS: Record<ThemeName, VariantConfig> = {
     showGrid: true,
     glow: false,
     strokeWeightScale: 1,
+    groundOpacity: 0.09,
   },
 };
 
