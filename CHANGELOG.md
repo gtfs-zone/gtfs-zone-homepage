@@ -1,3 +1,9 @@
+## v0.5.2 (2026-08-16)
+
+### Fix
+
+- **engine**: keep mobile scroll scrubs from finishing off screen
+
 ## v0.5.1 (2026-08-16)
 
 ### Perf
