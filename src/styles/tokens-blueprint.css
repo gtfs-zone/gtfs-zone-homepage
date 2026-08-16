@@ -1,5 +1,8 @@
 /* Light theme tokens. Warm paper, hairlines, engineering drawing. */
 [data-theme='light'] {
+  /* Form controls and scrollbars follow the toggle, not the OS. */
+  color-scheme: light;
+
   --bg: #f6f2e9;
   --bg-elevated: #fffdf7;
   --ink: #1d2430;
