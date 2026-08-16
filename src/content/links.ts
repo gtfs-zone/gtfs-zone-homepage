@@ -23,12 +23,14 @@ export const links = {
   manager: { label: 'Sign in to the manager', href: 'https://manage.rt.gtfs.zone' },
 
   gtfs: { label: 'Learn more at gtfs.org', href: 'https://gtfs.org' },
+  // Distinct labels: two links with the same text and different targets read as
+  // one destination to a screen reader running a link list.
   scheduleReference: {
-    label: 'View the spec',
+    label: 'View the Schedule spec',
     href: 'https://gtfs.org/documentation/schedule/reference/',
   },
   realtimeReference: {
-    label: 'View the spec',
+    label: 'View the Realtime spec',
     href: 'https://gtfs.org/documentation/realtime/reference/',
   },
 

@@ -26,12 +26,16 @@ function escapeHtml(s: string): string {
 
 function chips(kind: 'editor' | 'visualizer'): string {
   const href = kind === 'editor' ? editorLink : visualizerLink;
+  // The same feed appears in both lists, so each link states its destination
+  // off-screen: identical link text pointing at two targets reads as one link.
+  const destination = kind === 'editor' ? 'open in the editor' : 'open in the visualizer';
   const items = feeds
     .map(
       (feed) => `    <li>
       <a class="chip block h-full p-4" href="${escapeHtml(href(feed))}">
         <span class="font-semibold">${feed.name}</span>
         <span class="lede mt-1 block text-sm">${feed.descriptor}</span>
+        <span class="sr-only-desc">, ${destination}</span>
       </a>
     </li>`
     )

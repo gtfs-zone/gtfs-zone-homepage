@@ -18,7 +18,7 @@ export interface SectionCopy {
 export const copy = {
   hero: {
     wordmark: 'gtfs.zone',
-    heading: 'Tools for publishing transit data.',
+    heading: 'Simple tools for publishing transit data.',
     body: 'Open source software for building, checking, and publishing GTFS Schedule and GTFS Realtime feeds.',
     primaryCta: links.editor,
     secondaryCta: links.visualizer,
@@ -99,7 +99,7 @@ export const copy = {
   editor: {
     eyebrow: 'The editor',
     heading: 'Upload, inspect, fix, export.',
-    body: 'Runs in the browser. Nothing is uploaded anywhere, and there is no account.',
+    body: 'Runs in the browser. Nothing is uploaded anywhere, and there is no account. Fast enough for even the largest big-city feeds.',
     steps: ['Upload', 'Inspect', 'Fix', 'Export'],
     operationsHeading: 'Allowing your GTFS to power your operations.',
     operationsBody:
@@ -180,7 +180,7 @@ export const copy = {
       { icon: 'shield', title: 'Secure', body: 'Audited in the open.' },
       {
         icon: 'server',
-        title: 'Reliable',
+        title: 'Own your feed',
         body: 'Run it yourself. There is no vendor to lock you in.',
       },
       {
