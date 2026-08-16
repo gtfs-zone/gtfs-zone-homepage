@@ -1,3 +1,9 @@
+## v0.3.1 (2026-08-16)
+
+### Perf
+
+- **hero**: stop re-running the glow filter on every scroll frame
+
 ## v0.3.0 (2026-08-16)
 
 ### Feat
