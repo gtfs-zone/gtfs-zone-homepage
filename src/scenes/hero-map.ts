@@ -213,24 +213,23 @@ export class HeroMapScene implements Scene {
       this.svg.style('opacity', opacity.toFixed(3));
     }
 
-    // Draw-in reveal, staggered by route. Instant under reduced motion.
-    // Dash writes stop once every route is fully drawn; rewriting them each
-    // frame invalidates the whole path, glow underlay included.
+    // Routes desaturate slightly as text sections take over. Scoped to the crisp
+    // strokes: writing to the glow underlays would re-run the blur over
+    // near-fullscreen paths on every scroll frame.
     const routeOpacity = 1 - recede * 0.45;
-    const opacityChanged = Math.abs(routeOpacity - this.lastRouteOpacity) > 0.004;
-    if (opacityChanged) this.lastRouteOpacity = routeOpacity;
+    if (Math.abs(routeOpacity - this.lastRouteOpacity) > 0.004) {
+      this.lastRouteOpacity = routeOpacity;
+      this.routeGroup.selectAll('path.route').style('stroke-opacity', routeOpacity.toFixed(3));
+    }
 
-    if (!this.revealDone || opacityChanged) {
+    // Draw-in reveal, staggered by route. Instant under reduced motion. Dash
+    // writes stop once every route is fully drawn, glow underlay included.
+    if (!this.revealDone) {
       let allDrawn = true;
       this.routeGroup.selectAll<SVGPathElement, { id: string }>('path').each((d, i, nodes) => {
         const len = this.lengths.get(d.id) ?? 0;
         if (len === 0) return;
         const el = nodes[i];
-        if (opacityChanged) {
-          // Routes desaturate slightly as text sections take over.
-          el.style.strokeOpacity = routeOpacity.toFixed(3);
-        }
-        if (this.revealDone) return;
         const routeIndex = i % Math.max(1, this.lengths.size);
         const t = reducedMotion
           ? 1
@@ -264,7 +263,6 @@ export class HeroMapScene implements Scene {
       .attr('rx', variant.vehicleGlyph === 'capsule' ? size * 0.31 : 0)
       .attr('fill', (d) => d.color)
       .attr('fill-opacity', (d) => (d.dwelling ? 0.75 : 1))
-      .attr('filter', variant.glow ? 'url(#hero-glow)' : null)
       .attr(
         'transform',
         (d) => `translate(${d.x} ${d.y}) rotate(${d.bearing}) translate(${-size / 2} ${-size * 0.31})`
