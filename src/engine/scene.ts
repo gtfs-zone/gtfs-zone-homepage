@@ -12,10 +12,11 @@ export type VariantName = 'night' | 'blueprint';
 export interface VariantConfig {
   name: VariantName;
   vehicleGlyph: 'capsule' | 'square';
-  vehicleMotion: 'continuous' | 'snap';
   showGrid: boolean;
   glow: boolean;
   strokeWeightScale: number;
+  /** Opacity the background network recedes to once text sections take over. */
+  groundOpacity: number;
 }
 
 export interface SceneContext {

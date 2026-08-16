@@ -20,21 +20,22 @@ pnpm bake        # re-bake public/data/network-night.json from a GTFS feed
 
 ## Architecture
 
-- **`index.html`** — the only page. Head only; the body is inlined at build time.
-- **`src/page.html`** — the body markup. All copy is real text, so the page reads
+- **`index.html`**: the only page. Head only; the body is inlined at build time.
+- **`src/page.html`**: the body markup. All copy is real text, so the page reads
   with JS disabled.
-- **`vite.config.ts`** — a build plugin with three passes: inline `@include`,
-  expand `@feeds` chips from `src/content/feeds.ts`, then stamp
+- **`vite.config.ts`**: a build plugin with four passes: inline `@include`,
+  expand `@feeds` chips from `src/content/feeds.ts`, expand `@icon` glyphs from
+  `src/content/icons.ts`, then stamp
   `target="_blank" rel="noopener noreferrer"` on every external anchor and **fail
   the build** if one escapes.
-- **`src/content/links.ts`** — the canonical URL table. `copy.ts` imports its
+- **`src/content/links.ts`**: the canonical URL table. `copy.ts` imports its
   hrefs from there. Never hardcode a product URL elsewhere.
-- **`src/engine/`** — one rAF ticker, a scroll store, section progress, and the
+- **`src/engine/`**: one rAF ticker, a scroll store, section progress, and the
   scene registry.
-- **`src/scenes/`** — one file per scene. `render(p)` must be idempotent and
+- **`src/scenes/`**: one file per scene. `render(p)` must be idempotent and
   depend only on `p`.
-- **`src/net/`** — geometry sources and the vehicle sim.
-- **`src/theme/`** — palette token reader and the theme controller.
+- **`src/net/`**: geometry sources and the vehicle sim.
+- **`src/theme/`**: palette token reader and the theme controller.
 
 ## Themes
 
@@ -59,6 +60,7 @@ give it a working `destroy()`.
 - Do not add a second HTML entry point without a reason; the single-page shape is
   deliberate.
 - Never add Co-Authored-By trailers to commit messages.
+- No m-dashes, in page copy, comments, or docs. Use a colon or a semicolon.
 
 ## Releasing
 

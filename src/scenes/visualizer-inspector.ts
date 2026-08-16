@@ -195,7 +195,6 @@ export class VisualizerInspectorScene implements Scene {
 
     const states = simulate(this.ctx.network, this.fleet, {
       elapsed: reducedMotion ? 0 : p.elapsed,
-      motion: variant.vehicleMotion,
       frozen: reducedMotion,
     });
     const placed = states.map((s) => {

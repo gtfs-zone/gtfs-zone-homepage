@@ -17,6 +17,11 @@ const FRAME_Y = [22, 170, 318];
 const BAR_H = 28;
 const MAP_H = FRAME.h - BAR_H;
 const PACKETS_PER_SPOKE = 3;
+// Fraction of the network's full extent the frames show. The frames are small,
+// so they show the dense core rather than the whole metro area.
+const CROP = 0.34;
+// Grid resolution used to locate that core.
+const DENSITY_CELLS = 24;
 
 export class PublishScene implements Scene {
   private ctx!: SceneContext;
@@ -200,12 +205,13 @@ export class PublishScene implements Scene {
       .attr('rx', variant.vehicleGlyph === 'capsule' ? 3.5 : 0)
       .attr('fill', palette.accent);
 
-    this.fleet = buildFleet(ctx.network, 1, 11);
+    // Two per route, since the crop only shows part of each line.
+    this.fleet = buildFleet(ctx.network, 2, 11);
   }
 
   resize(): void {
-    // Fit the shared network into one frame's map area. The instances handle the
-    // other two, so the geometry is computed once.
+    // Fit a crop of the shared network into one frame's map area. The instances
+    // handle the other two, so the geometry is computed once.
     const routes = this.ctx.network.routes();
     let minX = Infinity;
     let minY = Infinity;
@@ -221,13 +227,57 @@ export class PublishScene implements Scene {
     }
     const spanX = Math.max(1, maxX - minX);
     const spanY = Math.max(1, maxY - minY);
-    const pad = 12;
-    const k = Math.min((FRAME.w - pad * 2) / spanX, (MAP_H - pad * 2) / spanY);
-    const ox = FRAME.x + (FRAME.w - spanX * k) / 2;
-    const oy = FRAME_Y[0] + BAR_H + (MAP_H - spanY * k) / 2;
-    this.transform = ([x, y]) => [ox + (x - minX) * k, oy + (y - minY) * k];
+
+    // Center the crop on the densest part of the network, which is downtown.
+    const [cx, cy] = this.denseCenter(minX, minY, spanX, spanY);
+    // The crop takes the frame's aspect, so the scale is a plain width fit and
+    // nothing spills past the clip.
+    const cropX = spanX * CROP;
+    const cropY = cropX * (MAP_H / FRAME.w);
+    const left = Math.min(Math.max(cx - cropX / 2, minX), Math.max(minX, maxX - cropX));
+    const top = Math.min(Math.max(cy - cropY / 2, minY), Math.max(minY, maxY - cropY));
+
+    const k = FRAME.w / cropX;
+    const ox = FRAME.x;
+    const oy = FRAME_Y[0] + BAR_H;
+    this.transform = ([x, y]) => [ox + (x - left) * k, oy + (y - top) * k];
 
     this.drawMap();
+  }
+
+  // Bin the stops onto a coarse grid and return the center of the heaviest
+  // 3x3 neighborhood, so a single busy cell cannot pull the crop off center.
+  private denseCenter(minX: number, minY: number, spanX: number, spanY: number): [number, number] {
+    const n = DENSITY_CELLS;
+    const counts = new Float64Array(n * n);
+    for (const s of this.ctx.network.stops()) {
+      const gx = Math.min(n - 1, Math.max(0, Math.floor(((s.x - minX) / spanX) * n)));
+      const gy = Math.min(n - 1, Math.max(0, Math.floor(((s.y - minY) / spanY) * n)));
+      counts[gy * n + gx] += 1;
+    }
+
+    let best = -1;
+    let bx = n / 2;
+    let by = n / 2;
+    for (let y = 0; y < n; y++) {
+      for (let x = 0; x < n; x++) {
+        let sum = 0;
+        for (let dy = -1; dy <= 1; dy++) {
+          for (let dx = -1; dx <= 1; dx++) {
+            const nx = x + dx;
+            const ny = y + dy;
+            if (nx < 0 || ny < 0 || nx >= n || ny >= n) continue;
+            sum += counts[ny * n + nx];
+          }
+        }
+        if (sum > best) {
+          best = sum;
+          bx = x;
+          by = y;
+        }
+      }
+    }
+    return [minX + ((bx + 0.5) / n) * spanX, minY + ((by + 0.5) / n) * spanY];
   }
 
   private drawMap(): void {
@@ -258,7 +308,7 @@ export class PublishScene implements Scene {
       .attr('class', 'pb-stop')
       .attr('cx', (d) => this.transform([d.x, d.y])[0])
       .attr('cy', (d) => this.transform([d.x, d.y])[1])
-      .attr('r', 1.6)
+      .attr('r', 2.4)
       .attr('fill', palette.inkMuted);
   }
 
@@ -283,7 +333,6 @@ export class PublishScene implements Scene {
     // The same vehicles, drawn once and shown in all three frames at once.
     const states = simulate(this.ctx.network, this.fleet, {
       elapsed,
-      motion: this.ctx.variant.vehicleMotion,
       frozen: this.ctx.reducedMotion,
     });
     this.map

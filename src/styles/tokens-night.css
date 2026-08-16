@@ -1,5 +1,8 @@
 /* Dark theme tokens. Selected by the moon toggle, or by system preference. */
 [data-theme='night'] {
+  /* Form controls and scrollbars follow the toggle, not the OS. */
+  color-scheme: dark;
+
   --bg: #06080a;
   --bg-elevated: #0e1319;
   --ink: #e8eef2;

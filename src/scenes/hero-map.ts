@@ -10,9 +10,19 @@ import { buildFleet, simulate, type Vehicle } from '../net/vehicle-sim';
 
 const REVEAL_SECONDS = 1.2;
 const ROUTE_STAGGER = 0.18;
-// The hero zooms to 1.15. The layer is rendered that much larger and scaled
-// down toward 1, so the compositor never has to re-raster at a bigger scale.
-const OVERSCAN = 1.15;
+// The zoom keeps climbing past the hero, over ZOOM_SPAN viewports of scroll, so
+// the network reads as receding rather than as a layer being switched off. The
+// span ends where the fade below ends, so the descent settles with the ground.
+const ZOOM_MAX = 1.3;
+const ZOOM_SPAN = 1.05;
+// The layer is rendered ZOOM_MAX larger and scaled down toward 1, so the
+// compositor never has to re-raster at a bigger scale.
+const OVERSCAN = ZOOM_MAX;
+// Window on the zoom curve over which the network fades to its ground opacity.
+// Its ends are ~0.35 and 1.05 viewports of scroll, so the ground is already dark
+// by the time the "What is GTFS?" section is in view.
+const FADE_IN = 0.56;
+const FADE_OUT = 1;
 
 export class HeroMapScene implements Scene {
   private ctx!: SceneContext;
@@ -173,21 +183,25 @@ export class HeroMapScene implements Scene {
   render(p: SceneProgress): void {
     const { variant, palette, reducedMotion } = this.ctx;
 
-    // Hero scrub: one viewport of scroll, descending into the network. Driven
-    // off the damped scroll position so wheel notches do not land as jumps.
+    // Descent into the network. Eased out so the hero's first viewport moves at
+    // the rate it always did, then keeps drifting deeper. Driven off the damped
+    // scroll position so wheel notches do not land as jumps.
     const y = scrollState.ySmooth;
-    const heroP = clamp01(y / Math.max(1, scrollState.viewport));
-    const scale = (1 + heroP * 0.15) / OVERSCAN;
-    const drift = -heroP * 60 * OVERSCAN;
+    const u = clamp01(y / Math.max(1, scrollState.viewport * ZOOM_SPAN));
+    const zoomP = 1 - (1 - u) * (1 - u);
+    const scale = (1 + zoomP * (ZOOM_MAX - 1)) / OVERSCAN;
+    // Parallax stays inside the oversized layer's margin so no edge shows.
+    const drift = -zoomP * (this.height / OVERSCAN) * ((OVERSCAN - 1) / 2) * 0.9;
     const transform = `scale(${scale.toFixed(4)}) translateY(${drift.toFixed(2)}px)`;
     if (transform !== this.lastTransform) {
       this.lastTransform = transform;
       this.svg.style('transform', transform);
     }
 
-    // Past the hero the network recedes and becomes the page's ground.
-    const recede = clamp01((y - scrollState.viewport * 0.6) / (scrollState.viewport * 0.8));
-    const bodyOpacity = 1 - recede * 0.72;
+    // The fade rides the same curve as the zoom, so the network recedes into the
+    // distance instead of switching off, and it settles at the variant's ground.
+    const recede = clamp01((zoomP - FADE_IN) / (FADE_OUT - FADE_IN));
+    const bodyOpacity = 1 - recede * (1 - variant.groundOpacity);
 
     // The last section slows and dims the network to a stop.
     const tail = clamp01(
@@ -202,7 +216,7 @@ export class HeroMapScene implements Scene {
     // Draw-in reveal, staggered by route. Instant under reduced motion.
     // Dash writes stop once every route is fully drawn; rewriting them each
     // frame invalidates the whole path, glow underlay included.
-    const routeOpacity = 1 - recede * 0.25;
+    const routeOpacity = 1 - recede * 0.45;
     const opacityChanged = Math.abs(routeOpacity - this.lastRouteOpacity) > 0.004;
     if (opacityChanged) this.lastRouteOpacity = routeOpacity;
 
@@ -237,7 +251,6 @@ export class HeroMapScene implements Scene {
     const elapsed = reducedMotion ? 0 : Math.max(0, p.elapsed - REVEAL_SECONDS * 0.4);
     const states = simulate(this.ctx.network, this.fleet, {
       elapsed: elapsed * (1 - tail),
-      motion: variant.vehicleMotion,
       frozen: reducedMotion,
     });
 

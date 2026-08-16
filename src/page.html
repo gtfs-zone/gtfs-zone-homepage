@@ -63,29 +63,41 @@
         <a class="link" href="https://gtfs.org">Learn more at gtfs.org</a>
       </p>
       <dl class="mt-10 grid gap-6 sm:grid-cols-2">
-        <div>
-          <dt class="font-semibold">Improved rider experience</dt>
-          <dd class="lede mt-1 text-sm">
-            Accurate schedules and real-time updates, so riders wait less and decide better.
-          </dd>
+        <div class="flex gap-3">
+          <!-- @icon rider-experience -->
+          <div>
+            <dt class="font-semibold">Improved rider experience</dt>
+            <dd class="lede mt-1 text-sm">
+              Accurate schedules and real-time updates, so riders wait less and decide better.
+            </dd>
+          </div>
         </div>
-        <div>
-          <dt class="font-semibold">Global reach</dt>
-          <dd class="lede mt-1 text-sm">
-            Consistent data across agencies and regions makes multi-agency trips work.
-          </dd>
+        <div class="flex gap-3">
+          <!-- @icon globe -->
+          <div>
+            <dt class="font-semibold">Global reach</dt>
+            <dd class="lede mt-1 text-sm">
+              Consistent data across agencies and regions makes multi-agency trips work.
+            </dd>
+          </div>
         </div>
-        <div>
-          <dt class="font-semibold">Simple to use</dt>
-          <dd class="lede mt-1 text-sm">
-            A plain data structure, easy to produce and to consume.
-          </dd>
+        <div class="flex gap-3">
+          <!-- @icon data-structure -->
+          <div>
+            <dt class="font-semibold">Simple to use</dt>
+            <dd class="lede mt-1 text-sm">
+              A plain data structure, easy to produce and to consume.
+            </dd>
+          </div>
         </div>
-        <div>
-          <dt class="font-semibold">Open source community</dt>
-          <dd class="lede mt-1 text-sm">
-            The standard keeps evolving through community collaboration.
-          </dd>
+        <div class="flex gap-3">
+          <!-- @icon people -->
+          <div>
+            <dt class="font-semibold">Open source community</dt>
+            <dd class="lede mt-1 text-sm">
+              The standard keeps evolving through community collaboration.
+            </dd>
+          </div>
         </div>
       </dl>
     </div>
@@ -105,27 +117,42 @@
             already reads.
           </p>
           <ul class="mt-6 space-y-3">
-            <li>
-              <span class="font-semibold">Routes and stops</span>
-              <span class="lede"> &mdash; exactly where to catch the bus or the train.</span>
+            <li class="flex gap-3">
+              <!-- @icon routes-stops -->
+              <div>
+                <span class="font-semibold">Routes and stops:</span>
+                <span class="lede"> exactly where to catch the bus or the train.</span>
+              </div>
             </li>
-            <li>
-              <span class="font-semibold">Schedules and frequencies</span>
-              <span class="lede"> &mdash; clear timetables riders can plan against.</span>
+            <li class="flex gap-3">
+              <!-- @icon schedule -->
+              <div>
+                <span class="font-semibold">Schedules and frequencies:</span>
+                <span class="lede"> clear timetables riders can plan against.</span>
+              </div>
             </li>
-            <li>
-              <span class="font-semibold">Fares</span>
-              <span class="lede"> &mdash; journey costs shown upfront in apps.</span>
+            <li class="flex gap-3">
+              <!-- @icon fares -->
+              <div>
+                <span class="font-semibold">Fares:</span>
+                <span class="lede"> journey costs shown upfront in apps.</span>
+              </div>
             </li>
-            <li>
-              <span class="font-semibold">Flexible services</span>
-              <span class="lede"> &mdash; demand-responsive transportation.</span>
+            <li class="flex gap-3">
+              <!-- @icon flexible -->
+              <div>
+                <span class="font-semibold">Flexible services:</span>
+                <span class="lede"> demand-responsive transportation.</span>
+              </div>
             </li>
-            <li>
-              <span class="font-semibold">Pathways</span>
-              <span class="lede">
-                &mdash; station interiors, down to which elevator reaches which platform.</span
-              >
+            <li class="flex gap-3">
+              <!-- @icon pathways -->
+              <div>
+                <span class="font-semibold">Pathways:</span>
+                <span class="lede">
+                  station interiors, down to which elevator reaches which platform.</span
+                >
+              </div>
             </li>
           </ul>
           <p class="mt-8">
@@ -152,24 +179,33 @@
             GTFS Realtime covers the parts of transit that change during the day.
           </p>
           <ul class="mt-6 space-y-3">
-            <li>
-              <span class="font-semibold">Vehicle positions</span>
-              <span class="lede">
-                &mdash; where the vehicle actually is right now, so nobody stands at a stop
-                wondering.</span
-              >
+            <li class="flex gap-3">
+              <!-- @icon vehicle-position -->
+              <div>
+                <span class="font-semibold">Vehicle positions:</span>
+                <span class="lede">
+                  where the vehicle actually is right now, so nobody stands at a stop
+                  wondering.</span
+                >
+              </div>
             </li>
-            <li>
-              <span class="font-semibold">Trip updates</span>
-              <span class="lede">
-                &mdash; a more accurate arrival time, so connections are not missed.</span
-              >
+            <li class="flex gap-3">
+              <!-- @icon trip-update -->
+              <div>
+                <span class="font-semibold">Trip updates:</span>
+                <span class="lede">
+                  a more accurate arrival time, so connections are not missed.</span
+                >
+              </div>
             </li>
-            <li>
-              <span class="font-semibold">Service alerts</span>
-              <span class="lede">
-                &mdash; notice of disruptions on the network, in time to change plans.</span
-              >
+            <li class="flex gap-3">
+              <!-- @icon service-alert -->
+              <div>
+                <span class="font-semibold">Service alerts:</span>
+                <span class="lede">
+                  notice of disruptions on the network, in time to change plans.</span
+                >
+              </div>
             </li>
           </ul>
           <p class="mt-8">
@@ -183,21 +219,37 @@
     </div>
   </section>
 
-  <!-- Section 4: the editor -->
-  <section id="editor" class="section py-32">
+  <!-- Section 4: the editor, page one. Pinned, so the four-act flow scrubs
+       while the graphic is held in the middle of the screen. -->
+  <section id="editor" class="section pin-track pin-track-long">
+    <div class="pin">
+      <div class="mx-auto w-full max-w-3xl px-6">
+        <p class="eyebrow">The editor</p>
+        <h2 class="mt-4 text-2xl md:text-4xl font-semibold tracking-tight">
+          Upload, inspect, fix, export.
+        </h2>
+        <p class="lede mt-4">
+          Runs in the browser. Nothing is uploaded anywhere, and there is no account.
+        </p>
+        <div class="mt-8" data-scene="editor-cta"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 4b: the editor, page two -->
+  <section id="editor-operations" class="section py-32">
     <div class="mx-auto w-full max-w-4xl px-6">
       <div class="reveal">
         <p class="eyebrow">The editor</p>
         <h2 class="mt-4 text-2xl md:text-4xl font-semibold tracking-tight">
-          The Swiss army knife of GTFS.
+          Allowing your GTFS to power your operations.
         </h2>
         <p class="lede mt-4">
-          Upload a GTFS file, find what is broken, fix it, export it back. Runs in the browser.
-          Nothing is uploaded anywhere, and there is no account.
+          The Swiss army knife of GTFS: everything needed to keep a feed accurate as the service
+          it describes keeps changing.
         </p>
       </div>
       <div class="mt-10" data-scene="editor-tools"></div>
-      <div class="mt-6" data-scene="editor-cta" data-scene-track="self"></div>
       <div class="mt-10">
         <a class="btn btn-primary btn-lg" href="https://edit.gtfs.zone">Open the editor</a>
         <p class="lede mt-8 text-sm">Or open a real feed straight away</p>
@@ -219,13 +271,25 @@
           updates, and service alerts against the schedule they claim to follow. Any agency&rsquo;s
           feed, not just ours. Nothing to install.
         </p>
-        <ul class="lede mt-6 list-disc space-y-2 pl-5">
-          <li>Vehicles on a live map, matched to their route and trip.</li>
-          <li>Trip updates read against the static schedule.</li>
-          <li>Service alerts, with the entities they affect.</li>
-          <li>
-            A catalog of ready-to-load example feeds, and a shareable link that reproduces a whole
-            session.
+        <ul class="lede mt-6 space-y-3">
+          <li class="flex gap-3">
+            <!-- @icon map-vehicles -->
+            <div>Vehicles on a live map, matched to their route and trip.</div>
+          </li>
+          <li class="flex gap-3">
+            <!-- @icon trip-update -->
+            <div>Trip updates read against the static schedule.</div>
+          </li>
+          <li class="flex gap-3">
+            <!-- @icon service-alert -->
+            <div>Service alerts, with the entities they affect.</div>
+          </li>
+          <li class="flex gap-3">
+            <!-- @icon catalog -->
+            <div>
+              A catalog of ready-to-load example feeds, and a shareable link that reproduces a whole
+              session.
+            </div>
           </li>
         </ul>
       </div>
@@ -249,36 +313,59 @@
           </h2>
           <p class="lede mt-4">
             <span class="mono">manage.rt.gtfs.zone</span> is where an agency runs its feed: define
-            feeds, add drivers, track vehicles, and publish service alerts. The public GTFS-RT
+            feeds, register trackers, watch vehicles, and publish service alerts. The public GTFS-RT
             endpoints update from it directly.
           </p>
           <ul class="mt-6 space-y-3 text-sm">
-            <li>
-              <span class="font-semibold">Feeds</span>
-              <span class="lede">
-                &mdash; one agency, one or many feeds, each with its static source and its public
-                endpoints.</span
-              >
+            <li class="flex gap-3">
+              <!-- @icon feeds -->
+              <div>
+                <span class="font-semibold">Feeds:</span>
+                <span class="lede">
+                  one agency, one or many feeds, each with its static source and its public
+                  endpoints.</span
+                >
+              </div>
             </li>
-            <li>
-              <span class="font-semibold">Service alerts</span>
-              <span class="lede">
-                &mdash; header, description, cause, effect, severity, active period, and the routes
-                or stops affected. Published to the alerts feed.</span
-              >
+            <li class="flex gap-3">
+              <!-- @icon service-alert -->
+              <div>
+                <span class="font-semibold">Service alerts:</span>
+                <span class="lede">
+                  header, description, cause, effect, severity, active period, and the
+                  routes or stops affected. Published to the alerts feed.</span
+                >
+              </div>
             </li>
-            <li>
-              <span class="font-semibold">Vehicle tracking</span>
-              <span class="lede">
-                &mdash; drivers with their own credentials, positions arriving from a phone or a
-                tracker and served as vehicle positions.</span
-              >
+            <li class="flex gap-3">
+              <!-- @icon vehicle-tracking -->
+              <div>
+                <span class="font-semibold">Vehicle tracking:</span>
+                <span class="lede">
+                  one tracker per vehicle, provisioned by scanning a QR code. Positions arrive
+                  from a phone or a GPS unit and are served as vehicle positions.</span
+                >
+              </div>
             </li>
-            <li>
-              <span class="font-semibold">Trip updates</span>
-              <span class="lede">
-                &mdash; delay against the scheduled trip, derived from those positions.</span
-              >
+            <li class="flex gap-3">
+              <!-- @icon trip-update -->
+              <div>
+                <span class="font-semibold">Trip updates:</span>
+                <span class="lede">
+                  delay against the scheduled trip, derived from those positions. A tracker can be
+                  tied to its trip by a day and time rule, so the match happens on the server.</span
+                >
+              </div>
+            </li>
+            <li class="flex gap-3">
+              <!-- @icon people -->
+              <div>
+                <span class="font-semibold">Shared feeds:</span>
+                <span class="lede">
+                  hand a colleague a feed by email address. They sign in as themselves and see the
+                  same feeds, trackers, and alerts.</span
+                >
+              </div>
             </li>
           </ul>
           <div class="mt-8">
@@ -289,20 +376,30 @@
           <div data-scene="alert-broadcast"></div>
           <div class="mt-6">
             <p class="eyebrow">Tracking hardware</p>
-            <ul class="lede mt-3 space-y-2 text-sm">
-              <li>
-                Built on <a class="link" href="https://www.traccar.org/">Traccar</a>, the open source
-                GPS tracking platform.
+            <ul class="lede mt-3 space-y-3 text-sm">
+              <li class="flex gap-3">
+                <!-- @icon satellite -->
+                <div>
+                  Built on <a class="link" href="https://www.traccar.org/">Traccar</a>, the open
+                  source GPS tracking platform.
+                </div>
               </li>
-              <li>
-                Compatible with a vast array of GPS trackers, from low-cost units to premium brands
-                &mdash;
-                <a class="link" href="https://www.traccar.org/devices/"
-                  >see the supported device list</a
-                >.
+              <li class="flex gap-3">
+                <!-- @icon tracker -->
+                <div>
+                  Compatible with a vast array of GPS trackers, from low-cost units to premium
+                  brands;
+                  <a class="link" href="https://www.traccar.org/devices/"
+                    >see the supported device list</a
+                  >.
+                </div>
               </li>
-              <li>
-                A driver&rsquo;s phone works too, so an agency can start with no hardware at all.
+              <li class="flex gap-3">
+                <!-- @icon phone -->
+                <div>
+                  A phone running the Traccar Client app works too, so an agency can start with no
+                  hardware at all.
+                </div>
               </li>
             </ul>
           </div>
@@ -324,6 +421,13 @@
         </p>
       </div>
       <div class="mt-10" data-scene="publish"></div>
+      <p class="eyebrow mt-10">Where the feed ends up</p>
+      <ul class="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+        <li><a class="link" href="https://www.google.com/maps">Google Maps</a></li>
+        <li><a class="link" href="https://maps.apple.com">Apple Maps</a></li>
+        <li><a class="link" href="https://transitapp.com">Transit</a></li>
+        <li><a class="link" href="https://motis-project.de">Motis</a></li>
+      </ul>
     </div>
   </section>
 
