@@ -32,18 +32,22 @@ export const copy = {
     // gtfs.org lists six reasons; these are the four that do not overlap.
     reasons: [
       {
+        icon: 'rider-experience',
         title: 'Improved rider experience',
         body: 'Accurate schedules and real-time updates, so riders wait less and decide better.',
       },
       {
+        icon: 'globe',
         title: 'Global reach',
         body: 'Consistent data across agencies and regions makes multi-agency trips work.',
       },
       {
+        icon: 'data-structure',
         title: 'Simple to use',
         body: 'A plain data structure, easy to produce and to consume.',
       },
       {
+        icon: 'people',
         title: 'Open source community',
         body: 'The standard keeps evolving through community collaboration.',
       },
@@ -91,11 +95,15 @@ export const copy = {
     ],
     link: links.realtimeReference,
   },
+  // The editor runs over two page-height sections: the flow, then the toolset.
   editor: {
     eyebrow: 'The editor',
-    heading: 'The Swiss army knife of GTFS.',
-    body: 'Upload a GTFS file, find what is broken, fix it, export it back. Runs in the browser. Nothing is uploaded anywhere, and there is no account.',
+    heading: 'Upload, inspect, fix, export.',
+    body: 'Runs in the browser. Nothing is uploaded anywhere, and there is no account.',
     steps: ['Upload', 'Inspect', 'Fix', 'Export'],
+    operationsHeading: 'Allowing your GTFS to power your operations.',
+    operationsBody:
+      'The Swiss army knife of GTFS: everything needed to keep a feed accurate as the service it describes keeps changing.',
     // Each blade names a capability confirmed in coloring-book: timetable-*.ts and
     // editable-table.ts, route-*.ts, map-controller.ts and stop-view-controller.ts,
     // shapes-manager.ts, gtfs-validator.ts.

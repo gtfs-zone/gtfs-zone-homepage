@@ -11,16 +11,18 @@ import { buildFleet, simulate, type Vehicle } from '../net/vehicle-sim';
 const REVEAL_SECONDS = 1.2;
 const ROUTE_STAGGER = 0.18;
 // The zoom keeps climbing past the hero, over ZOOM_SPAN viewports of scroll, so
-// the network reads as receding rather than as a layer being switched off.
+// the network reads as receding rather than as a layer being switched off. The
+// span ends where the fade below ends, so the descent settles with the ground.
 const ZOOM_MAX = 1.3;
-const ZOOM_SPAN = 4;
+const ZOOM_SPAN = 1.05;
 // The layer is rendered ZOOM_MAX larger and scaled down toward 1, so the
 // compositor never has to re-raster at a bigger scale.
 const OVERSCAN = ZOOM_MAX;
 // Window on the zoom curve over which the network fades to its ground opacity.
-// Its ends are ~0.6 and ~1.6 viewports of scroll.
-const FADE_IN = 0.28;
-const FADE_OUT = 0.64;
+// Its ends are ~0.35 and 1.05 viewports of scroll, so the ground is already dark
+// by the time the "What is GTFS?" section is in view.
+const FADE_IN = 0.56;
+const FADE_OUT = 1;
 
 export class HeroMapScene implements Scene {
   private ctx!: SceneContext;
@@ -249,7 +251,6 @@ export class HeroMapScene implements Scene {
     const elapsed = reducedMotion ? 0 : Math.max(0, p.elapsed - REVEAL_SECONDS * 0.4);
     const states = simulate(this.ctx.network, this.fleet, {
       elapsed: elapsed * (1 - tail),
-      motion: variant.vehicleMotion,
       frozen: reducedMotion,
     });
 

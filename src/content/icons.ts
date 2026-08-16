@@ -6,6 +6,14 @@
 // markup lives here; the plugin writes the <svg> wrapper.
 
 export const icons: Record<string, string> = {
+  // What is GTFS
+  'rider-experience':
+    '<circle cx="9.5" cy="7.5" r="2.6"/><path d="M4 19a5.5 5.5 0 0 1 11 0"/><path d="M17.6 8.6a5 5 0 0 1 0 6.8M20.4 6a9 9 0 0 1 0 12"/>',
+  globe:
+    '<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17"/><path d="M12 3.5c2.3 2.4 3.5 5.3 3.5 8.5S14.3 18.1 12 20.5c-2.3-2.4-3.5-5.3-3.5-8.5S9.7 5.9 12 3.5Z"/>',
+  'data-structure':
+    '<rect x="3.5" y="5" width="17" height="14" rx="2"/><path d="M3.5 9.5h17"/><path d="M9.5 9.5V19"/>',
+
   // Schedule
   'routes-stops':
     '<path d="M4 17.5c4.5 0 4-11 8.5-11S20 11 20 11"/><circle cx="4" cy="17.5" r="1.8"/><circle cx="20" cy="11" r="1.8"/>',
