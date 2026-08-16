@@ -13,7 +13,6 @@ const VARIANTS: Record<ThemeName, VariantConfig> = {
   night: {
     name: 'night',
     vehicleGlyph: 'capsule',
-    vehicleMotion: 'continuous',
     showGrid: false,
     glow: true,
     strokeWeightScale: 1,
@@ -22,7 +21,6 @@ const VARIANTS: Record<ThemeName, VariantConfig> = {
   light: {
     name: 'blueprint',
     vehicleGlyph: 'square',
-    vehicleMotion: 'snap',
     showGrid: true,
     glow: false,
     strokeWeightScale: 1,

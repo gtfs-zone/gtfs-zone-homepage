@@ -69,7 +69,6 @@ function dwellEase(t: number, stops: number): { t: number; dwelling: boolean } {
 
 export interface SimOptions {
   elapsed: number;
-  motion: 'continuous' | 'snap';
   frozen: boolean; // reduced motion: place at t=0 and hold
 }
 
@@ -81,18 +80,7 @@ export function simulate(
   const out: VehicleState[] = [];
   for (const v of fleet) {
     const raw = opts.frozen ? v.phase : (v.phase + opts.elapsed * v.speed) % 1;
-    let t: number;
-    let dwelling = false;
-
-    if (opts.motion === 'snap') {
-      // Blueprint vehicles jump station to station rather than gliding.
-      t = Math.floor(raw * STOP_COUNT) / STOP_COUNT;
-      dwelling = true;
-    } else {
-      const eased = dwellEase(raw, STOP_COUNT);
-      t = eased.t;
-      dwelling = eased.dwelling;
-    }
+    const { t, dwelling } = dwellEase(raw, STOP_COUNT);
 
     const travel = v.direction === 1 ? t : 1 - t;
     const [x, y] = source.pointAt(v.routeId, travel);

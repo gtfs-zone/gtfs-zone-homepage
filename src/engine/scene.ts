@@ -12,7 +12,6 @@ export type VariantName = 'night' | 'blueprint';
 export interface VariantConfig {
   name: VariantName;
   vehicleGlyph: 'capsule' | 'square';
-  vehicleMotion: 'continuous' | 'snap';
   showGrid: boolean;
   glow: boolean;
   strokeWeightScale: number;

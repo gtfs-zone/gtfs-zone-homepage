@@ -437,7 +437,6 @@ export class RealtimePhoneScene implements Scene {
     // Beat 1: vehicle positions on the phone map.
     const states = simulate(this.ctx.network, this.fleet, {
       elapsed: reducedMotion ? 0 : p.elapsed,
-      motion: this.ctx.variant.vehicleMotion,
       frozen: reducedMotion,
     });
     const placed = states.map((s) => {
