@@ -1,3 +1,9 @@
+## v0.5.1 (2026-08-16)
+
+### Perf
+
+- **hero**: drop the glow filter from the night variant
+
 ## v0.5.0 (2026-08-16)
 
 ### Feat
