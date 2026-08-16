@@ -17,6 +17,8 @@ const FRAME_Y = [22, 170, 318];
 const BAR_H = 28;
 const MAP_H = FRAME.h - BAR_H;
 const PACKETS_PER_SPOKE = 3;
+// Fraction of the fitted scale the network is drawn at.
+const FILL = 0.6;
 
 export class PublishScene implements Scene {
   private ctx!: SceneContext;
@@ -222,7 +224,11 @@ export class PublishScene implements Scene {
     const spanX = Math.max(1, maxX - minX);
     const spanY = Math.max(1, maxY - minY);
     const pad = 12;
-    const k = Math.min((FRAME.w - pad * 2) / spanX, (MAP_H - pad * 2) / spanY);
+    // Fitting the bbox edge to edge reads as noise at frame size. Backing the
+    // fitted scale off leaves air around the network so it reads as a map, and
+    // makes the stops and vehicles relatively larger, which is what keeps them
+    // legible.
+    const k = Math.min((FRAME.w - pad * 2) / spanX, (MAP_H - pad * 2) / spanY) * FILL;
     const ox = FRAME.x + (FRAME.w - spanX * k) / 2;
     const oy = FRAME_Y[0] + BAR_H + (MAP_H - spanY * k) / 2;
     this.transform = ([x, y]) => [ox + (x - minX) * k, oy + (y - minY) * k];
