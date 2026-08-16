@@ -1,4 +1,5 @@
 import { defineConfig, type Plugin } from 'vite';
+import { execSync } from 'child_process';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { editorLink, feeds, visualizerLink } from './src/content/feeds';
@@ -8,11 +9,12 @@ import { icons } from './src/content/icons';
 // are generated from feeds.ts so the editor list and the visualizer list cannot
 // drift from each other.
 //
-// Four passes, in order:
+// Five passes, in order:
 //   1. @include: inline the body markup
 //   2. @feeds:   expand the generated feed chip lists
 //   3. @icon:    expand a list glyph from icons.ts, so a mark is defined once
-//   4. new-tab:  stamp target/rel on every external anchor, then assert none
+//   4. @version: stamp the build version from git tags
+//   5. new-tab:  stamp target/rel on every external anchor, then assert none
 //                  were missed. This is what makes the rule unforgettable: no
 //                  author has to remember it per-anchor.
 
@@ -48,6 +50,30 @@ function icon(name: string): string {
   );
 }
 
+// Build version, read from git tags the same way the editor reads it. Exactly on
+// a tag gives the clean version; anywhere else appends the commit distance and
+// hash, so a page served off an untagged build says so.
+function buildVersion(): string {
+  const git = (cmd: string): string =>
+    execSync(cmd, { encoding: 'utf-8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+  try {
+    const described = git('git describe --tags --long --abbrev=7');
+    const parts = /^(.*)-(\d+)-g([0-9a-f]+)$/.exec(described);
+    if (!parts) return described.replace(/^v/, '');
+    const [, tag, distance, hash] = parts;
+    const clean = tag.replace(/^v/, '');
+    return distance === '0' ? clean : `${clean}-${distance}-g${hash}`;
+  } catch {
+    try {
+      return `0.0.0-dev.${git('git rev-parse --short HEAD')}`;
+    } catch {
+      return '0.0.0-development';
+    }
+  }
+}
+
+const version = buildVersion();
+
 function buildPage(): Plugin {
   return {
     name: 'build-page',
@@ -63,6 +89,8 @@ function buildPage(): Plugin {
         );
 
         out = out.replace(/<!--\s*@icon\s+([\w-]+)\s*-->/g, (_, name: string) => icon(name));
+
+        out = out.replace(/<!--\s*@version\s*-->/g, escapeHtml(version));
 
         out = out.replace(EXTERNAL_ANCHOR, (match, before: string, href: string, after: string) => {
           if (/\btarget=/.test(before + after)) return match;
