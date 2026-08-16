@@ -1,3 +1,9 @@
+## v0.5.3 (2026-08-16)
+
+### Fix
+
+- fix accessibility and better marketing terms
+
 ## v0.5.2 (2026-08-16)
 
 ### Fix
