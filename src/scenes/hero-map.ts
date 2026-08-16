@@ -80,7 +80,7 @@ export class HeroMapScene implements Scene {
     this.stopGroup = this.mapGroup.append('g');
     this.vehicleGroup = this.mapGroup.append('g');
 
-    this.fleet = buildFleet(ctx.network, ctx.variant.name === 'night' ? 3 : 2);
+    this.fleet = buildFleet(ctx.network, ctx.variant.fleetPerRoute);
   }
 
   resize(v: Viewport): void {
@@ -123,7 +123,7 @@ export class HeroMapScene implements Scene {
     const path = line<[number, number]>()
       .x((d) => d[0])
       .y((d) => d[1])
-      .curve(variant.name === 'night' ? curveCatmullRom.alpha(0.5) : curveLinear);
+      .curve(variant.smoothCurves ? curveCatmullRom.alpha(0.5) : curveLinear);
 
     const routes = this.ctx.network.routes();
     const weight = palette.strokeRoute * variant.strokeWeightScale;
@@ -270,7 +270,7 @@ export class HeroMapScene implements Scene {
 
     // Stops brighten as a vehicle approaches. Squared distances, and the fill is
     // only rewritten when a stop crosses a step, so most frames touch no stop.
-    if (variant.name === 'night') {
+    if (variant.stopLighting) {
       const radiusSq = 60 * 60;
       this.stopGroup.selectAll<SVGCircleElement, { x: number; y: number }>('circle').each((d, i, nodes) => {
         let nearestSq = Infinity;

@@ -95,6 +95,12 @@ body {
   will-change: transform, opacity;
 }
 
+/* Debug flag ?blur=0: isolates what the backdrop blur costs over a live SVG. */
+.no-backdrop .theme-toggle,
+.no-backdrop .plate {
+  backdrop-filter: none;
+}
+
 .plate {
   background: color-mix(in oklab, var(--bg) 82%, transparent);
   border: 1px solid var(--grid);

@@ -17,6 +17,12 @@ export interface VariantConfig {
   strokeWeightScale: number;
   /** Opacity the background network recedes to once text sections take over. */
   groundOpacity: number;
+  /** Vehicles simulated per route. */
+  fleetPerRoute: number;
+  /** Round the route geometry instead of drawing straight segments. */
+  smoothCurves: boolean;
+  /** Brighten stops as vehicles approach. */
+  stopLighting: boolean;
 }
 
 export interface SceneContext {
