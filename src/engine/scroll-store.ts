@@ -24,6 +24,10 @@ const SMOOTH_TAU = 0.075;
 let lastY = 0;
 let lastSample = 0;
 
+export function refreshLayout(): void {
+  readLayout();
+}
+
 function readLayout(): void {
   scrollState.height = document.documentElement.scrollHeight;
   scrollState.viewport = window.innerHeight;

@@ -74,20 +74,21 @@ body {
   justify-content: center;
 }
 
-/* Mobile stacks the side-by-side scenes, so the scrub distance shortens. */
+/* Mobile stacks the columns, which makes the pin taller than the viewport. A
+   sticky box taller than the viewport pins its top and never reveals its
+   bottom, so mobile drops the pin and scrolls the section normally. Scenes
+   there are driven by their own box, see SectionTracker. */
 @media (max-width: 767px) {
-  .pin-track {
-    height: 180vh;
-  }
-
+  .pin-track,
   .pin-track-long {
-    height: 220vh;
+    height: auto;
   }
 
   .pin {
+    position: static;
     height: auto;
-    min-height: 100vh;
     padding: 4rem 0;
+    display: block;
   }
 }
 

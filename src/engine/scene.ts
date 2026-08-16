@@ -3,7 +3,7 @@
 import type { NetworkSource } from '../net/network-source';
 import type { Palette } from '../theme/palette';
 import { onTick } from './ticker';
-import { initScrollStore, sampleScroll } from './scroll-store';
+import { initScrollStore, refreshLayout, sampleScroll } from './scroll-store';
 import { createSectionObserver, SectionTracker } from './section-progress';
 import { initViewport, onResizeViewport, prefersReducedMotion, viewport, type Viewport } from './viewport';
 
@@ -57,6 +57,8 @@ let observer: IntersectionObserver | null = null;
 let ctx: SceneContext | null = null;
 let stopTick: (() => void) | null = null;
 let stopResize: (() => void) | null = null;
+let layoutObserver: ResizeObserver | null = null;
+let remeasureQueued = false;
 // Window-level listeners are installed once and outlive a theme swap.
 let listenersInstalled = false;
 
@@ -70,9 +72,13 @@ export interface RegisterOptions {
 export function registerScene(root: HTMLElement, scene: Scene, opts: RegisterOptions = {}): void {
   if (!observer || !ctx) throw new Error('startEngine() must run before registerScene()');
   const section = opts.section ?? root.closest<HTMLElement>('.section') ?? root;
-  const tracker = new SectionTracker(section, observer);
+  // An explicit section means the caller picked the driving box itself.
+  const driver = opts.section ?? root;
+  const tracker = new SectionTracker(section, driver, observer);
   scene.mount(root, ctx);
   scene.resize?.(viewport);
+  // The scene's box only has a size once it is mounted.
+  tracker.measure();
   registrations.push({ scene, root, tracker, alwaysActive: opts.alwaysActive === true });
 }
 
@@ -92,6 +98,19 @@ export function startEngine(context: SceneContext): void {
       }
     }
   });
+
+  // Page height moves after mount as fonts and async geometry land, which shifts
+  // every cached rect below the change.
+  layoutObserver = new ResizeObserver(() => {
+    if (remeasureQueued) return;
+    remeasureQueued = true;
+    requestAnimationFrame(() => {
+      remeasureQueued = false;
+      refreshLayout();
+      for (const r of registrations) r.tracker.measure();
+    });
+  });
+  layoutObserver.observe(document.body);
 
   stopResize = onResizeViewport((v) => {
     for (const r of registrations) {
@@ -127,6 +146,9 @@ export function stopEngine(): void {
 
   observer?.disconnect();
   observer = null;
+  layoutObserver?.disconnect();
+  layoutObserver = null;
+  remeasureQueued = false;
 
   for (const r of registrations) {
     r.scene.destroy?.();
