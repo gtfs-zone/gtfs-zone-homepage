@@ -158,6 +158,8 @@ export const copy = {
     heading: 'Deliver to millions of pockets.',
     body: 'One feed reaches every major mapping app, and drops straight into your own site.',
     destinations: ['Google Maps / Apple Maps', 'Transit / Motis', 'Your website'],
+    destinationsLabel: 'Where the feed ends up',
+    destinationLinks: [links.googleMaps, links.appleMaps, links.transitApp, links.motis],
   },
   openSource: {
     eyebrow: 'Open source',

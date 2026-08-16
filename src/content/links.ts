@@ -38,6 +38,13 @@ export const links = {
     href: 'https://www.traccar.org/devices/',
   },
 
+  // Where a published feed ends up. Named, never drawn: no third-party logos
+  // anywhere on the page.
+  googleMaps: { label: 'Google Maps', href: 'https://www.google.com/maps' },
+  appleMaps: { label: 'Apple Maps', href: 'https://maps.apple.com' },
+  transitApp: { label: 'Transit', href: 'https://transitapp.com' },
+  motis: { label: 'Motis', href: 'https://motis-project.de' },
+
   source: { label: 'View the source', href: 'https://git.kcfam.us/gtfs.zone' },
 } as const satisfies Record<string, Link>;
 

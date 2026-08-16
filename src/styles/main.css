@@ -123,6 +123,16 @@ body {
   color: var(--accent);
 }
 
+/* Leading glyph on a term/description list item. The li is a flex row; this
+   holds the mark at its box size and lines it up with the first text line. */
+.list-glyph {
+  color: var(--accent);
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-top: 0.05rem;
+}
+
 .chip {
   border: 1px solid var(--grid);
   border-radius: var(--corner-radius);
