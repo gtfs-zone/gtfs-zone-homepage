@@ -48,6 +48,13 @@ export const links = {
   motis: { label: 'Motis', href: 'https://motis-project.de' },
 
   source: { label: 'View the source', href: 'https://git.kcfam.us/gtfs.zone' },
+
+  // Anonymous visitors are redirected to sign in before the new-issue form, so
+  // the contact address stays the channel that always works.
+  newIssue: {
+    label: 'Report a bug',
+    href: 'https://git.kcfam.us/gtfs.zone/landing-zone/issues/new',
+  },
 } as const satisfies Record<string, Link>;
 
 // Short footer labels. The full labels above are calls to action and read wrong
@@ -58,6 +65,7 @@ export const footerLinks: Link[] = [
   { label: 'Manager', href: links.manager.href },
   { label: 'Source', href: links.source.href },
   { label: 'gtfs.org', href: links.gtfs.href },
+  { label: 'Report a bug', href: links.newIssue.href },
 ];
 
 export const CONTACT_EMAIL = 'inquiry@gtfs.zone';

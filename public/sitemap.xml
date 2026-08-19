@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- The two apps live on their own hosts and ship their own sitemaps; these
+     cross-domain entries are the extra signal, and are only honored because
+     every host here is verified in Search Console. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://gtfs.zone/</loc>
+  </url>
+  <url>
+    <loc>https://edit.gtfs.zone/</loc>
+  </url>
+  <url>
+    <loc>https://viz.rt.gtfs.zone/</loc>
   </url>
 </urlset>

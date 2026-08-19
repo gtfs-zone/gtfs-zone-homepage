@@ -196,5 +196,7 @@ export const copy = {
     heading: 'Get in touch.',
     body: 'If you run transit and want your riders to see it, write to us.',
     email: CONTACT_EMAIL,
+    bugs: 'Found a bug?',
+    bugsLink: links.newIssue,
   },
 } as const;
