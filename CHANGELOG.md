@@ -1,3 +1,13 @@
+## v0.6.0 (2026-08-21)
+
+### Feat
+
+- **seo**: list both app hosts in the sitemap and name the bug tracker
+
+## v0.5.5 (2026-08-18)
+
+## v0.5.4 (2026-08-18)
+
 ## v0.5.3 (2026-08-16)
 
 ### Fix
