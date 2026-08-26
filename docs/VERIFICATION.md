@@ -5,7 +5,7 @@ so a future claim change can be re-checked against the same evidence.
 
 | Item | Status |
 |---|---|
-| Visualizer deep link | Scheme confirmed in the **deployed** `viz.rt.gtfs.zone` bundle. Every generated link round-trips through `URLSearchParams` back to the exact static URL, realtime triple, and cors flags |
+| Visualizer deep link | Scheme confirmed in the **deployed** `viz.rt.gtfs.zone` bundle. Every generated link round-trips through `URLSearchParams` back to the exact scheduled-feed URL, realtime triple, and cors flags. The `scheduled=` param name is the current one; viz still reads `static=` for old links |
 | Editor deep link | `#load=<url>` confirmed in the **deployed** `edit.gtfs.zone` bundle, not just the source |
 | CORS flags | Copied from `test-track/src/modules/examples.ts`: MBTA `s,r`, Amtrak `s,r`, Columbia County `r` (raw.githubusercontent.com needs no proxy) |
 | Public feed paths | Verified live: `https://rt.gtfs.zone/columbia-county/{vehicle_positions,trip_updates,service_alerts}.pb` |

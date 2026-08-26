@@ -3,13 +3,13 @@
 //
 // Both schemes are confirmed against the deployed builds, not just the source:
 //   editor      #load=<staticUrl>                      (coloring-book page-state-manager)
-//   visualizer  #static=…&rt_vp=…&rt_tu=…&rt_al=…&cors= (test-track feed-url)
+//   visualizer  #scheduled=…&rt_vp=…&rt_tu=…&rt_al=…&cors= (test-track feed-url)
 //
-// `cors` is a compact flag list: `s` proxies the static source, `r` proxies the
-// realtime sources. The per-feed values are copied from test-track's
+// `cors` is a compact flag list: `s` proxies the scheduled source, `r` proxies
+// the realtime sources. The per-feed values are copied from test-track's
 // examples.ts, which records which hosts actually send CORS headers.
-// raw.githubusercontent.com does, so Columbia County's static half is `s`-less;
-// cdn.mbta.com, content.amtrak.com and rt.gtfs.zone do not.
+// raw.githubusercontent.com does, so Columbia County's scheduled half is
+// `s`-less; cdn.mbta.com, content.amtrak.com and rt.gtfs.zone do not.
 
 export interface RealtimeTriple {
   vehiclePositions: string;
@@ -22,8 +22,8 @@ export interface FeedChip {
   descriptor: string;
   feedUrl: string;
   realtime: RealtimeTriple;
-  /** Proxy the static source. */
-  staticCors: boolean;
+  /** Proxy the scheduled source. */
+  scheduledCors: boolean;
   /** Proxy the realtime sources. */
   realtimeCors: boolean;
 }
@@ -50,7 +50,7 @@ export const feeds: FeedChip[] = [
       tripUpdates: 'https://cdn.mbta.com/realtime/TripUpdates.pb',
       serviceAlerts: 'https://cdn.mbta.com/realtime/Alerts.pb',
     },
-    staticCors: true,
+    scheduledCors: true,
     realtimeCors: true,
   },
   {
@@ -58,7 +58,7 @@ export const feeds: FeedChip[] = [
     descriptor: 'A national network, and a genuinely messy feed.',
     feedUrl: 'https://content.amtrak.com/content/gtfs/GTFS.zip',
     realtime: ours('amtrak'),
-    staticCors: true,
+    scheduledCors: true,
     realtimeCors: true,
   },
   {
@@ -67,7 +67,7 @@ export const feeds: FeedChip[] = [
     feedUrl:
       'https://raw.githubusercontent.com/columbia-county-ny-transit/gtfs-generator/refs/heads/main/columbia_county_gtfs.zip',
     realtime: ours('columbia-county'),
-    staticCors: false,
+    scheduledCors: false,
     realtimeCors: true,
   },
 ];
@@ -77,9 +77,9 @@ export function editorLink(feed: FeedChip): string {
 }
 
 export function visualizerLink(feed: FeedChip): string {
-  const cors = [feed.staticCors ? 's' : '', feed.realtimeCors ? 'r' : ''].filter(Boolean);
+  const cors = [feed.scheduledCors ? 's' : '', feed.realtimeCors ? 'r' : ''].filter(Boolean);
   const params = new URLSearchParams({
-    static: feed.feedUrl,
+    scheduled: feed.feedUrl,
     rt_vp: feed.realtime.vehiclePositions,
     rt_tu: feed.realtime.tripUpdates,
     rt_al: feed.realtime.serviceAlerts,

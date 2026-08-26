@@ -55,7 +55,7 @@ export const copy = {
   },
   scheduled: {
     eyebrow: 'GTFS Schedule',
-    heading: 'The foundation: static, rider-facing service information.',
+    heading: 'The foundation: the schedule riders plan their trips against.',
     body: 'GTFS Schedule describes the service an agency runs, in a form every major mapping app already reads.',
     features: [
       { title: 'Routes and stops', body: 'Exactly where to catch the bus or the train.' },
@@ -120,12 +120,12 @@ export const copy = {
   visualizer: {
     eyebrow: 'The visualizer',
     heading: 'Inspect any GTFS Realtime feed on a map.',
-    body: 'Point it at a static feed and its realtime endpoints and watch vehicle positions, trip updates, and service alerts against the schedule they claim to follow. Any agency’s feed, not just ours. Nothing to install.',
+    body: 'Point it at a scheduled feed and its realtime endpoints and watch vehicle positions, trip updates, and service alerts against the schedule they claim to follow. Any agency’s feed, not just ours. Nothing to install.',
     // Confirmed in test-track: pages/vehicle-page.ts, rt-index.ts, alerts.ts and
     // pages/alert-page.ts, examples.ts plus feed-catalog.ts and feed-url.ts.
     features: [
       'Vehicles on a live map, matched to their route and trip.',
-      'Trip updates read against the static schedule.',
+      'Trip updates read against the scheduled feed.',
       'Service alerts, with the entities they affect.',
       'A catalog of ready-to-load example feeds, and a shareable link that reproduces a whole session.',
     ],
@@ -139,7 +139,7 @@ export const copy = {
     features: [
       {
         title: 'Feeds',
-        body: 'One agency, one or many feeds, each with its static source and its public endpoints.',
+        body: 'One agency, one or many feeds, each with its scheduled source and its public endpoints.',
       },
       {
         title: 'Service alerts',
