@@ -9,7 +9,7 @@
  */
 
 import { readFile, writeFile } from 'node:fs/promises';
-import { resolve, dirname } from 'node:path';
+import { resolve, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import JSZip from 'jszip';
 import Papa from 'papaparse';
@@ -221,7 +221,12 @@ async function main(): Promise<void> {
     }))
     .filter((s) => Number.isFinite(s.lon) && Number.isFinite(s.lat));
 
-  const payload = { source, routes: outRoutes, stops: outStops };
+  // Local paths are reduced to the file name so no machine path is published
+  const payload = {
+    source: /^https?:/.test(source) ? source : basename(source),
+    routes: outRoutes,
+    stops: outStops,
+  };
   const json = JSON.stringify(payload);
   await writeFile(OUT, json);
 
