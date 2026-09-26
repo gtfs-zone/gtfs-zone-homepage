@@ -20,8 +20,8 @@ export const copy = {
     wordmark: 'gtfs.zone',
     heading: 'Simple, open source tools for transit data.',
     body: 'Built by riders and operators, for riders and operators.',
-    primaryCta: links.editor,
-    secondaryCta: links.visualizer,
+    primaryCta: links.feedMap,
+    secondaryCta: links.editor,
     scrollCue: 'Scroll',
   },
   whatIsGtfs: {

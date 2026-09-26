@@ -18,6 +18,7 @@ export interface Link {
 export const links = {
   editor: { label: 'Open the editor', href: 'https://edit.gtfs.zone' },
   visualizer: { label: 'Browse realtime feeds', href: 'https://viz.rt.gtfs.zone' },
+  feedMap: { label: 'Explore the feed map', href: 'https://list.gtfs.zone' },
   // Logged-out visitors get a 401, so the label says "sign in" rather than
   // promising a page they can look at.
   manager: { label: 'Sign in to the manager', href: 'https://manage.rt.gtfs.zone' },
@@ -62,6 +63,7 @@ export const links = {
 export const footerLinks: Link[] = [
   { label: 'Editor', href: links.editor.href },
   { label: 'Visualizer', href: links.visualizer.href },
+  { label: 'Feed map', href: links.feedMap.href },
   { label: 'Manager', href: links.manager.href },
   { label: 'Source', href: links.source.href },
   { label: 'gtfs.org', href: links.gtfs.href },

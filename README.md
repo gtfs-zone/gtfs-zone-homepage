@@ -38,7 +38,7 @@ Scenes bake palette values into DOM attributes when they mount, so a theme chang
 tears every scene down and remounts it (`stopEngine()` in `src/engine/scene.ts`).
 Window-level listeners are installed once and survive the swap.
 
-## The three products
+## The products
 
 The page treats the first two as peers, and links both everywhere.
 
@@ -47,6 +47,7 @@ The page treats the first two as peers, and links both everywhere.
 | Editor | `https://edit.gtfs.zone` | `coloring-book` |
 | Visualizer | `https://viz.rt.gtfs.zone` | `test-track` |
 | Manager | `https://manage.rt.gtfs.zone` | `cafe-car` |
+| Feed map | `https://list.gtfs.zone` | `globe-of-contents` |
 
 ## How it fits together
 
