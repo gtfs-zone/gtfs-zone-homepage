@@ -18,8 +18,8 @@ export interface SectionCopy {
 export const copy = {
   hero: {
     wordmark: 'gtfs.zone',
-    heading: 'Simple tools for publishing transit data.',
-    body: 'Open source software for building, checking, and publishing GTFS Schedule and GTFS Realtime feeds.',
+    heading: 'Simple, open source tools for transit data.',
+    body: 'Built by riders and operators, for riders and operators.',
     primaryCta: links.editor,
     secondaryCta: links.visualizer,
     scrollCue: 'Scroll',
