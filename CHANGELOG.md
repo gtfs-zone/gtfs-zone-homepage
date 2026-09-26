@@ -1,3 +1,14 @@
+## v0.8.0 (2026-09-27)
+
+### Feat
+
+- **seo**: GTFS in the title, structured data, and a PNG social card
+
+### Fix
+
+- **nginx**: return 404 for unknown paths instead of the homepage
+- **bake**: publish only the file name of a local feed source
+
 ## v0.7.0 (2026-09-27)
 
 ### Feat
