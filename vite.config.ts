@@ -4,17 +4,19 @@ import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { editorLink, feeds, visualizerLink } from './src/content/feeds';
 import { icons } from './src/content/icons';
+import { structuredData } from './src/content/structured-data';
 
 // The body markup lives in src/page.html and is inlined here, and the feed chips
 // are generated from feeds.ts so the editor list and the visualizer list cannot
 // drift from each other.
 //
-// Five passes, in order:
+// Six passes, in order:
 //   1. @include: inline the body markup
 //   2. @feeds:   expand the generated feed chip lists
 //   3. @icon:    expand a list glyph from icons.ts, so a mark is defined once
 //   4. @version: stamp the build version from git tags
-//   5. new-tab:  stamp target/rel on every external anchor, then assert none
+//   5. @jsonld:  emit the schema.org JSON-LD from structured-data.ts
+//   6. new-tab:  stamp target/rel on every external anchor, then assert none
 //                  were missed. This is what makes the rule unforgettable: no
 //                  author has to remember it per-anchor.
 
@@ -95,6 +97,13 @@ function buildPage(): Plugin {
         out = out.replace(/<!--\s*@icon\s+([\w-]+)\s*-->/g, (_, name: string) => icon(name));
 
         out = out.replace(/<!--\s*@version\s*-->/g, escapeHtml(version));
+
+        // `<` is escaped so no string in the data can close the script element.
+        out = out.replace(
+          /<!--\s*@jsonld\s*-->/g,
+          () =>
+            `<script type="application/ld+json">${JSON.stringify(structuredData).replace(/</g, '\\u003c')}</script>`
+        );
 
         out = out.replace(EXTERNAL_ANCHOR, (match, before: string, href: string, after: string) => {
           if (/\btarget=/.test(before + after)) return match;
