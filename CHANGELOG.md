@@ -1,3 +1,14 @@
+## v0.7.0 (2026-09-27)
+
+### Feat
+
+- link the feed map from the page
+
+### Refactor
+
+- **copy**: open source hero tagline and scheduled feed wording
+- **copy**: scheduled feed vocabulary and link param
+
 ## v0.6.0 (2026-08-21)
 
 ### Feat
