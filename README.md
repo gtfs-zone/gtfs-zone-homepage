@@ -46,7 +46,7 @@ The page treats the first two as peers, and links both everywhere.
 |---|---|---|
 | Editor | `https://edit.gtfs.zone` | `coloring-book` |
 | Visualizer | `https://viz.rt.gtfs.zone` | `test-track` |
-| Manager | `https://manage.rt.gtfs.zone` | `cafe-car` |
+| Manager | `https://manage.rt.gtfs.zone` | `yard-master` |
 | Feed map | `https://list.gtfs.zone` | `globe-of-contents` |
 
 ## How it fits together
@@ -89,14 +89,15 @@ nothing ships until a tag exists.
 
 ```
 cz bump          # updates package.json + CHANGELOG.md, commits, tags vX.Y.Z
-git push --follow-tags
+git push origin main --tags
+git push github main --tags
 ```
 
 `cz bump` refuses to run off `main`. The `v*` tag fires
-`.forgejo/workflows/build.yml`, which typechecks, builds, and copies `dist/` to
-`/sites/gtfs.zone`.
+`.forgejo/workflows/build.yml`, which typechecks, builds, pushes the image by
+digest and records that digest in `deploy-gtfs-rt/sites/kustomization.yaml`;
+ArgoCD rolls it out.
 
 ## History
 
-`docs/` holds the build and revision plans this page was written to, and
 `docs/VERIFICATION.md` records what was checked against the deployed products.

@@ -17,7 +17,7 @@
     "transit"
   ],
   "author": "gtfs.zone contributors",
-  "license": "MIT",
+  "license": "AGPL-3.0-or-later",
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
     "@types/d3-array": "^3.2.2",
