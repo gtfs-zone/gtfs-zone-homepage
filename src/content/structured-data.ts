@@ -27,7 +27,7 @@ export const structuredData = {
       url: SITE,
       logo: `${SITE}logo.svg`,
       email: CONTACT_EMAIL,
-      sameAs: [links.source.href, links.mirror.href],
+      sameAs: [links.source.href, links.github.href],
     },
     {
       '@type': 'WebApplication',

@@ -49,8 +49,8 @@ export const links = {
   motis: { label: 'Motis', href: 'https://motis-project.de' },
 
   source: { label: 'View the source', href: 'https://git.kcfam.us/gtfs.zone' },
-  // Read-only mirror; named in the structured data, not on the page.
-  mirror: { label: 'GitHub mirror', href: 'https://github.com/gtfs-zone' },
+  // Named in the structured data, not on the page.
+  github: { label: 'GitHub', href: 'https://github.com/gtfs-zone' },
 
   // Anonymous visitors are redirected to sign in before the new-issue form, so
   // the contact address stays the channel that always works.
