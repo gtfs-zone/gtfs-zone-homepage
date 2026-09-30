@@ -9,7 +9,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "bake": "tsx scripts/bake-network.ts"
+    "bake": "tsx scripts/bake-network.ts",
+    "vuln": "sh scripts/vuln-gate.sh"
   },
   "keywords": [
     "gtfs",
