@@ -159,8 +159,3 @@ export function stopEngine(): void {
   registrations.length = 0;
   ctx = null;
 }
-
-export function getContext(): SceneContext {
-  if (!ctx) throw new Error('engine not started');
-  return ctx;
-}

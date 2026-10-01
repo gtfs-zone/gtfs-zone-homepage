@@ -40,7 +40,7 @@ async function table(zip: JSZip, name: string): Promise<Row[]> {
   const file = zip.file(name) ?? zip.file(new RegExp(`(^|/)${name}$`))[0];
   if (!file) throw new Error(`missing ${name}`);
   const text = await file.async('string');
-  return Papa.parse<Row>(text.replace(/^﻿/, ''), {
+  return Papa.parse<Row>(text.replace(/^\uFEFF/, ''), {
     header: true,
     skipEmptyLines: true,
   }).data;

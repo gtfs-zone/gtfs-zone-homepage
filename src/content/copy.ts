@@ -8,13 +8,6 @@
 
 import { CONTACT_EMAIL, links } from './links';
 
-export interface SectionCopy {
-  eyebrow?: string;
-  heading: string;
-  body: string;
-  bullets?: string[];
-}
-
 export const copy = {
   hero: {
     wordmark: 'gtfs.zone',

@@ -6,9 +6,7 @@
 // New-tab attributes are not attached here. The vite plugin in vite.config.ts
 // stamps `target="_blank" rel="noopener noreferrer"` onto every external anchor
 // in the built HTML and fails the build if one slips through, which is the only
-// way to make the rule hold for markup nobody generated from this file. Use
-// `linkAttrs()` when a scene or a script builds an anchor at runtime, where the
-// build-time pass cannot see it.
+// way to make the rule hold for markup nobody generated from this file.
 
 export interface Link {
   label: string;
@@ -57,21 +55,4 @@ export const links = {
   },
 } as const satisfies Record<string, Link>;
 
-// Short footer labels. The full labels above are calls to action and read wrong
-// in a row of five.
-export const footerLinks: Link[] = [
-  { label: 'Editor', href: links.editor.href },
-  { label: 'Visualizer', href: links.visualizer.href },
-  { label: 'Feed map', href: links.feedMap.href },
-  { label: 'Manager', href: links.manager.href },
-  { label: 'Source', href: links.source.href },
-  { label: 'gtfs.org', href: links.gtfs.href },
-  { label: 'Report a bug', href: links.newIssue.href },
-];
-
 export const CONTACT_EMAIL = 'inquiry@gtfs.zone';
-
-/** Attributes every off-site anchor carries. */
-export function linkAttrs(): Record<string, string> {
-  return { target: '_blank', rel: 'noopener noreferrer' };
-}

@@ -9,7 +9,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "check": "pnpm run typecheck",
+    "check": "pnpm run typecheck && pnpm run knip",
+    "knip": "knip",
     "bake": "tsx scripts/bake-network.ts",
     "vuln": "sh scripts/vuln-gate.sh",
     "commit": "cz commit"
@@ -22,17 +23,14 @@
   "license": "AGPL-3.0-or-later",
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
-    "@types/d3-array": "^3.2.2",
-    "@types/d3-ease": "^3.0.2",
     "@types/d3-geo": "^3.1.1",
-    "@types/d3-interpolate": "^3.0.4",
-    "@types/d3-scale": "^4.0.9",
     "@types/d3-selection": "^3.0.12",
     "@types/d3-shape": "^3.2.0",
     "@types/node": "^24.19.0",
     "@types/papaparse": "^5.5.2",
     "autoprefixer": "^10.6.1",
     "jszip": "^3.10.2",
+    "knip": "^6.39.0",
     "papaparse": "^5.7.0",
     "tailwindcss": "^4.3.3",
     "tsx": "^4.23.15",
@@ -40,11 +38,7 @@
     "vite": "^7.3.6"
   },
   "dependencies": {
-    "d3-array": "^3.2.4",
-    "d3-ease": "^3.0.1",
     "d3-geo": "^3.1.1",
-    "d3-interpolate": "^3.0.1",
-    "d3-scale": "^4.0.2",
     "d3-selection": "^3.0.0",
     "d3-shape": "^3.2.0",
     "daisyui": "^5.7.46"
