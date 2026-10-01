@@ -48,15 +48,12 @@ export const links = {
   transitApp: { label: 'Transit', href: 'https://transitapp.com' },
   motis: { label: 'Motis', href: 'https://motis-project.de' },
 
-  source: { label: 'View the source', href: 'https://git.kcfam.us/gtfs.zone' },
-  // Named in the structured data, not on the page.
-  github: { label: 'GitHub', href: 'https://github.com/gtfs-zone' },
+  source: { label: 'View the source', href: 'https://github.com/gtfs-zone' },
 
-  // Anonymous visitors are redirected to sign in before the new-issue form, so
-  // the contact address stays the channel that always works.
+  // Filing an issue needs a GitHub account; the contact address does not.
   newIssue: {
     label: 'Report a bug',
-    href: 'https://git.kcfam.us/gtfs.zone/landing-zone/issues/new',
+    href: 'https://github.com/gtfs-zone/gtfs-zone-homepage/issues/new',
   },
 } as const satisfies Record<string, Link>;
 
