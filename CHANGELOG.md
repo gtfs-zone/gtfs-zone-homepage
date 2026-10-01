@@ -1,3 +1,9 @@
+## v0.8.1 (2026-10-01)
+
+### Refactor
+
+- **content**: name the GitHub link github instead of mirror
+
 ## v0.8.0 (2026-09-27)
 
 ### Feat
