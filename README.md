@@ -1,4 +1,4 @@
-# landing-zone
+# gtfs-zone-homepage
 
 The gtfs.zone homepage. Deployed to `https://gtfs.zone`.
 
@@ -44,10 +44,10 @@ The page treats the first two as peers, and links both everywhere.
 
 | Tool | URL | Repo |
 |---|---|---|
-| Editor | `https://edit.gtfs.zone` | `coloring-book` |
-| Visualizer | `https://viz.rt.gtfs.zone` | `test-track` |
-| Manager | `https://manage.rt.gtfs.zone` | `yard-master` |
-| Feed map | `https://list.gtfs.zone` | `globe-of-contents` |
+| Editor | `https://edit.gtfs.zone` | `gtfs-zone-editor` |
+| Visualizer | `https://viz.rt.gtfs.zone` | `rt-viewer` |
+| Manager | `https://manage.rt.gtfs.zone` | `rt-manager` |
+| Feed map | `https://list.gtfs.zone` | `feed-list` |
 
 ## How it fits together
 
