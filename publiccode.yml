@@ -1,0 +1,46 @@
+publiccodeYmlVersion: "0.4"
+
+name: GTFS.zone Homepage
+url: "https://github.com/gtfs-zone/gtfs-zone-homepage"
+landingURL: "https://gtfs.zone"
+
+platforms:
+  - web
+
+categories:
+  - website-builder
+  - data-visualization
+
+developmentStatus: beta
+
+softwareType: "standalone/web"
+
+description:
+  en:
+    shortDescription: >
+      The gtfs.zone homepage: a scroll-driven single page introducing GTFS and the gtfs.zone tools.
+    longDescription: >
+      The gtfs.zone homepage explains what GTFS is and what each gtfs.zone
+      tool does, over an animated transit network drawn from a real GTFS feed.
+      It is a static single page built with Vite, TypeScript, Tailwind and d3,
+      with no framework and no backend. All copy is real text, so the page
+      reads with JavaScript disabled. It has a night and a light theme that
+      share the theme toggle and setting of the other gtfs.zone apps.
+    features:
+      - Scroll-driven scenes over a transit network baked from a GTFS feed
+      - Night and light themes shared with the other gtfs.zone apps
+      - Readable with JavaScript disabled
+
+legal:
+  license: AGPL-3.0-or-later
+
+maintenance:
+  type: community
+  contacts:
+    - name: Max Katz-Christy
+      email: maxkatzchristy@gmail.com
+
+localisation:
+  localisationReady: false
+  availableLanguages:
+    - en
