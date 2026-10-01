@@ -2,11 +2,11 @@
 // the visualizer list cannot drift.
 //
 // Both schemes are confirmed against the deployed builds, not just the source:
-//   editor      #load=<staticUrl>                      (coloring-book page-state-manager)
-//   visualizer  #scheduled=…&rt_vp=…&rt_tu=…&rt_al=…&cors= (test-track feed-url)
+//   editor      #load=<staticUrl>                      (gtfs-zone-editor page-state-manager)
+//   visualizer  #scheduled=…&rt_vp=…&rt_tu=…&rt_al=…&cors= (gtfs-zone-rt-viewer feed-url)
 //
 // `cors` is a compact flag list: `s` proxies the scheduled source, `r` proxies
-// the realtime sources. The per-feed values are copied from test-track's
+// the realtime sources. The per-feed values are copied from gtfs-zone-rt-viewer's
 // examples.ts, which records which hosts actually send CORS headers.
 // raw.githubusercontent.com does, so Columbia County's scheduled half is
 // `s`-less; cdn.mbta.com, content.amtrak.com and rt.gtfs.zone do not.

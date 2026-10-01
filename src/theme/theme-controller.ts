@@ -1,4 +1,4 @@
-/* @vendored-from coloring-book:src/modules/theme-controller.ts
+/* @vendored-from gtfs-zone-editor:src/modules/theme-controller.ts
    @status adapted
 
    Adapted for this site's two themes: `light` (blueprint paper) and `night`.

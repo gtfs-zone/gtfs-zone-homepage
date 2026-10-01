@@ -104,7 +104,7 @@ export const copy = {
     operationsHeading: 'Allowing your GTFS to power your operations.',
     operationsBody:
       'The Swiss army knife of GTFS: everything needed to keep a feed accurate as the service it describes keeps changing.',
-    // Each blade names a capability confirmed in coloring-book: timetable-*.ts and
+    // Each blade names a capability confirmed in gtfs-zone-editor: timetable-*.ts and
     // editable-table.ts, route-*.ts, map-controller.ts and stop-view-controller.ts,
     // shapes-manager.ts, gtfs-validator.ts.
     blades: [
@@ -121,7 +121,7 @@ export const copy = {
     eyebrow: 'The visualizer',
     heading: 'Inspect any GTFS Realtime feed on a map.',
     body: 'Point it at a scheduled feed and its realtime endpoints and watch vehicle positions, trip updates, and service alerts against the schedule they claim to follow. Any agency’s feed, not just ours. Nothing to install.',
-    // Confirmed in test-track: pages/vehicle-page.ts, rt-index.ts, alerts.ts and
+    // Confirmed in gtfs-zone-rt-viewer: pages/vehicle-page.ts, rt-index.ts, alerts.ts and
     // pages/alert-page.ts, examples.ts plus feed-catalog.ts and feed-url.ts.
     features: [
       'Vehicles on a live map, matched to their route and trip.',
