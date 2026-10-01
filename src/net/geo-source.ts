@@ -1,7 +1,13 @@
 // Real GTFS geometry projected at runtime, used by the night-map variant.
 
 import { geoMercator } from 'd3-geo';
-import { pointAlong, type Bounds, type NetworkSource, type RouteLine, type StopPoint } from './network-source';
+import {
+  pointAlong,
+  type Bounds,
+  type NetworkSource,
+  type RouteLine,
+  type StopPoint,
+} from './network-source';
 
 interface BakedRoute {
   id: string;
@@ -40,7 +46,9 @@ export class GeoSource implements NetworkSource {
 
   static async load(url: string): Promise<GeoSource> {
     const res = await fetch(url);
-    if (!res.ok) throw new Error(`network geometry unavailable: ${res.status}`);
+    if (!res.ok) {
+      throw new Error(`network geometry unavailable: ${res.status}`);
+    }
     return new GeoSource((await res.json()) as BakedNetwork);
   }
 
@@ -57,7 +65,10 @@ export class GeoSource implements NetworkSource {
     const projection = geoMercator().fitExtent(
       [
         [padding, padding],
-        [Math.max(padding + 1, width - padding), Math.max(padding + 1, height - padding)],
+        [
+          Math.max(padding + 1, width - padding),
+          Math.max(padding + 1, height - padding),
+        ],
       ],
       collection
     );
@@ -66,7 +77,10 @@ export class GeoSource implements NetworkSource {
       id: r.id,
       name: r.name,
       color: r.color,
-      points: r.coordinates.map((c) => projection(c) ?? [0, 0]) as [number, number][],
+      points: r.coordinates.map((c) => projection(c) ?? [0, 0]) as [
+        number,
+        number,
+      ][],
     }));
 
     this.projectedStops = this.baked.stops.map((s) => {

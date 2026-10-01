@@ -28,7 +28,11 @@ function hash(seed: number): number {
   return x;
 }
 
-export function buildFleet(source: NetworkSource, perRoute = 3, seed = 1): Vehicle[] {
+export function buildFleet(
+  source: NetworkSource,
+  perRoute = 3,
+  seed = 1
+): Vehicle[] {
   const fleet: Vehicle[] = [];
   const routes = source.routes();
   routes.forEach((route, ri) => {
@@ -85,8 +89,18 @@ export function simulate(
     const travel = v.direction === 1 ? t : 1 - t;
     const [x, y] = source.pointAt(v.routeId, travel);
     const route = source.routes().find((r) => r.id === v.routeId);
-    const bearing = route ? tangentAlong(route.points, travel) + (v.direction === 1 ? 0 : 180) : 0;
-    out.push({ id: v.id, routeId: v.routeId, color: v.color, x, y, bearing, dwelling });
+    const bearing = route
+      ? tangentAlong(route.points, travel) + (v.direction === 1 ? 0 : 180)
+      : 0;
+    out.push({
+      id: v.id,
+      routeId: v.routeId,
+      color: v.color,
+      x,
+      y,
+      bearing,
+      dwelling,
+    });
   }
   return out;
 }

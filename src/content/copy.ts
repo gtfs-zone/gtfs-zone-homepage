@@ -19,7 +19,8 @@ export const copy = {
   },
   whatIsGtfs: {
     eyebrow: 'What is GTFS?',
-    heading: 'A community-driven open standard for rider-facing transit information.',
+    heading:
+      'A community-driven open standard for rider-facing transit information.',
     body: 'Over 10,000 agencies in 100+ countries publish GTFS. It is a simple data structure that any app developer can consume, which is why adopting it puts an agency’s service in front of a wide audience without a custom integration per app.',
     link: links.gtfs,
     // gtfs.org lists six reasons; these are the four that do not overlap.
@@ -51,8 +52,14 @@ export const copy = {
     heading: 'The foundation: the schedule riders plan their trips against.',
     body: 'GTFS Schedule describes the service an agency runs, in a form every major mapping app already reads.',
     features: [
-      { title: 'Routes and stops', body: 'Exactly where to catch the bus or the train.' },
-      { title: 'Schedules and frequencies', body: 'Clear timetables riders can plan against.' },
+      {
+        title: 'Routes and stops',
+        body: 'Exactly where to catch the bus or the train.',
+      },
+      {
+        title: 'Schedules and frequencies',
+        body: 'Clear timetables riders can plan against.',
+      },
       { title: 'Fares', body: 'Journey costs shown upfront in apps.' },
       { title: 'Flexible services', body: 'Demand-responsive transportation.' },
       {
@@ -71,19 +78,32 @@ export const copy = {
         title: 'Vehicle positions',
         body: 'Where the vehicle actually is right now, so nobody stands at a stop wondering.',
         type: 'VehiclePosition',
-        fields: ['latitude 42.24671', 'longitude -73.79052', 'bearing 118', 'timestamp 1755188400'],
+        fields: [
+          'latitude 42.24671',
+          'longitude -73.79052',
+          'bearing 118',
+          'timestamp 1755188400',
+        ],
       },
       {
         title: 'Trip updates',
         body: 'A more accurate arrival time, so connections are not missed.',
         type: 'TripUpdate',
-        fields: ['stop_sequence 12', 'arrival.delay +120s', 'schedule_relationship SCHEDULED'],
+        fields: [
+          'stop_sequence 12',
+          'arrival.delay +120s',
+          'schedule_relationship SCHEDULED',
+        ],
       },
       {
         title: 'Service alerts',
         body: 'Notice of disruptions on the network, in time to change plans.',
         type: 'Alert',
-        fields: ['cause CONSTRUCTION', 'effect DETOUR', 'informed_entity route_id A'],
+        fields: [
+          'cause CONSTRUCTION',
+          'effect DETOUR',
+          'informed_entity route_id A',
+        ],
       },
     ],
     link: links.realtimeReference,
@@ -162,9 +182,18 @@ export const copy = {
     eyebrow: 'Publish',
     heading: 'Deliver to millions of pockets.',
     body: 'One feed reaches every major mapping app, and drops straight into your own site.',
-    destinations: ['Google Maps / Apple Maps', 'Transit / Motis', 'Your website'],
+    destinations: [
+      'Google Maps / Apple Maps',
+      'Transit / Motis',
+      'Your website',
+    ],
     destinationsLabel: 'Where the feed ends up',
-    destinationLinks: [links.googleMaps, links.appleMaps, links.transitApp, links.motis],
+    destinationLinks: [
+      links.googleMaps,
+      links.appleMaps,
+      links.transitApp,
+      links.motis,
+    ],
   },
   openSource: {
     eyebrow: 'Open source',

@@ -20,17 +20,23 @@ import { structuredData } from './src/content/structured-data';
 //                  were missed. This is what makes the rule unforgettable: no
 //                  author has to remember it per-anchor.
 
-const EXTERNAL_ANCHOR = /<a\s([^>]*?)href="((?:https?:|mailto:)[^"]*)"([^>]*?)>/g;
+const EXTERNAL_ANCHOR =
+  /<a\s([^>]*?)href="((?:https?:|mailto:)[^"]*)"([^>]*?)>/g;
 
 function escapeHtml(s: string): string {
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
 function chips(kind: 'editor' | 'visualizer'): string {
   const href = kind === 'editor' ? editorLink : visualizerLink;
   // The same feed appears in both lists, so each link states its destination
   // off-screen: identical link text pointing at two targets reads as one link.
-  const destination = kind === 'editor' ? 'open in the editor' : 'open in the visualizer';
+  const destination =
+    kind === 'editor' ? 'open in the editor' : 'open in the visualizer';
   const items = feeds
     .map(
       (feed) => `    <li>
@@ -48,7 +54,8 @@ function chips(kind: 'editor' | 'visualizer'): string {
 // Decorative, so aria-hidden and no role.
 function icon(name: string): string {
   const paths = icons[name];
-  if (!paths) throw new Error(`@icon ${name}: no such glyph in src/content/icons.ts`);
+  if (!paths)
+    throw new Error(`@icon ${name}: no such glyph in src/content/icons.ts`);
   return (
     '<svg class="list-glyph" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" ' +
     'fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" ' +
@@ -61,7 +68,10 @@ function icon(name: string): string {
 // hash, so a page served off an untagged build says so.
 function buildVersion(): string {
   const git = (cmd: string): string =>
-    execSync(cmd, { encoding: 'utf-8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+    execSync(cmd, {
+      encoding: 'utf-8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    }).trim();
   try {
     const described = git('git describe --tags --long --abbrev=7');
     const parts = /^(.*)-(\d+)-g([0-9a-f]+)$/.exec(described);
@@ -86,15 +96,20 @@ function buildPage(): Plugin {
     transformIndexHtml: {
       order: 'pre',
       handler(html, ctx) {
-        let out = html.replace(/<!--\s*@include\s+(\S+)\s*-->/g, (_, file: string) =>
-          readFileSync(resolve(__dirname, 'src', file), 'utf-8')
+        let out = html.replace(
+          /<!--\s*@include\s+(\S+)\s*-->/g,
+          (_, file: string) =>
+            readFileSync(resolve(__dirname, 'src', file), 'utf-8')
         );
 
-        out = out.replace(/<!--\s*@feeds\s+(editor|visualizer)\s*-->/g, (_, kind) =>
-          chips(kind as 'editor' | 'visualizer')
+        out = out.replace(
+          /<!--\s*@feeds\s+(editor|visualizer)\s*-->/g,
+          (_, kind) => chips(kind as 'editor' | 'visualizer')
         );
 
-        out = out.replace(/<!--\s*@icon\s+([\w-]+)\s*-->/g, (_, name: string) => icon(name));
+        out = out.replace(/<!--\s*@icon\s+([\w-]+)\s*-->/g, (_, name: string) =>
+          icon(name)
+        );
 
         out = out.replace(/<!--\s*@version\s*-->/g, escapeHtml(version));
 
@@ -105,13 +120,18 @@ function buildPage(): Plugin {
             `<script type="application/ld+json">${JSON.stringify(structuredData).replace(/</g, '\\u003c')}</script>`
         );
 
-        out = out.replace(EXTERNAL_ANCHOR, (match, before: string, href: string, after: string) => {
-          if (/\btarget=/.test(before + after)) return match;
-          return `<a ${before}href="${href}" target="_blank" rel="noopener noreferrer"${after}>`;
-        });
+        out = out.replace(
+          EXTERNAL_ANCHOR,
+          (match, before: string, href: string, after: string) => {
+            if (/\btarget=/.test(before + after)) return match;
+            return `<a ${before}href="${href}" target="_blank" rel="noopener noreferrer"${after}>`;
+          }
+        );
 
         const missed = [...out.matchAll(EXTERNAL_ANCHOR)].filter(
-          (m) => !/\btarget="_blank"/.test(m[1] + m[3]) || !/\brel="noopener noreferrer"/.test(m[1] + m[3])
+          (m) =>
+            !/\btarget="_blank"/.test(m[1] + m[3]) ||
+            !/\brel="noopener noreferrer"/.test(m[1] + m[3])
         );
         if (missed.length > 0) {
           throw new Error(

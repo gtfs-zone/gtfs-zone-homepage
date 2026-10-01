@@ -152,7 +152,9 @@ body {
   border-radius: var(--corner-radius);
   background: var(--bg-elevated);
   color: var(--ink);
-  transition: border-color 0.15s ease, transform 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    transform 0.15s ease;
 }
 
 .chip:hover {
@@ -182,7 +184,9 @@ body {
 .js .reveal {
   opacity: 0;
   transform: translateY(24px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
 }
 
 .js .reveal.is-in {

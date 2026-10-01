@@ -1,0 +1,3 @@
+dist/
+# Hand-wrapped copy; prettier would reflow every paragraph
+src/page.html

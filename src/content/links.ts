@@ -15,11 +15,17 @@ export interface Link {
 
 export const links = {
   editor: { label: 'Open the editor', href: 'https://edit.gtfs.zone' },
-  visualizer: { label: 'Browse realtime feeds', href: 'https://viz.rt.gtfs.zone' },
+  visualizer: {
+    label: 'Browse realtime feeds',
+    href: 'https://viz.rt.gtfs.zone',
+  },
   feedMap: { label: 'Explore the feed map', href: 'https://list.gtfs.zone' },
   // Logged-out visitors get a 401, so the label says "sign in" rather than
   // promising a page they can look at.
-  manager: { label: 'Sign in to the manager', href: 'https://manage.rt.gtfs.zone' },
+  manager: {
+    label: 'Sign in to the manager',
+    href: 'https://manage.rt.gtfs.zone',
+  },
 
   gtfs: { label: 'Learn more at gtfs.org', href: 'https://gtfs.org' },
   // Distinct labels: two links with the same text and different targets read as

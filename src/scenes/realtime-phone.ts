@@ -12,7 +12,12 @@ const VB_W = 680;
 const VB_H = 440;
 
 const PHONE = { x: 150, y: 20, w: 190, h: 400, r: 26 };
-const SCREEN = { x: PHONE.x + 10, y: PHONE.y + 34, w: PHONE.w - 20, h: PHONE.h - 54 };
+const SCREEN = {
+  x: PHONE.x + 10,
+  y: PHONE.y + 34,
+  w: PHONE.w - 20,
+  h: PHONE.h - 54,
+};
 const PANEL = { x: 400, y: 110, w: 250, h: 150 };
 
 // The map-app furniture: a search bar over the map, a sheet that rises over it.
@@ -89,7 +94,9 @@ export class RealtimePhoneScene implements Scene {
       .attr('stroke', palette.grid)
       .attr('stroke-width', palette.strokeHairline);
 
-    const screen = this.svg.append('g').attr('clip-path', 'url(#rt-screen-clip)');
+    const screen = this.svg
+      .append('g')
+      .attr('clip-path', 'url(#rt-screen-clip)');
     this.buildBasemap(screen);
     this.mapLayer = screen.append('g').attr('class', 'rt-map');
     this.listLayer = screen.append('g').attr('class', 'rt-list');
@@ -150,7 +157,9 @@ export class RealtimePhoneScene implements Scene {
 
   // Ground under the routes: a faint street grid and a park, so the screen
   // reads as a map app rather than a diagram.
-  private buildBasemap(screen: Selection<SVGGElement, unknown, null, undefined>): void {
+  private buildBasemap(
+    screen: Selection<SVGGElement, unknown, null, undefined>
+  ): void {
     const { palette } = this.ctx;
     const g = screen.append('g').attr('class', 'rt-basemap');
     g.append('rect')
@@ -169,13 +178,19 @@ export class RealtimePhoneScene implements Scene {
       .attr('fill', palette.routes[1])
       .attr('fill-opacity', 0.12);
     g.append('path')
-      .attr('d', `M${SCREEN.x},${SCREEN.y + 232} C${SCREEN.x + 60},${SCREEN.y + 214} ${SCREEN.x + 110},${SCREEN.y + 262} ${SCREEN.x + SCREEN.w},${SCREEN.y + 240}`)
+      .attr(
+        'd',
+        `M${SCREEN.x},${SCREEN.y + 232} C${SCREEN.x + 60},${SCREEN.y + 214} ${SCREEN.x + 110},${SCREEN.y + 262} ${SCREEN.x + SCREEN.w},${SCREEN.y + 240}`
+      )
       .attr('fill', 'none')
       .attr('stroke', palette.routes[4])
       .attr('stroke-opacity', 0.18)
       .attr('stroke-width', 9);
 
-    const streets = g.append('g').attr('stroke', palette.inkMuted).attr('stroke-opacity', 0.16);
+    const streets = g
+      .append('g')
+      .attr('stroke', palette.inkMuted)
+      .attr('stroke-opacity', 0.16);
     [0.14, 0.34, 0.52, 0.71, 0.88].forEach((f) => {
       streets
         .append('line')
@@ -196,7 +211,9 @@ export class RealtimePhoneScene implements Scene {
     });
   }
 
-  private buildSearch(screen: Selection<SVGGElement, unknown, null, undefined>): void {
+  private buildSearch(
+    screen: Selection<SVGGElement, unknown, null, undefined>
+  ): void {
     const { palette } = this.ctx;
     const g = screen.append('g').attr('class', 'rt-search');
     g.append('rect')
@@ -375,16 +392,27 @@ export class RealtimePhoneScene implements Scene {
     let maxY = -Infinity;
     for (const r of routes) {
       for (const [x, y] of r.points) {
-        if (x < minX) minX = x;
-        if (y < minY) minY = y;
-        if (x > maxX) maxX = x;
-        if (y > maxY) maxY = y;
+        if (x < minX) {
+          minX = x;
+        }
+        if (y < minY) {
+          minY = y;
+        }
+        if (x > maxX) {
+          maxX = x;
+        }
+        if (y > maxY) {
+          maxY = y;
+        }
       }
     }
     const spanX = Math.max(1, maxX - minX);
     const spanY = Math.max(1, maxY - minY);
     const pad = 14;
-    const k = Math.min((SCREEN.w - pad * 2) / spanX, (SCREEN.h - pad * 2) / spanY);
+    const k = Math.min(
+      (SCREEN.w - pad * 2) / spanX,
+      (SCREEN.h - pad * 2) / spanY
+    );
     const ox = SCREEN.x + (SCREEN.w - spanX * k) / 2;
     const oy = SCREEN.y + (SCREEN.h - spanY * k) / 2;
     this.transform = ([x, y]) => [ox + (x - minX) * k, oy + (y - minY) * k];
@@ -455,7 +483,11 @@ export class RealtimePhoneScene implements Scene {
       .attr('rx', this.ctx.variant.vehicleGlyph === 'capsule' ? 2.5 : 0)
       .attr('fill', (d) => d.color)
       .attr('opacity', String(subRange(beat1, 0, 0.3)))
-      .attr('transform', (d) => `translate(${d.x} ${d.y}) rotate(${d.bearing}) translate(-4 -2.5)`);
+      .attr(
+        'transform',
+        (d) =>
+          `translate(${d.x} ${d.y}) rotate(${d.bearing}) translate(-4 -2.5)`
+      );
 
     // Beat 2: the departures sheet rises over the map, with an ETA that slips.
     const rise = index === 0 ? 0 : subRange(beat2, 0, 0.3);
@@ -463,12 +495,19 @@ export class RealtimePhoneScene implements Scene {
       .attr('opacity', String(index === 0 ? 0 : 1))
       .attr('transform', `translate(0 ${SHEET_TOP + (1 - rise) * SHEET_H})`);
     const slip = subRange(beat2, 0.35, 0.7);
-    this.listLayer.selectAll<SVGTextElement, (typeof ARRIVALS)[number]>('.rt-eta').each((d, i, nodes) => {
-      const minutes = i === 0 ? Math.round(d.base + slip * 2) : d.base;
-      nodes[i].textContent = `${minutes} min`;
-      nodes[i].setAttribute('fill', i === 0 && slip > 0.5 ? palette.accentText : palette.ink);
-    });
-    this.listLayer.select('.rt-delay-chip').attr('opacity', String(subRange(beat2, 0.55, 0.8)));
+    this.listLayer
+      .selectAll<SVGTextElement, (typeof ARRIVALS)[number]>('.rt-eta')
+      .each((d, i, nodes) => {
+        const minutes = i === 0 ? Math.round(d.base + slip * 2) : d.base;
+        nodes[i].textContent = `${minutes} min`;
+        nodes[i].setAttribute(
+          'fill',
+          i === 0 && slip > 0.5 ? palette.accentText : palette.ink
+        );
+      });
+    this.listLayer
+      .select('.rt-delay-chip')
+      .attr('opacity', String(subRange(beat2, 0.55, 0.8)));
 
     // Beat 3: the alert card drops out from behind the search bar.
     const drop = subRange(beat3, 0, 0.35);
@@ -486,7 +525,9 @@ export class RealtimePhoneScene implements Scene {
           ? [SCREEN.x + SCREEN.w - 40, SHEET_TOP + 64]
           : [SCREEN.x + SCREEN.w / 2, SEARCH.y + SEARCH.h + 34];
 
-    const appear = clamp01(Math.max(subRange(beat1, 0.25, 0.5), index > 0 ? 1 : 0));
+    const appear = clamp01(
+      Math.max(subRange(beat1, 0.25, 0.5), index > 0 ? 1 : 0)
+    );
     this.svg
       .select('.rt-lens')
       .attr('transform', `translate(${target[0]} ${target[1]})`)

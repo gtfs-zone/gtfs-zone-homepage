@@ -9,7 +9,12 @@ const VB_W = 800;
 const VB_H = 420;
 
 const SCREEN = { x: 44, y: 96, w: 210, h: 138 };
-const BUTTON = { x: SCREEN.x + SCREEN.w - 90, y: SCREEN.y + SCREEN.h - 40, w: 74, h: 26 };
+const BUTTON = {
+  x: SCREEN.x + SCREEN.w - 90,
+  y: SCREEN.y + SCREEN.h - 40,
+  w: 74,
+  h: 26,
+};
 const PHONES = [600, 672, 744].map((x) => ({ x, y: 70, w: 56, h: 104 }));
 const RIDERS = [628, 700, 772];
 
@@ -47,7 +52,10 @@ export class AlertBroadcastScene implements Scene {
       .attr('stroke-width', palette.strokeHairline * 3);
     // Lid hinge and base, so the screen reads as a laptop and not a window.
     op.append('path')
-      .attr('d', `M${SCREEN.x - 34},${SCREEN.y + SCREEN.h + 24} L${SCREEN.x - 10},${SCREEN.y + SCREEN.h + 10} L${SCREEN.x + SCREEN.w + 10},${SCREEN.y + SCREEN.h + 10} L${SCREEN.x + SCREEN.w + 34},${SCREEN.y + SCREEN.h + 24} Z`)
+      .attr(
+        'd',
+        `M${SCREEN.x - 34},${SCREEN.y + SCREEN.h + 24} L${SCREEN.x - 10},${SCREEN.y + SCREEN.h + 10} L${SCREEN.x + SCREEN.w + 10},${SCREEN.y + SCREEN.h + 10} L${SCREEN.x + SCREEN.w + 34},${SCREEN.y + SCREEN.h + 24} Z`
+      )
       .attr('fill', palette.bgElevated)
       .attr('stroke', palette.ink)
       .attr('stroke-width', palette.strokeHairline * 3)
@@ -233,11 +241,16 @@ export class AlertBroadcastScene implements Scene {
     const react = subRange(t, 0.85, 1);
 
     // The alert is typed out, then the button depresses.
-    this.svg.selectAll<SVGRectElement, number>('.ab-fields rect').each((d, i, nodes) => {
-      const typed = subRange(press, d * 0.2, d * 0.2 + 0.5);
-      nodes[i].setAttribute('opacity', String(0.35 + typed * 0.65));
-      nodes[i].setAttribute('fill', typed > 0.9 ? palette.inkMuted : palette.grid);
-    });
+    this.svg
+      .selectAll<SVGRectElement, number>('.ab-fields rect')
+      .each((d, i, nodes) => {
+        const typed = subRange(press, d * 0.2, d * 0.2 + 0.5);
+        nodes[i].setAttribute('opacity', String(0.35 + typed * 0.65));
+        nodes[i].setAttribute(
+          'fill',
+          typed > 0.9 ? palette.inkMuted : palette.grid
+        );
+      });
     this.svg
       .select('.ab-button')
       .attr('transform', `translate(0 ${press > 0.9 ? 2 : 0})`)
@@ -252,7 +265,10 @@ export class AlertBroadcastScene implements Scene {
     this.svg
       .select('.ab-packet')
       .attr('transform', `translate(${point.x} ${point.y})`)
-      .attr('opacity', String(travel > 0 && split < 0.4 ? 1 : clamp01(1 - split * 3)));
+      .attr(
+        'opacity',
+        String(travel > 0 && split < 0.4 ? 1 : clamp01(1 - split * 3))
+      );
 
     // The packet splits, one per phone.
     const end = this.wireNode.getPointAtLength(this.wireLength);
@@ -266,24 +282,41 @@ export class AlertBroadcastScene implements Scene {
         nodes[i].setAttribute('opacity', String(split > 0 && f < 1 ? 1 : 0));
       });
 
-    this.svg.selectAll<SVGRectElement, unknown>('.ab-phone-screen').each((_, i, nodes) => {
-      nodes[i].setAttribute('fill-opacity', String(0.06 + subRange(split, 0.4 + i * 0.08, 0.9) * 0.24));
-    });
-    this.svg.selectAll<SVGRectElement, unknown>('.ab-phone-banner').each((_, i, nodes) => {
-      nodes[i].setAttribute('opacity', String(subRange(split, 0.5 + i * 0.08, 0.95)));
-    });
+    this.svg
+      .selectAll<SVGRectElement, unknown>('.ab-phone-screen')
+      .each((_, i, nodes) => {
+        nodes[i].setAttribute(
+          'fill-opacity',
+          String(0.06 + subRange(split, 0.4 + i * 0.08, 0.9) * 0.24)
+        );
+      });
+    this.svg
+      .selectAll<SVGRectElement, unknown>('.ab-phone-banner')
+      .each((_, i, nodes) => {
+        nodes[i].setAttribute(
+          'opacity',
+          String(subRange(split, 0.5 + i * 0.08, 0.95))
+        );
+      });
 
     // Riders react: shoulders lift.
-    this.svg.selectAll<SVGPathElement, number>('.ab-rider-body').each((d, i, nodes) => {
-      const lift = subRange(react, i * 0.15, i * 0.15 + 0.5) * 8;
-      nodes[i].setAttribute(
-        'd',
-        `M${d - 14},${330 - lift} C${d - 14},${306 - lift} ${d + 14},${306 - lift} ${d + 14},${330 - lift}`
-      );
-      nodes[i].setAttribute('stroke', react > 0.4 ? palette.accent : palette.inkMuted);
-    });
+    this.svg
+      .selectAll<SVGPathElement, number>('.ab-rider-body')
+      .each((d, i, nodes) => {
+        const lift = subRange(react, i * 0.15, i * 0.15 + 0.5) * 8;
+        nodes[i].setAttribute(
+          'd',
+          `M${d - 14},${330 - lift} C${d - 14},${306 - lift} ${d + 14},${306 - lift} ${d + 14},${330 - lift}`
+        );
+        nodes[i].setAttribute(
+          'stroke',
+          react > 0.4 ? palette.accent : palette.inkMuted
+        );
+      });
 
-    this.svg.select('.ab-caption').attr('opacity', String(subRange(react, 0.3, 1)));
+    this.svg
+      .select('.ab-caption')
+      .attr('opacity', String(subRange(react, 0.3, 1)));
   }
 
   destroy(): void {

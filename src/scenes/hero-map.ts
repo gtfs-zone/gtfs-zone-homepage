@@ -60,7 +60,9 @@ export class HeroMapScene implements Scene {
       .style('backface-visibility', 'hidden');
 
     this.mapGroup = this.svg.append('g');
-    if (ctx.variant.showGrid) this.mapGroup.append('g').attr('class', 'hero-grid');
+    if (ctx.variant.showGrid) {
+      this.mapGroup.append('g').attr('class', 'hero-grid');
+    }
     this.routeGroup = this.mapGroup.append('g');
     this.stopGroup = this.mapGroup.append('g');
     this.vehicleGroup = this.mapGroup.append('g');
@@ -74,7 +76,11 @@ export class HeroMapScene implements Scene {
     this.height = v.height * OVERSCAN;
     this.svg.attr('viewBox', `0 0 ${this.width} ${this.height}`);
     // The hero crops to a tighter box on mobile rather than shrinking the network.
-    this.ctx.network.fit(this.width, this.height, v.isMobile ? -this.width * 0.25 : 40 * OVERSCAN);
+    this.ctx.network.fit(
+      this.width,
+      this.height,
+      v.isMobile ? -this.width * 0.25 : 40 * OVERSCAN
+    );
     this.drawGrid();
     this.drawRoutes();
     this.drawStops();
@@ -86,12 +92,18 @@ export class HeroMapScene implements Scene {
   }
 
   private drawGrid(): void {
-    if (!this.ctx.variant.showGrid) return;
+    if (!this.ctx.variant.showGrid) {
+      return;
+    }
     const step = 40;
     const g = this.mapGroup.select<SVGGElement>('.hero-grid');
     const lines: { x1: number; y1: number; x2: number; y2: number }[] = [];
-    for (let x = 0; x <= this.width; x += step) lines.push({ x1: x, y1: 0, x2: x, y2: this.height });
-    for (let y = 0; y <= this.height; y += step) lines.push({ x1: 0, y1: y, x2: this.width, y2: y });
+    for (let x = 0; x <= this.width; x += step) {
+      lines.push({ x1: x, y1: 0, x2: x, y2: this.height });
+    }
+    for (let y = 0; y <= this.height; y += step) {
+      lines.push({ x1: 0, y1: y, x2: this.width, y2: y });
+    }
     g.selectAll('line')
       .data(lines)
       .join('line')
@@ -143,7 +155,10 @@ export class HeroMapScene implements Scene {
       .attr('cx', (d) => d.x)
       .attr('cy', (d) => d.y)
       .attr('r', (d) => (d.isMajor ? r * 1.8 : r))
-      .attr('fill', variant.name === 'night' ? palette.inkMuted : palette.bgElevated)
+      .attr(
+        'fill',
+        variant.name === 'night' ? palette.inkMuted : palette.bgElevated
+      )
       .attr('stroke', variant.name === 'night' ? 'none' : palette.ink)
       .attr('stroke-width', palette.strokeHairline * 2)
       .attr('fill-opacity', variant.name === 'night' ? 0.55 : 1);
@@ -162,7 +177,8 @@ export class HeroMapScene implements Scene {
     const zoomP = 1 - (1 - u) * (1 - u);
     const scale = (1 + zoomP * (ZOOM_MAX - 1)) / OVERSCAN;
     // Parallax stays inside the oversized layer's margin so no edge shows.
-    const drift = -zoomP * (this.height / OVERSCAN) * ((OVERSCAN - 1) / 2) * 0.9;
+    const drift =
+      -zoomP * (this.height / OVERSCAN) * ((OVERSCAN - 1) / 2) * 0.9;
     const transform = `scale(${scale.toFixed(4)}) translateY(${drift.toFixed(2)}px)`;
     if (transform !== this.lastTransform) {
       this.lastTransform = transform;
@@ -176,7 +192,8 @@ export class HeroMapScene implements Scene {
 
     // The last section slows and dims the network to a stop.
     const tail = clamp01(
-      (y - (scrollState.height - scrollState.viewport * 1.8)) / (scrollState.viewport * 1.2)
+      (y - (scrollState.height - scrollState.viewport * 1.8)) /
+        (scrollState.viewport * 1.2)
     );
     const opacity = bodyOpacity * (1 - tail * 0.6);
     if (Math.abs(opacity - this.lastOpacity) > 0.002) {
@@ -188,34 +205,44 @@ export class HeroMapScene implements Scene {
     const routeOpacity = 1 - recede * 0.45;
     if (Math.abs(routeOpacity - this.lastRouteOpacity) > 0.004) {
       this.lastRouteOpacity = routeOpacity;
-      this.routeGroup.selectAll('path.route').style('stroke-opacity', routeOpacity.toFixed(3));
+      this.routeGroup
+        .selectAll('path.route')
+        .style('stroke-opacity', routeOpacity.toFixed(3));
     }
 
     // Draw-in reveal, staggered by route. Instant under reduced motion. Dash
     // writes stop once every route is fully drawn.
     if (!this.revealDone) {
       let allDrawn = true;
-      this.routeGroup.selectAll<SVGPathElement, { id: string }>('path.route').each((d, i, nodes) => {
-        const len = this.lengths.get(d.id) ?? 0;
-        if (len === 0) return;
-        const el = nodes[i];
-        const t = reducedMotion
-          ? 1
-          : clamp01((p.elapsed - i * ROUTE_STAGGER) / REVEAL_SECONDS);
-        if (t < 1) {
-          allDrawn = false;
-          const eased = 1 - Math.pow(1 - t, 3);
-          el.style.strokeDasharray = `${len}`;
-          el.style.strokeDashoffset = `${len * (1 - eased)}`;
-        } else {
-          el.style.strokeDasharray = '';
-          el.style.strokeDashoffset = '';
-        }
-      });
-      if (allDrawn) this.revealDone = true;
+      this.routeGroup
+        .selectAll<SVGPathElement, { id: string }>('path.route')
+        .each((d, i, nodes) => {
+          const len = this.lengths.get(d.id) ?? 0;
+          if (len === 0) {
+            return;
+          }
+          const el = nodes[i];
+          const t = reducedMotion
+            ? 1
+            : clamp01((p.elapsed - i * ROUTE_STAGGER) / REVEAL_SECONDS);
+          if (t < 1) {
+            allDrawn = false;
+            const eased = 1 - Math.pow(1 - t, 3);
+            el.style.strokeDasharray = `${len}`;
+            el.style.strokeDashoffset = `${len * (1 - eased)}`;
+          } else {
+            el.style.strokeDasharray = '';
+            el.style.strokeDashoffset = '';
+          }
+        });
+      if (allDrawn) {
+        this.revealDone = true;
+      }
     }
 
-    const elapsed = reducedMotion ? 0 : Math.max(0, p.elapsed - REVEAL_SECONDS * 0.4);
+    const elapsed = reducedMotion
+      ? 0
+      : Math.max(0, p.elapsed - REVEAL_SECONDS * 0.4);
     const states = simulate(this.ctx.network, this.fleet, {
       elapsed: elapsed * (1 - tail),
       frozen: reducedMotion,
@@ -233,28 +260,42 @@ export class HeroMapScene implements Scene {
       .attr('fill-opacity', (d) => (d.dwelling ? 0.75 : 1))
       .attr(
         'transform',
-        (d) => `translate(${d.x} ${d.y}) rotate(${d.bearing}) translate(${-size / 2} ${-size * 0.31})`
+        (d) =>
+          `translate(${d.x} ${d.y}) rotate(${d.bearing}) translate(${-size / 2} ${-size * 0.31})`
       );
 
     // Stops brighten as a vehicle approaches. Squared distances, and the fill is
     // only rewritten when a stop crosses a step, so most frames touch no stop.
     if (variant.stopLighting) {
       const radiusSq = 60 * 60;
-      this.stopGroup.selectAll<SVGCircleElement, { x: number; y: number }>('circle').each((d, i, nodes) => {
-        let nearestSq = Infinity;
-        for (const s of states) {
-          const dx = s.x - d.x;
-          const dy = s.y - d.y;
-          const distSq = dx * dx + dy * dy;
-          if (distSq < nearestSq) nearestSq = distSq;
-        }
-        const near = nearestSq >= radiusSq ? 0 : clamp01(1 - Math.sqrt(nearestSq) / 60);
-        const step = Math.round(near * 10);
-        if (this.stopLit[i] === step) return;
-        this.stopLit[i] = step;
-        nodes[i].setAttribute('fill', near > 0.4 ? palette.accent : palette.inkMuted);
-        nodes[i].setAttribute('fill-opacity', (0.45 + (step / 10) * 0.55).toFixed(2));
-      });
+      this.stopGroup
+        .selectAll<SVGCircleElement, { x: number; y: number }>('circle')
+        .each((d, i, nodes) => {
+          let nearestSq = Infinity;
+          for (const s of states) {
+            const dx = s.x - d.x;
+            const dy = s.y - d.y;
+            const distSq = dx * dx + dy * dy;
+            if (distSq < nearestSq) {
+              nearestSq = distSq;
+            }
+          }
+          const near =
+            nearestSq >= radiusSq ? 0 : clamp01(1 - Math.sqrt(nearestSq) / 60);
+          const step = Math.round(near * 10);
+          if (this.stopLit[i] === step) {
+            return;
+          }
+          this.stopLit[i] = step;
+          nodes[i].setAttribute(
+            'fill',
+            near > 0.4 ? palette.accent : palette.inkMuted
+          );
+          nodes[i].setAttribute(
+            'fill-opacity',
+            (0.45 + (step / 10) * 0.55).toFixed(2)
+          );
+        });
     }
   }
 

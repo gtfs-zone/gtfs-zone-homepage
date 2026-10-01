@@ -7,7 +7,12 @@
 //                  teardown and remount, not a repaint.
 
 import './styles/main.css';
-import { registerScene, startEngine, stopEngine, type VariantConfig } from './engine/scene';
+import {
+  registerScene,
+  startEngine,
+  stopEngine,
+  type VariantConfig,
+} from './engine/scene';
 import { onTick } from './engine/ticker';
 import { scrollState } from './engine/scroll-store';
 import { clamp01 } from './engine/section-progress';
@@ -37,14 +42,18 @@ type SceneKey = keyof typeof SCENES;
 function heroParallax(): void {
   const overlay = document.getElementById('hero-overlay');
   const cue = document.getElementById('scroll-cue');
-  if (!overlay) return;
+  if (!overlay) {
+    return;
+  }
 
   onTick(() => {
     const p = clamp01(scrollState.y / Math.max(1, scrollState.viewport));
     // Overlay moves faster than the map, separating text from ground.
     overlay.style.transform = `translate3d(0, ${-p * 140}px, 0)`;
     overlay.style.opacity = String(1 - clamp01(p * 1.6));
-    if (cue) cue.style.opacity = String(1 - clamp01(p / 0.15));
+    if (cue) {
+      cue.style.opacity = String(1 - clamp01(p / 0.15));
+    }
   });
 }
 
@@ -72,7 +81,10 @@ export function initPage(): void {
 }
 
 /** Tear down any live scenes and mount a fresh set for the given variant. */
-export function mountScenes(variant: VariantConfig, network: NetworkSource): void {
+export function mountScenes(
+  variant: VariantConfig,
+  network: NetworkSource
+): void {
   stopEngine();
 
   startEngine({
@@ -82,18 +94,27 @@ export function mountScenes(variant: VariantConfig, network: NetworkSource): voi
     reducedMotion: false, // set from the media query inside startEngine
   });
 
-  const stage = document.querySelector<HTMLElement>('.stage[data-scene="hero-map"]');
+  const stage = document.querySelector<HTMLElement>(
+    '.stage[data-scene="hero-map"]'
+  );
   const hero = document.getElementById('hero');
   if (stage && hero) {
     // The background network persists past its own section, so it keeps rendering.
-    registerScene(stage, new HeroMapScene(), { section: hero, alwaysActive: true });
+    registerScene(stage, new HeroMapScene(), {
+      section: hero,
+      alwaysActive: true,
+    });
   }
 
   document.querySelectorAll<HTMLElement>('[data-scene]').forEach((el) => {
     const key = el.dataset.scene as SceneKey | 'hero-map' | undefined;
-    if (!key || key === 'hero-map') return;
+    if (!key || key === 'hero-map') {
+      return;
+    }
     const Ctor = SCENES[key];
-    if (!Ctor) return;
+    if (!Ctor) {
+      return;
+    }
     // Opt-in: drive the scene from its own box instead of the enclosing section.
     const self = el.dataset.sceneTrack === 'self';
     registerScene(el, new Ctor(), self ? { section: el } : {});

@@ -48,7 +48,11 @@ export class TimetableScene implements Scene {
     for (let row = 0; row < ROWS; row++) {
       for (let col = 0; col < COLS; col++) {
         // Synthetic but plausible: each trip leaves 45 min apart, each stop 7 min later.
-        this.cells.push({ row, col, minutes: 6 * 60 + 10 + col * 45 + row * 7 });
+        this.cells.push({
+          row,
+          col,
+          minutes: 6 * 60 + 10 + col * 45 + row * 7,
+        });
       }
     }
 
@@ -136,16 +140,23 @@ export class TimetableScene implements Scene {
     const link = subRange(t, 0.5, 1);
 
     // Stop rows slide in from the left, staggered.
-    this.svg.selectAll<SVGTextElement, string>('.tt-row-label').each((_, i, nodes) => {
-      const local = clamp01((assemble - i * 0.05) / 0.5);
-      nodes[i].setAttribute('transform', `translate(${(1 - local) * -60} 0)`);
-      nodes[i].setAttribute('opacity', String(local));
-    });
+    this.svg
+      .selectAll<SVGTextElement, string>('.tt-row-label')
+      .each((_, i, nodes) => {
+        const local = clamp01((assemble - i * 0.05) / 0.5);
+        nodes[i].setAttribute('transform', `translate(${(1 - local) * -60} 0)`);
+        nodes[i].setAttribute('opacity', String(local));
+      });
 
     // Trip columns fade in left to right, times counting up to their final values.
-    this.svg.selectAll<SVGTextElement, number>('.tt-col-head').each((d, i, nodes) => {
-      nodes[i].setAttribute('opacity', String(clamp01((assemble - d * 0.08) / 0.4)));
-    });
+    this.svg
+      .selectAll<SVGTextElement, number>('.tt-col-head')
+      .each((d, i, nodes) => {
+        nodes[i].setAttribute(
+          'opacity',
+          String(clamp01((assemble - d * 0.08) / 0.4))
+        );
+      });
 
     this.svg.selectAll<SVGTextElement, Cell>('.tt-cell').each((d, i, nodes) => {
       const local = clamp01((assemble - d.col * 0.08 - d.row * 0.01) / 0.4);
@@ -153,7 +164,10 @@ export class TimetableScene implements Scene {
       const shown = d.minutes - (1 - local) * 240;
       nodes[i].textContent = local > 0 ? formatClock(shown) : '';
       const highlighted = d.col === HIGHLIGHT_COL && link > 0;
-      nodes[i].setAttribute('fill', highlighted ? this.ctx.palette.accentText : this.ctx.palette.inkMuted);
+      nodes[i].setAttribute(
+        'fill',
+        highlighted ? this.ctx.palette.accentText : this.ctx.palette.inkMuted
+      );
     });
 
     this.svg.select('.tt-highlight').attr('opacity', String(link));

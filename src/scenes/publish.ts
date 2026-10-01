@@ -118,7 +118,9 @@ export class PublishScene implements Scene {
 
     const frames = this.svg
       .selectAll('g.pb-frame')
-      .data(copy.publish.destinations.map((name, i) => ({ name, y: FRAME_Y[i], i })))
+      .data(
+        copy.publish.destinations.map((name, i) => ({ name, y: FRAME_Y[i], i }))
+      )
       .join('g')
       .attr('class', 'pb-frame');
     frames
@@ -166,7 +168,9 @@ export class PublishScene implements Scene {
       .attr('x', (d) => (d.i === 2 ? FRAME.x + 66 : FRAME.x + 16))
       .attr('y', (d) => d.y + 19)
       .attr('font-size', 12)
-      .attr('font-family', (d) => (d.i === 2 ? 'ui-monospace, monospace' : 'inherit'))
+      .attr('font-family', (d) =>
+        d.i === 2 ? 'ui-monospace, monospace' : 'inherit'
+      )
       .attr('fill', (d) => (d.i === 2 ? palette.inkMuted : palette.ink))
       .text((d) => (d.i === 2 ? 'your-agency.gov' : d.name));
     frames
@@ -195,7 +199,10 @@ export class PublishScene implements Scene {
       .selectAll('rect')
       .data(
         FRAME_Y.flatMap((_, spoke) =>
-          Array.from({ length: PACKETS_PER_SPOKE }, (_, i) => ({ spoke, phase: i / PACKETS_PER_SPOKE }))
+          Array.from({ length: PACKETS_PER_SPOKE }, (_, i) => ({
+            spoke,
+            phase: i / PACKETS_PER_SPOKE,
+          }))
         )
       )
       .join('rect')
@@ -219,10 +226,18 @@ export class PublishScene implements Scene {
     let maxY = -Infinity;
     for (const r of routes) {
       for (const [x, y] of r.points) {
-        if (x < minX) minX = x;
-        if (y < minY) minY = y;
-        if (x > maxX) maxX = x;
-        if (y > maxY) maxY = y;
+        if (x < minX) {
+          minX = x;
+        }
+        if (y < minY) {
+          minY = y;
+        }
+        if (x > maxX) {
+          maxX = x;
+        }
+        if (y > maxY) {
+          maxY = y;
+        }
       }
     }
     const spanX = Math.max(1, maxX - minX);
@@ -234,8 +249,14 @@ export class PublishScene implements Scene {
     // nothing spills past the clip.
     const cropX = spanX * CROP;
     const cropY = cropX * (MAP_H / FRAME.w);
-    const left = Math.min(Math.max(cx - cropX / 2, minX), Math.max(minX, maxX - cropX));
-    const top = Math.min(Math.max(cy - cropY / 2, minY), Math.max(minY, maxY - cropY));
+    const left = Math.min(
+      Math.max(cx - cropX / 2, minX),
+      Math.max(minX, maxX - cropX)
+    );
+    const top = Math.min(
+      Math.max(cy - cropY / 2, minY),
+      Math.max(minY, maxY - cropY)
+    );
 
     const k = FRAME.w / cropX;
     const ox = FRAME.x;
@@ -247,12 +268,23 @@ export class PublishScene implements Scene {
 
   // Bin the stops onto a coarse grid and return the center of the heaviest
   // 3x3 neighborhood, so a single busy cell cannot pull the crop off center.
-  private denseCenter(minX: number, minY: number, spanX: number, spanY: number): [number, number] {
+  private denseCenter(
+    minX: number,
+    minY: number,
+    spanX: number,
+    spanY: number
+  ): [number, number] {
     const n = DENSITY_CELLS;
     const counts = new Float64Array(n * n);
     for (const s of this.ctx.network.stops()) {
-      const gx = Math.min(n - 1, Math.max(0, Math.floor(((s.x - minX) / spanX) * n)));
-      const gy = Math.min(n - 1, Math.max(0, Math.floor(((s.y - minY) / spanY) * n)));
+      const gx = Math.min(
+        n - 1,
+        Math.max(0, Math.floor(((s.x - minX) / spanX) * n))
+      );
+      const gy = Math.min(
+        n - 1,
+        Math.max(0, Math.floor(((s.y - minY) / spanY) * n))
+      );
       counts[gy * n + gx] += 1;
     }
 
@@ -266,7 +298,9 @@ export class PublishScene implements Scene {
           for (let dx = -1; dx <= 1; dx++) {
             const nx = x + dx;
             const ny = y + dy;
-            if (nx < 0 || ny < 0 || nx >= n || ny >= n) continue;
+            if (nx < 0 || ny < 0 || nx >= n || ny >= n) {
+              continue;
+            }
             sum += counts[ny * n + nx];
           }
         }
@@ -317,18 +351,22 @@ export class PublishScene implements Scene {
     const reveal = subRange(t, 0.1, 0.6);
     const elapsed = this.ctx.reducedMotion ? 0 : p.elapsed;
 
-    this.svg.selectAll<SVGPathElement, unknown>('.pb-spoke').each((_, i, nodes) => {
-      const len = this.spokeLengths[i];
-      const local = subRange(reveal, i * 0.15, i * 0.15 + 0.6);
-      nodes[i].style.strokeDasharray = `${len}`;
-      nodes[i].style.strokeDashoffset = `${len * (1 - local)}`;
-    });
+    this.svg
+      .selectAll<SVGPathElement, unknown>('.pb-spoke')
+      .each((_, i, nodes) => {
+        const len = this.spokeLengths[i];
+        const local = subRange(reveal, i * 0.15, i * 0.15 + 0.6);
+        nodes[i].style.strokeDasharray = `${len}`;
+        nodes[i].style.strokeDashoffset = `${len * (1 - local)}`;
+      });
 
-    this.svg.selectAll<SVGGElement, { i: number }>('.pb-frame').each((d, i, nodes) => {
-      const local = subRange(reveal, 0.25 + d.i * 0.12, 0.8 + d.i * 0.06);
-      nodes[i].setAttribute('opacity', String(local));
-      nodes[i].setAttribute('transform', `translate(${(1 - local) * 20} 0)`);
-    });
+    this.svg
+      .selectAll<SVGGElement, { i: number }>('.pb-frame')
+      .each((d, i, nodes) => {
+        const local = subRange(reveal, 0.25 + d.i * 0.12, 0.8 + d.i * 0.06);
+        nodes[i].setAttribute('opacity', String(local));
+        nodes[i].setAttribute('transform', `translate(${(1 - local) * 20} 0)`);
+      });
 
     // The same vehicles, drawn once and shown in all three frames at once.
     const states = simulate(this.ctx.network, this.fleet, {
@@ -360,8 +398,14 @@ export class PublishScene implements Scene {
         const flow = (d.phase + elapsed * 0.22) % 1;
         const visible = subRange(reveal, d.spoke * 0.15, d.spoke * 0.15 + 0.6);
         const pt = node.getPointAtLength(len * flow);
-        nodes[i].setAttribute('transform', `translate(${pt.x - 3.5} ${pt.y - 3.5})`);
-        nodes[i].setAttribute('opacity', String(visible * (this.ctx.reducedMotion ? 0.6 : 1)));
+        nodes[i].setAttribute(
+          'transform',
+          `translate(${pt.x - 3.5} ${pt.y - 3.5})`
+        );
+        nodes[i].setAttribute(
+          'opacity',
+          String(visible * (this.ctx.reducedMotion ? 0.6 : 1))
+        );
       });
   }
 

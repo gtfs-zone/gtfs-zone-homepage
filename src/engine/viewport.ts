@@ -17,7 +17,9 @@ export const viewport: Viewport = {
 const MD = 768;
 
 const reducedQuery =
-  typeof window !== 'undefined' ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  typeof window !== 'undefined'
+    ? window.matchMedia('(prefers-reduced-motion: reduce)')
+    : null;
 
 export let prefersReducedMotion = reducedQuery ? reducedQuery.matches : false;
 
@@ -37,7 +39,9 @@ function onResize(): void {
   window.clearTimeout(resizeTimer);
   resizeTimer = window.setTimeout(() => {
     measure();
-    for (const fn of listeners) fn(viewport);
+    for (const fn of listeners) {
+      fn(viewport);
+    }
   }, 120);
 }
 
@@ -45,7 +49,9 @@ export function onResizeViewport(fn: ResizeFn): () => void {
   listeners.push(fn);
   return () => {
     const i = listeners.indexOf(fn);
-    if (i >= 0) listeners.splice(i, 1);
+    if (i >= 0) {
+      listeners.splice(i, 1);
+    }
   };
 }
 
@@ -55,6 +61,8 @@ export function initViewport(): void {
   window.addEventListener('orientationchange', onResize, { passive: true });
   reducedQuery?.addEventListener('change', (e) => {
     prefersReducedMotion = e.matches;
-    for (const fn of listeners) fn(viewport);
+    for (const fn of listeners) {
+      fn(viewport);
+    }
   });
 }

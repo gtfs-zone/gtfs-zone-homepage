@@ -6,7 +6,8 @@ import { CONTACT_EMAIL, links } from './links';
 const SITE = 'https://gtfs.zone/';
 
 // The apps' canonical URLs end in a slash; links.ts hrefs do not.
-const canonical = (href: string): string => (href.endsWith('/') ? href : `${href}/`);
+const canonical = (href: string): string =>
+  href.endsWith('/') ? href : `${href}/`;
 
 const free = { '@type': 'Offer', price: '0', priceCurrency: 'USD' };
 

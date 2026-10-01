@@ -22,7 +22,10 @@ const MAX_POINTS_PER_ROUTE = 400;
 const MAX_BRANCHES_PER_DIRECTION = 4;
 const BRANCH_NEAR = 0.0015; // degrees, roughly 160m
 const BRANCH_MIN_NEW = 0.12; // keep a shape if this share of it is off the kept ones
-const OUT = resolve(dirname(fileURLToPath(import.meta.url)), '../public/data/network-night.json');
+const OUT = resolve(
+  dirname(fileURLToPath(import.meta.url)),
+  '../public/data/network-night.json'
+);
 
 type Row = Record<string, string>;
 type Pt = [number, number];
@@ -30,7 +33,9 @@ type Pt = [number, number];
 async function loadZip(source: string): Promise<JSZip> {
   if (/^https?:/.test(source)) {
     const res = await fetch(source);
-    if (!res.ok) throw new Error(`fetch failed: ${res.status} ${source}`);
+    if (!res.ok) {
+      throw new Error(`fetch failed: ${res.status} ${source}`);
+    }
     return JSZip.loadAsync(Buffer.from(await res.arrayBuffer()));
   }
   return JSZip.loadAsync(await readFile(resolve(source)));
@@ -38,7 +43,9 @@ async function loadZip(source: string): Promise<JSZip> {
 
 async function table(zip: JSZip, name: string): Promise<Row[]> {
   const file = zip.file(name) ?? zip.file(new RegExp(`(^|/)${name}$`))[0];
-  if (!file) throw new Error(`missing ${name}`);
+  if (!file) {
+    throw new Error(`missing ${name}`);
+  }
   const text = await file.async('string');
   return Papa.parse<Row>(text.replace(/^\uFEFF/, ''), {
     header: true,
@@ -49,7 +56,9 @@ async function table(zip: JSZip, name: string): Promise<Row[]> {
 function perpendicularDistance(p: Pt, a: Pt, b: Pt): number {
   const dx = b[0] - a[0];
   const dy = b[1] - a[1];
-  if (dx === 0 && dy === 0) return Math.hypot(p[0] - a[0], p[1] - a[1]);
+  if (dx === 0 && dy === 0) {
+    return Math.hypot(p[0] - a[0], p[1] - a[1]);
+  }
   const t = ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / (dx * dx + dy * dy);
   const cx = a[0] + Math.max(0, Math.min(1, t)) * dx;
   const cy = a[1] + Math.max(0, Math.min(1, t)) * dy;
@@ -57,7 +66,9 @@ function perpendicularDistance(p: Pt, a: Pt, b: Pt): number {
 }
 
 function douglasPeucker(points: Pt[], tolerance: number): Pt[] {
-  if (points.length < 3) return points;
+  if (points.length < 3) {
+    return points;
+  }
   let index = 0;
   let maxDist = 0;
   const first = points[0];
@@ -69,7 +80,9 @@ function douglasPeucker(points: Pt[], tolerance: number): Pt[] {
       index = i;
     }
   }
-  if (maxDist <= tolerance) return [first, last];
+  if (maxDist <= tolerance) {
+    return [first, last];
+  }
   return [
     ...douglasPeucker(points.slice(0, index + 1), tolerance).slice(0, -1),
     ...douglasPeucker(points.slice(index), tolerance),
@@ -108,41 +121,68 @@ async function main(): Promise<void> {
     const id = r.shape_id;
     const lat = Number(r.shape_pt_lat);
     const lon = Number(r.shape_pt_lon);
-    if (!id || !Number.isFinite(lat) || !Number.isFinite(lon)) continue;
+    if (!id || !Number.isFinite(lat) || !Number.isFinite(lon)) {
+      continue;
+    }
     const list = byShape.get(id) ?? [];
-    list.push({ seq: Number(r.shape_pt_sequence) || list.length, pt: [lon, lat] });
+    list.push({
+      seq: Number(r.shape_pt_sequence) || list.length,
+      pt: [lon, lat],
+    });
     byShape.set(id, list);
   }
 
   // Candidate shapes per route + direction, longest first.
-  const keptRoutes = keepTypes ? routes.filter((r) => keepTypes.has(r.route_type)) : routes;
+  const keptRoutes = keepTypes
+    ? routes.filter((r) => keepTypes.has(r.route_type))
+    : routes;
   const keptRouteIds = new Set(keptRoutes.map((r) => r.route_id));
   const routeMeta = new Map(keptRoutes.map((r) => [r.route_id, r]));
-  const candidates = new Map<string, { routeId: string; shapeIds: Set<string> }>();
+  const candidates = new Map<
+    string,
+    { routeId: string; shapeIds: Set<string> }
+  >();
   for (const t of trips) {
-    if (!t.shape_id || !byShape.has(t.shape_id)) continue;
-    if (keepTypes && !keptRouteIds.has(t.route_id)) continue;
+    if (!t.shape_id || !byShape.has(t.shape_id)) {
+      continue;
+    }
+    if (keepTypes && !keptRouteIds.has(t.route_id)) {
+      continue;
+    }
     const key = `${t.route_id}::${t.direction_id ?? '0'}`;
-    const entry = candidates.get(key) ?? { routeId: t.route_id, shapeIds: new Set<string>() };
+    const entry = candidates.get(key) ?? {
+      routeId: t.route_id,
+      shapeIds: new Set<string>(),
+    };
     entry.shapeIds.add(t.shape_id);
     candidates.set(key, entry);
   }
 
   // Keep the longest shape, then any shape that covers enough ground the kept ones
   // do not. That picks up real branches without duplicating near-identical variants.
-  const representative = new Map<string, { routeId: string; shapeId: string }>();
+  const representative = new Map<
+    string,
+    { routeId: string; shapeId: string }
+  >();
   for (const [key, entry] of candidates) {
     const ordered = [...entry.shapeIds].sort(
-      (a, b) => byShape.get(b)!.length - byShape.get(a)!.length,
+      (a, b) => byShape.get(b)!.length - byShape.get(a)!.length
     );
     const covered: Pt[] = [];
     let branch = 0;
     for (const shapeId of ordered) {
-      if (branch >= MAX_BRANCHES_PER_DIRECTION) break;
+      if (branch >= MAX_BRANCHES_PER_DIRECTION) {
+        break;
+      }
       const pts = orderedPoints(shapeId);
       const novel = pts.filter((p) => !nearAny(p, covered)).length / pts.length;
-      if (branch > 0 && novel < BRANCH_MIN_NEW) continue;
-      representative.set(branch === 0 ? key : `${key}::${branch}`, { routeId: entry.routeId, shapeId });
+      if (branch > 0 && novel < BRANCH_MIN_NEW) {
+        continue;
+      }
+      representative.set(branch === 0 ? key : `${key}::${branch}`, {
+        routeId: entry.routeId,
+        shapeId,
+      });
       covered.push(...pts);
       branch++;
     }
@@ -158,7 +198,12 @@ async function main(): Promise<void> {
 
   function nearAny(p: Pt, pool: Pt[]): boolean {
     for (const q of pool) {
-      if (Math.abs(q[0] - p[0]) < BRANCH_NEAR && Math.abs(q[1] - p[1]) < BRANCH_NEAR) return true;
+      if (
+        Math.abs(q[0] - p[0]) < BRANCH_NEAR &&
+        Math.abs(q[1] - p[1]) < BRANCH_NEAR
+      ) {
+        return true;
+      }
     }
     return false;
   }
@@ -170,7 +215,14 @@ async function main(): Promise<void> {
     }
   }
 
-  const palette = ['--route-1', '--route-2', '--route-3', '--route-4', '--route-5', '--route-6'];
+  const palette = [
+    '--route-1',
+    '--route-2',
+    '--route-3',
+    '--route-4',
+    '--route-5',
+    '--route-6',
+  ];
   const outRoutes: unknown[] = [];
   const keptPoints: Pt[] = [];
   let paletteIndex = 0;
@@ -183,7 +235,9 @@ async function main(): Promise<void> {
     const simplified = simplifyToBudget(raw);
     keptPoints.push(...simplified);
     const meta = routeMeta.get(rep.routeId);
-    const gtfsColor = meta?.route_color ? `#${meta.route_color.replace(/^#/, '')}` : '';
+    const gtfsColor = meta?.route_color
+      ? `#${meta.route_color.replace(/^#/, '')}`
+      : '';
     outRoutes.push({
       id: key,
       name: meta?.route_short_name || meta?.route_long_name || rep.routeId,
@@ -196,9 +250,13 @@ async function main(): Promise<void> {
   // on a kept shape. Cheap, and exact enough for a decorative map.
   const NEAR = 0.0012; // roughly 130m
   const onNetwork = (lon: number, lat: number): boolean => {
-    if (!keepTypes) return true;
+    if (!keepTypes) {
+      return true;
+    }
     for (const [px, py] of keptPoints) {
-      if (Math.abs(px - lon) < NEAR && Math.abs(py - lat) < NEAR) return true;
+      if (Math.abs(px - lon) < NEAR && Math.abs(py - lat) < NEAR) {
+        return true;
+      }
     }
     return false;
   };
@@ -233,7 +291,9 @@ async function main(): Promise<void> {
   const kb = (Buffer.byteLength(json) / 1024).toFixed(1);
   console.log(`wrote ${OUT}`);
   console.log(`${outRoutes.length} routes, ${outStops.length} stops, ${kb} KB`);
-  if (Number(kb) > 150) console.warn('over the 150 KB budget, raise the simplification tolerance');
+  if (Number(kb) > 150) {
+    console.warn('over the 150 KB budget, raise the simplification tolerance');
+  }
 }
 
 function round(n: number): number {

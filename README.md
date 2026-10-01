@@ -11,7 +11,8 @@ the scene geometry. No framework.
 pnpm install
 pnpm dev         # http://localhost:8080
 pnpm build
-pnpm check        # typecheck, knip
+pnpm check       # typecheck, eslint, knip
+pnpm format
 pnpm bake                          # re-bake public/data/network-night.json from MBTA
 pnpm bake ./path/to/feed.zip
 pnpm bake <source> --types=0,1     # keep only those GTFS route_types

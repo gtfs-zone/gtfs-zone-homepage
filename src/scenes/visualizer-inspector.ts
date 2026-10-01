@@ -137,10 +137,18 @@ export class VisualizerInspectorScene implements Scene {
     let maxY = -Infinity;
     for (const r of routes) {
       for (const [x, y] of r.points) {
-        if (x < minX) minX = x;
-        if (y < minY) minY = y;
-        if (x > maxX) maxX = x;
-        if (y > maxY) maxY = y;
+        if (x < minX) {
+          minX = x;
+        }
+        if (y < minY) {
+          minY = y;
+        }
+        if (x > maxX) {
+          maxX = x;
+        }
+        if (y > maxY) {
+          maxY = y;
+        }
       }
     }
     const spanX = Math.max(1, maxX - minX);
@@ -212,7 +220,10 @@ export class VisualizerInspectorScene implements Scene {
       .attr('rx', variant.vehicleGlyph === 'capsule' ? 3 : 0)
       .attr('fill', (d) => d.color)
       .attr('opacity', String(arrive))
-      .attr('transform', (d) => `translate(${d.x} ${d.y}) rotate(${d.bearing}) translate(-5 -3)`);
+      .attr(
+        'transform',
+        (d) => `translate(${d.x} ${d.y}) rotate(${d.bearing}) translate(-5 -3)`
+      );
 
     // One vehicle is the subject; the panel describes it.
     const subject = placed[0] ?? { x: MAP.x + MAP.w / 2, y: MAP.y + MAP.h / 2 };

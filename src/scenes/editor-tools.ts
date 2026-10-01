@@ -98,23 +98,30 @@ export class EditorToolsScene implements Scene {
     const opening = subRange(t, 0.08, 0.5);
     const closing = subRange(t, 0.72, 0.98);
 
-    this.svg.selectAll<SVGPathElement, (typeof BLADES)[number]>('.kn-blade').each((d, i, nodes) => {
-      nodes[i].setAttribute('transform', `translate(${PIVOT.x} ${PIVOT.y}) rotate(${amount(opening, closing, i) * (d.angle - FOLDED) + FOLDED})`);
-    });
+    this.svg
+      .selectAll<SVGPathElement, (typeof BLADES)[number]>('.kn-blade')
+      .each((d, i, nodes) => {
+        nodes[i].setAttribute(
+          'transform',
+          `translate(${PIVOT.x} ${PIVOT.y}) rotate(${amount(opening, closing, i) * (d.angle - FOLDED) + FOLDED})`
+        );
+      });
 
-    this.svg.selectAll<SVGTextElement, (typeof BLADES)[number]>('.kn-label').each((d, i, nodes) => {
-      const a = amount(opening, closing, i);
-      const angle = (a * (d.angle - FOLDED) + FOLDED) * DEG;
-      const r = d.length + 14;
-      const x = PIVOT.x + Math.cos(angle) * r;
-      const y = PIVOT.y + Math.sin(angle) * r;
-      const left = Math.cos(angle) < 0;
-      nodes[i].setAttribute('x', String(x));
-      nodes[i].setAttribute('y', String(y + 4));
-      nodes[i].setAttribute('text-anchor', left ? 'end' : 'start');
-      // The label only appears once its blade has cleared the handle.
-      nodes[i].setAttribute('opacity', String(subRange(a, 0.55, 0.95)));
-    });
+    this.svg
+      .selectAll<SVGTextElement, (typeof BLADES)[number]>('.kn-label')
+      .each((d, i, nodes) => {
+        const a = amount(opening, closing, i);
+        const angle = (a * (d.angle - FOLDED) + FOLDED) * DEG;
+        const r = d.length + 14;
+        const x = PIVOT.x + Math.cos(angle) * r;
+        const y = PIVOT.y + Math.sin(angle) * r;
+        const left = Math.cos(angle) < 0;
+        nodes[i].setAttribute('x', String(x));
+        nodes[i].setAttribute('y', String(y + 4));
+        nodes[i].setAttribute('text-anchor', left ? 'end' : 'start');
+        // The label only appears once its blade has cleared the handle.
+        nodes[i].setAttribute('opacity', String(subRange(a, 0.55, 0.95)));
+      });
   }
 
   destroy(): void {
@@ -126,7 +133,11 @@ export class EditorToolsScene implements Scene {
 // fold in reverse, which is how a real knife closes.
 function amount(opening: number, closing: number, i: number): number {
   const open = subRange(opening, i * 0.09, i * 0.09 + 0.55);
-  const close = subRange(closing, (BLADES.length - 1 - i) * 0.09, (BLADES.length - 1 - i) * 0.09 + 0.55);
+  const close = subRange(
+    closing,
+    (BLADES.length - 1 - i) * 0.09,
+    (BLADES.length - 1 - i) * 0.09 + 0.55
+  );
   return open * (1 - close);
 }
 

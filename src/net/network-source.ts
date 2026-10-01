@@ -28,15 +28,26 @@ export interface NetworkSource {
 
 // Segment lengths are recomputed only when a route's point array is replaced,
 // which happens on resize, not per frame.
-const arcCache = new WeakMap<[number, number][], { segs: number[]; total: number }>();
+const arcCache = new WeakMap<
+  [number, number][],
+  { segs: number[]; total: number }
+>();
 
-function arcLengths(points: [number, number][]): { segs: number[]; total: number } {
+function arcLengths(points: [number, number][]): {
+  segs: number[];
+  total: number;
+} {
   const cached = arcCache.get(points);
-  if (cached) return cached;
+  if (cached) {
+    return cached;
+  }
   let total = 0;
   const segs: number[] = [];
   for (let i = 1; i < points.length; i++) {
-    const d = Math.hypot(points[i][0] - points[i - 1][0], points[i][1] - points[i - 1][1]);
+    const d = Math.hypot(
+      points[i][0] - points[i - 1][0],
+      points[i][1] - points[i - 1][1]
+    );
     segs.push(d);
     total += d;
   }
@@ -46,13 +57,22 @@ function arcLengths(points: [number, number][]): { segs: number[]; total: number
 }
 
 /** Shared helper: position along a polyline by normalized arc length. */
-export function pointAlong(points: [number, number][], t: number): [number, number] {
-  if (points.length === 0) return [0, 0];
-  if (points.length === 1) return points[0];
+export function pointAlong(
+  points: [number, number][],
+  t: number
+): [number, number] {
+  if (points.length === 0) {
+    return [0, 0];
+  }
+  if (points.length === 1) {
+    return points[0];
+  }
   const tt = ((t % 1) + 1) % 1;
 
   const { segs, total } = arcLengths(points);
-  if (total === 0) return points[0];
+  if (total === 0) {
+    return points[0];
+  }
 
   let target = tt * total;
   for (let i = 0; i < segs.length; i++) {

@@ -27,7 +27,11 @@ export class SectionTracker {
   private pinned = false;
   visible = false;
 
-  constructor(el: HTMLElement, root: HTMLElement, observer: IntersectionObserver) {
+  constructor(
+    el: HTMLElement,
+    root: HTMLElement,
+    observer: IntersectionObserver
+  ) {
     this.el = el;
     this.root = root;
     this.measure();
@@ -88,7 +92,9 @@ export function clamp01(n: number): number {
 
 // Maps a 0..1 value onto a sub-window of the same range, clamped.
 export function subRange(p: number, from: number, to: number): number {
-  if (to === from) return p >= to ? 1 : 0;
+  if (to === from) {
+    return p >= to ? 1 : 0;
+  }
   return clamp01((p - from) / (to - from));
 }
 
@@ -97,7 +103,9 @@ export function createSectionObserver(
 ): IntersectionObserver {
   return new IntersectionObserver(
     (entries) => {
-      for (const e of entries) onChange(e.target, e.isIntersecting);
+      for (const e of entries) {
+        onChange(e.target, e.isIntersecting);
+      }
     },
     { rootMargin: '20% 0px 20% 0px' }
   );

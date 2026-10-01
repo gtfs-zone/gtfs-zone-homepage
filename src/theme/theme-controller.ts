@@ -42,7 +42,9 @@ export class ThemeController {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem(STORAGE_KEY, theme);
     this.updateThemeControllers(theme);
-    for (const fn of this.listeners) fn(theme);
+    for (const fn of this.listeners) {
+      fn(theme);
+    }
   }
 
   private loadThemePreference(): void {
@@ -57,12 +59,16 @@ export class ThemeController {
       this.setTheme('night');
       return;
     }
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const prefersDark = window.matchMedia(
+      '(prefers-color-scheme: dark)'
+    ).matches;
     this.setTheme(prefersDark ? 'night' : 'light');
   }
 
   private handleThemeChange(controller: HTMLInputElement): void {
-    if (controller.type !== 'checkbox') return;
+    if (controller.type !== 'checkbox') {
+      return;
+    }
     // The checkbox carries the light theme as its value, matching the swap
     // markup: checked means light, unchecked means night.
     this.setTheme(controller.checked ? 'light' : 'night');

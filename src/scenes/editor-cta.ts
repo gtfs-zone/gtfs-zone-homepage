@@ -144,7 +144,9 @@ export class EditorCtaScene implements Scene {
           .attr('stroke-width', hair);
       }
       [r.id, r.name, r.lat, r.lon].forEach((cell, c) => {
-        if (!cell) return;
+        if (!cell) {
+          return;
+        }
         const bad = i === 3 && c === 2;
         row
           .append('text')
@@ -447,17 +449,25 @@ export class EditorCtaScene implements Scene {
     const k = 1 - 1.6 * lidOpen;
     this.svg
       .select('.ed-lid')
-      .attr('transform', `translate(0 ${LID_Y}) scale(1 ${k}) translate(0 ${-LID_Y})`);
+      .attr(
+        'transform',
+        `translate(0 ${LID_Y}) scale(1 ${k}) translate(0 ${-LID_Y})`
+      );
 
     // Cards.
-    const cardOpacity = inExport ? restack * (1 - tuckAway) : fan * (1 - collapse);
+    const cardOpacity = inExport
+      ? restack * (1 - tuckAway)
+      : fan * (1 - collapse);
     const cardSpread = inExport ? unfan : fan * (1 - collapse);
     this.svg.select('.ed-cards').attr('opacity', String(cardOpacity));
     this.svg.selectAll<SVGGElement, unknown>('.ed-card').each((_, i, nodes) => {
       const c = CARDS[i];
       const x = CX + c.off * CARD_SPREAD * cardSpread;
       const rot = c.off * 8 * cardSpread;
-      nodes[i].setAttribute('transform', `translate(${x} ${CARD_Y}) rotate(${rot} 0 ${CARD_H / 2})`);
+      nodes[i].setAttribute(
+        'transform',
+        `translate(${x} ${CARD_Y}) rotate(${rot} 0 ${CARD_H / 2})`
+      );
     });
 
     // Table. The header leaves with the unflagged rows, so the map never
@@ -467,16 +477,24 @@ export class EditorCtaScene implements Scene {
     this.svg.selectAll<SVGGElement, unknown>('.ed-row').each((_, i, nodes) => {
       const flagged = FLAGS.some((f) => f.row === i);
       nodes[i].setAttribute('opacity', String(flagged ? 1 : 1 - rowShift));
-      nodes[i].setAttribute('transform', `translate(0 ${ROW_SHIFT[i] * rowShift})`);
+      nodes[i].setAttribute(
+        'transform',
+        `translate(0 ${ROW_SHIFT[i] * rowShift})`
+      );
     });
     const issueColor = fixed > 0.5 ? palette.accent : palette.routes[3];
-    this.svg.selectAll<SVGRectElement, unknown>('.ed-flag').each((_, i, nodes) => {
-      const f = FLAGS[i];
-      const at = (f.x - TABLE_X) / TABLE_W;
-      nodes[i].setAttribute('opacity', String(subRange(sweep, at, at + 0.15)));
-      nodes[i].setAttribute('fill', issueColor);
-      nodes[i].setAttribute('stroke', issueColor);
-    });
+    this.svg
+      .selectAll<SVGRectElement, unknown>('.ed-flag')
+      .each((_, i, nodes) => {
+        const f = FLAGS[i];
+        const at = (f.x - TABLE_X) / TABLE_W;
+        nodes[i].setAttribute(
+          'opacity',
+          String(subRange(sweep, at, at + 0.15))
+        );
+        nodes[i].setAttribute('fill', issueColor);
+        nodes[i].setAttribute('stroke', issueColor);
+      });
     // The fix writes both cells back: the blank one gets a value, the out of
     // range lat gets a real one.
     const done = fixed > 0.5;
@@ -501,10 +519,15 @@ export class EditorCtaScene implements Scene {
       .attr('stroke', issueColor);
 
     // Badge.
-    const badgeOpacity = subRange(sweep, 0.75, 1) * (1 - subRange(a4, 0.15, 0.3));
+    const badgeOpacity =
+      subRange(sweep, 0.75, 1) * (1 - subRange(a4, 0.15, 0.3));
     this.svg.select('.ed-badge').attr('opacity', String(badgeOpacity));
-    this.svg.select('.ed-badge-open').attr('opacity', String(fixed > 0.5 ? 0 : 1));
-    this.svg.select('.ed-badge-clear').attr('opacity', String(fixed > 0.5 ? 1 : 0));
+    this.svg
+      .select('.ed-badge-open')
+      .attr('opacity', String(fixed > 0.5 ? 0 : 1));
+    this.svg
+      .select('.ed-badge-clear')
+      .attr('opacity', String(fixed > 0.5 ? 1 : 0));
 
     // Export mark.
     this.svg
@@ -525,11 +548,16 @@ export class EditorCtaScene implements Scene {
 
     const arrivals = [subRange(a1, 0, 0.2), hop1, hop2, hop3];
     const departures = [hop1, hop2, hop3, 0];
-    this.svg.selectAll<SVGTextElement, string>('.ed-step').each((_, i, nodes) => {
-      const active = arrivals[i] > 0.2 && departures[i] < 0.8;
-      nodes[i].setAttribute('fill', active ? palette.accentText : palette.inkMuted);
-      nodes[i].setAttribute('opacity', String(arrivals[i] > 0.2 ? 1 : 0.55));
-    });
+    this.svg
+      .selectAll<SVGTextElement, string>('.ed-step')
+      .each((_, i, nodes) => {
+        const active = arrivals[i] > 0.2 && departures[i] < 0.8;
+        nodes[i].setAttribute(
+          'fill',
+          active ? palette.accentText : palette.inkMuted
+        );
+        nodes[i].setAttribute('opacity', String(arrivals[i] > 0.2 ? 1 : 0.55));
+      });
   }
 
   destroy(): void {

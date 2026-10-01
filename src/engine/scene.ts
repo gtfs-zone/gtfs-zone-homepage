@@ -5,7 +5,13 @@ import type { Palette } from '../theme/palette';
 import { onTick } from './ticker';
 import { initScrollStore, refreshLayout, sampleScroll } from './scroll-store';
 import { createSectionObserver, SectionTracker } from './section-progress';
-import { initViewport, onResizeViewport, prefersReducedMotion, viewport, type Viewport } from './viewport';
+import {
+  initViewport,
+  onResizeViewport,
+  prefersReducedMotion,
+  viewport,
+  type Viewport,
+} from './viewport';
 
 export type VariantName = 'night' | 'blueprint';
 
@@ -69,8 +75,14 @@ export interface RegisterOptions {
   alwaysActive?: boolean;
 }
 
-export function registerScene(root: HTMLElement, scene: Scene, opts: RegisterOptions = {}): void {
-  if (!observer || !ctx) throw new Error('startEngine() must run before registerScene()');
+export function registerScene(
+  root: HTMLElement,
+  scene: Scene,
+  opts: RegisterOptions = {}
+): void {
+  if (!observer || !ctx) {
+    throw new Error('startEngine() must run before registerScene()');
+  }
   const section = opts.section ?? root.closest<HTMLElement>('.section') ?? root;
   // An explicit section means the caller picked the driving box itself.
   const driver = opts.section ?? root;
@@ -79,7 +91,12 @@ export function registerScene(root: HTMLElement, scene: Scene, opts: RegisterOpt
   scene.resize?.(viewport);
   // The scene's box only has a size once it is mounted.
   tracker.measure();
-  registrations.push({ scene, root, tracker, alwaysActive: opts.alwaysActive === true });
+  registrations.push({
+    scene,
+    root,
+    tracker,
+    alwaysActive: opts.alwaysActive === true,
+  });
 }
 
 export function startEngine(context: SceneContext): void {
@@ -102,12 +119,16 @@ export function startEngine(context: SceneContext): void {
   // Page height moves after mount as fonts and async geometry land, which shifts
   // every cached rect below the change.
   layoutObserver = new ResizeObserver(() => {
-    if (remeasureQueued) return;
+    if (remeasureQueued) {
+      return;
+    }
     remeasureQueued = true;
     requestAnimationFrame(() => {
       remeasureQueued = false;
       refreshLayout();
-      for (const r of registrations) r.tracker.measure();
+      for (const r of registrations) {
+        r.tracker.measure();
+      }
     });
   });
   layoutObserver.observe(document.body);
@@ -123,7 +144,9 @@ export function startEngine(context: SceneContext): void {
     sampleScroll();
     for (const r of registrations) {
       const p = r.tracker.read();
-      if (!p.visible && !r.alwaysActive) continue;
+      if (!p.visible && !r.alwaysActive) {
+        continue;
+      }
       r.scene.render({
         progress: p.progress,
         pinProgress: p.pinProgress,

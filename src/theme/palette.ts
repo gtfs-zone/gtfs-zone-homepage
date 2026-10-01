@@ -18,12 +18,18 @@ function readVar(styles: CSSStyleDeclaration, name: string): string {
   return styles.getPropertyValue(name).trim();
 }
 
-function readNum(styles: CSSStyleDeclaration, name: string, fallback: number): number {
+function readNum(
+  styles: CSSStyleDeclaration,
+  name: string,
+  fallback: number
+): number {
   const n = parseFloat(readVar(styles, name));
   return Number.isFinite(n) ? n : fallback;
 }
 
-export function readPalette(el: HTMLElement = document.documentElement): Palette {
+export function readPalette(
+  el: HTMLElement = document.documentElement
+): Palette {
   const s = getComputedStyle(el);
   return {
     bg: readVar(s, '--bg'),

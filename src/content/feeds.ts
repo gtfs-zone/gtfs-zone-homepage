@@ -77,13 +77,18 @@ export function editorLink(feed: FeedChip): string {
 }
 
 export function visualizerLink(feed: FeedChip): string {
-  const cors = [feed.scheduledCors ? 's' : '', feed.realtimeCors ? 'r' : ''].filter(Boolean);
+  const cors = [
+    feed.scheduledCors ? 's' : '',
+    feed.realtimeCors ? 'r' : '',
+  ].filter(Boolean);
   const params = new URLSearchParams({
     scheduled: feed.feedUrl,
     rt_vp: feed.realtime.vehiclePositions,
     rt_tu: feed.realtime.tripUpdates,
     rt_al: feed.realtime.serviceAlerts,
   });
-  if (cors.length > 0) params.set('cors', cors.join(','));
+  if (cors.length > 0) {
+    params.set('cors', cors.join(','));
+  }
   return `${VISUALIZER}/#${params.toString()}`;
 }

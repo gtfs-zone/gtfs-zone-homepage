@@ -41,7 +41,8 @@ function onScroll(): void {
 export function sampleScroll(): void {
   const now = performance.now();
   // Clamped so a long frame gap does not resume with one giant step.
-  const dt = lastSample === 0 ? 1 / 60 : Math.min((now - lastSample) / 1000, 0.1);
+  const dt =
+    lastSample === 0 ? 1 / 60 : Math.min((now - lastSample) / 1000, 0.1);
   lastSample = now;
 
   const dy = scrollState.y - lastY;
