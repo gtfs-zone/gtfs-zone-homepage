@@ -90,13 +90,11 @@ nothing ships until a tag exists.
 ```
 cz bump          # updates package.json + CHANGELOG.md, commits, tags vX.Y.Z
 git push origin main --tags
-git push github main --tags
 ```
 
 `cz bump` refuses to run off `main`. The `v*` tag fires
-`.forgejo/workflows/build.yml`, which typechecks, builds, pushes the image by
-digest and records that digest in `deploy-gtfs-rt/sites/kustomization.yaml`;
-ArgoCD rolls it out.
+`.github/workflows/pages.yml`, which typechecks, builds and publishes `dist/` to
+GitHub Pages.
 
 ## History
 

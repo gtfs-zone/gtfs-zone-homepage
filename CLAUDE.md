@@ -73,5 +73,5 @@ git push --follow-tags
 
 `cz bump` refuses to run off `main`. Commit messages must be conventional
 commits; `.pre-commit-config.yaml` enforces this via a commitizen commit-msg hook.
-`.forgejo/workflows/build.yml` typechecks, builds, and copies `dist/` to
-`/sites/gtfs.zone`.
+`.github/workflows/pages.yml` typechecks, builds, and publishes `dist/` to
+GitHub Pages.
