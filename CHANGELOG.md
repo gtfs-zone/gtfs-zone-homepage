@@ -1,3 +1,9 @@
+## v0.8.2 (2026-10-01)
+
+### Fix
+
+- link the source and bug tracker to GitHub
+
 ## v0.8.1 (2026-10-01)
 
 ### Refactor
