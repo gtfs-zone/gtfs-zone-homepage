@@ -60,13 +60,39 @@ The page treats the first two as peers, and links both everywhere.
 - It then stamps `target="_blank" rel="noopener noreferrer"` onto every external
   anchor and **fails the build** if one escapes. Nobody has to remember the rule
   per-anchor.
-- `src/content/links.ts` is the canonical URL table. `src/content/copy.ts` holds
-  the prose and imports its hrefs from there.
+- `src/content/links.ts` is the canonical URL table. Labels and prose live in the
+  catalogs, never in `page.html`.
 - Motion is a pure function of scroll offset. Every scene's `render(p)` is
   idempotent and depends only on `p`. Time-based ambient motion uses `p.elapsed`
   and a deterministic seed.
 - One rAF loop drives everything (`src/engine/ticker.ts`). Offscreen scenes do not
   render. The background network is the one exception and always renders.
+
+## Languages
+
+The page is built once per locale: English at `/`, French at `/fr/`. Both come
+from the same `index.html` and `src/page.html`; the build fills them from
+`src/content/copy.ts` (English, the source of truth for the keys) or
+`src/content/copy.fr.ts`, which is typed against it, so a missing or extra French
+key is a type error.
+
+`page.html` uses three markers, and the build fails on an unknown or unfilled
+one:
+
+- `{{section.key}}`: a catalog string, HTML-escaped. Array items by index, e.g.
+  `{{scheduled.features.0.term}}`.
+- `{{href:name}}`: a URL from `links.ts`.
+- `{{page:name}}`: a per-locale value (`lang`, `url`, `otherPath`, ...).
+
+Scenes read their strings from the catalog matching `<html lang>`
+(`pageCopy()` in `src/i18n/catalogs.ts`). GTFS field names and enum values are
+never translated.
+
+The `EN`/`FR` control next to the theme toggle is a plain link to the other
+page. With JS it also stores the choice in a `locale` cookie on `.gtfs.zone`,
+the same preference the apps read. A visit to `/` whose stored preference, or
+with none stored whose browser language, is French is redirected to `/fr/` by
+a small inline script; without JS every page stays where it is.
 
 ## Sections and scenes
 

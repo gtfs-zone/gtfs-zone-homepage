@@ -16,10 +16,17 @@ expands `@feeds` and `@icon` markers, and **fails the build** if an external
 anchor lacks `target="_blank" rel="noopener noreferrer"`. Sections, scenes and
 themes are described in [README.md](README.md).
 
-- All copy is real text in `src/page.html`; the page must read with JS disabled.
-- Product URLs come from `src/content/links.ts`. Never hardcode one elsewhere.
-- One HTML entry point. Do not add a second without a reason.
+- All copy lives in the catalogs, `src/content/copy.ts` (English, source of the
+  keys) and `src/content/copy.fr.ts`; `src/page.html` reads it through
+  `{{key}}` markers that the build fills with real text, so each locale's page
+  must read with JS disabled. A new string goes in both catalogs.
+- Product URLs come from `src/content/links.ts` (`{{href:name}}` in
+  `page.html`). Never hardcode one elsewhere.
+- One HTML template (`index.html` + `src/page.html`), rendered once per locale
+  (`/`, `/fr/`). Do not add a second template without a reason.
 - A scene's `render(p)` is idempotent and depends only on `p`.
+- Scenes never hardcode copy: read it from `pageCopy()` (`src/i18n/catalogs.ts`).
+  GTFS field names and enum values stay literal.
 - Scenes never hardcode colors: read them from `Palette` (`src/theme/palette.ts`)
   in `mount()`. A theme change remounts every scene, so each needs a working
   `destroy()`.
