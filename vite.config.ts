@@ -2,23 +2,45 @@ import { defineConfig, type Plugin } from 'vite';
 import { execSync } from 'child_process';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
+import type { Copy } from './src/content/copy';
 import { editorLink, feeds, visualizerLink } from './src/content/feeds';
 import { icons } from './src/content/icons';
+import { links } from './src/content/links';
 import { structuredData } from './src/content/structured-data';
+import {
+  catalogs,
+  DEFAULT_LOCALE,
+  LOCALES,
+  localePath,
+  type Locale,
+} from './src/i18n/catalogs';
+import { localeRedirect } from './src/i18n/preference';
 
 // The body markup lives in src/page.html and is inlined here, and the feed chips
 // are generated from feeds.ts so the editor list and the visualizer list cannot
 // drift from each other.
 //
-// Six passes, in order:
-//   1. @include: inline the body markup
-//   2. @feeds:   expand the generated feed chip lists
-//   3. @icon:    expand a list glyph from icons.ts, so a mark is defined once
-//   4. @version: stamp the build version from git tags
-//   5. @jsonld:  emit the schema.org JSON-LD from structured-data.ts
-//   6. new-tab:  stamp target/rel on every external anchor, then assert none
-//                  were missed. This is what makes the rule unforgettable: no
-//                  author has to remember it per-anchor.
+// index.html is rendered once per locale: `/` (English) and `/fr/` (French).
+// The French page has no file of its own; it is index.html served under
+// fr/index.html, and the passes below pick the locale from the page's path.
+//
+// Nine passes, in order:
+//   1. @include:         inline the body markup
+//   2. @feeds:           expand the generated feed chip lists
+//   3. @icon:            expand a list glyph from icons.ts, so a mark is defined once
+//   4. @version:         stamp the build version from git tags
+//   5. @jsonld:          emit the schema.org JSON-LD from structured-data.ts
+//   6. @alternates:      emit the hreflang links to every locale's page
+//   7. @locale-redirect: on the default locale's page, send a French preference to /fr/
+//   8. {{...}}:          fill copy from the locale's catalog, URLs from links.ts and
+//                          per-page values, then assert no marker is left
+//   9. new-tab:          stamp target/rel on every external anchor, then assert none
+//                          were missed. This is what makes the rule unforgettable: no
+//                          author has to remember it per-anchor.
+
+const SITE = 'https://gtfs.zone';
+
+const OG_LOCALE: Record<Locale, string> = { en: 'en_US', fr: 'fr_FR' };
 
 const EXTERNAL_ANCHOR =
   /<a\s([^>]*?)href="((?:https?:|mailto:)[^"]*)"([^>]*?)>/g;
@@ -31,19 +53,21 @@ function escapeHtml(s: string): string {
     .replace(/"/g, '&quot;');
 }
 
-function chips(kind: 'editor' | 'visualizer'): string {
+function chips(kind: 'editor' | 'visualizer', copy: Copy): string {
   const href = kind === 'editor' ? editorLink : visualizerLink;
   // The same feed appears in both lists, so each link states its destination
   // off-screen: identical link text pointing at two targets reads as one link.
   const destination =
-    kind === 'editor' ? 'open in the editor' : 'open in the visualizer';
+    kind === 'editor'
+      ? copy.feeds.editorDestination
+      : copy.feeds.visualizerDestination;
   const items = feeds
     .map(
       (feed) => `    <li>
       <a class="chip block h-full p-4" href="${escapeHtml(href(feed))}">
-        <span class="font-semibold">${feed.name}</span>
-        <span class="lede mt-1 block text-sm">${feed.descriptor}</span>
-        <span class="sr-only-desc">, ${destination}</span>
+        <span class="font-semibold">${escapeHtml(feed.name)}</span>
+        <span class="lede mt-1 block text-sm">${escapeHtml(copy.feeds[feed.id])}</span>
+        <span class="sr-only-desc">, ${escapeHtml(destination)}</span>
       </a>
     </li>`
     )
@@ -90,12 +114,125 @@ function buildVersion(): string {
 
 const version = buildVersion();
 
+/** The locale whose page lives at `path`; anything not under a locale's directory is the default. */
+function localeOf(path: string): Locale {
+  return (
+    LOCALES.find(
+      (l) => l !== DEFAULT_LOCALE && path.startsWith(localePath[l])
+    ) ?? DEFAULT_LOCALE
+  );
+}
+
+/** The catalog string at a dotted path such as `scheduled.features.0.term`. */
+function catalogString(copy: Copy, key: string): string | undefined {
+  let node: unknown = copy;
+  for (const part of key.split('.')) {
+    if (typeof node !== 'object' || node === null || !(part in node)) {
+      return undefined;
+    }
+    node = (node as Record<string, unknown>)[part];
+  }
+  return typeof node === 'string' ? node : undefined;
+}
+
+/**
+ * The value behind a `{{...}}` marker: `href:<name>` is a URL from links.ts,
+ * `page:<name>` a per-locale page value, anything else a catalog key.
+ */
+function markerValue(locale: Locale, marker: string): string | undefined {
+  const [ns, name] = marker.includes(':') ? marker.split(':', 2) : ['', marker];
+  if (ns === 'href') {
+    return (links as Record<string, string>)[name];
+  }
+  if (ns === 'page') {
+    const other = LOCALES.find((l) => l !== locale) ?? DEFAULT_LOCALE;
+    const page: Record<string, string> = {
+      lang: locale,
+      url: SITE + localePath[locale],
+      ogLocale: OG_LOCALE[locale],
+      otherLang: other,
+      otherPath: localePath[other],
+      otherOgLocale: OG_LOCALE[other],
+    };
+    return page[name];
+  }
+  return ns === '' ? catalogString(catalogs[locale], name) : undefined;
+}
+
+function alternates(): string {
+  return [
+    ...LOCALES.map(
+      (l) =>
+        `<link rel="alternate" hreflang="${l}" href="${SITE}${localePath[l]}" />`
+    ),
+    `<link rel="alternate" hreflang="x-default" href="${SITE}${localePath[DEFAULT_LOCALE]}" />`,
+  ].join('\n    ');
+}
+
 function buildPage(): Plugin {
+  const root = __dirname;
+  // Entry ids of the non-default locales' pages, e.g. <root>/fr/index.html.
+  const localePages = new Map(
+    LOCALES.filter((l) => l !== DEFAULT_LOCALE).map((l) => [
+      resolve(root, `.${localePath[l]}index.html`),
+      l,
+    ])
+  );
+  const template = (): string =>
+    readFileSync(resolve(root, 'index.html'), 'utf-8');
+
   return {
     name: 'build-page',
+    config() {
+      return {
+        build: {
+          rollupOptions: {
+            input: [resolve(root, 'index.html'), ...localePages.keys()],
+          },
+        },
+      };
+    },
+    resolveId(id) {
+      return localePages.has(id) ? id : null;
+    },
+    load(id) {
+      return localePages.has(id) ? template() : null;
+    },
+    configureServer(server) {
+      // Dev: serve index.html under each locale's path.
+      server.middlewares.use(async (req, res, next) => {
+        const path = (req.url ?? '').split(/[?#]/)[0];
+        const locale = LOCALES.find(
+          (l) =>
+            l !== DEFAULT_LOCALE &&
+            [
+              localePath[l],
+              localePath[l].replace(/\/$/, ''),
+              `${localePath[l]}index.html`,
+            ].includes(path)
+        );
+        if (!locale) {
+          next();
+          return;
+        }
+        if (!path.endsWith('/') && !path.endsWith('.html')) {
+          res.writeHead(301, { Location: localePath[locale] }).end();
+          return;
+        }
+        const html = await server.transformIndexHtml(
+          `${localePath[locale]}index.html`,
+          template(),
+          req.originalUrl
+        );
+        res.setHeader('Content-Type', 'text/html').end(html);
+      });
+    },
     transformIndexHtml: {
       order: 'pre',
       handler(html, ctx) {
+        const locale = localeOf(ctx.path);
+        const copy = catalogs[locale];
+
         let out = html.replace(
           /<!--\s*@include\s+(\S+)\s*-->/g,
           (_, file: string) =>
@@ -104,7 +241,7 @@ function buildPage(): Plugin {
 
         out = out.replace(
           /<!--\s*@feeds\s+(editor|visualizer)\s*-->/g,
-          (_, kind) => chips(kind as 'editor' | 'visualizer')
+          (_, kind) => chips(kind as 'editor' | 'visualizer', copy)
         );
 
         out = out.replace(/<!--\s*@icon\s+([\w-]+)\s*-->/g, (_, name: string) =>
@@ -117,8 +254,30 @@ function buildPage(): Plugin {
         out = out.replace(
           /<!--\s*@jsonld\s*-->/g,
           () =>
-            `<script type="application/ld+json">${JSON.stringify(structuredData).replace(/</g, '\\u003c')}</script>`
+            `<script type="application/ld+json">${JSON.stringify(structuredData(copy, locale)).replace(/</g, '\\u003c')}</script>`
         );
+
+        out = out.replace(/<!--\s*@alternates\s*-->/g, alternates);
+
+        out = out.replace(/<!--\s*@locale-redirect\s*-->/g, () =>
+          locale === DEFAULT_LOCALE
+            ? `<script>(${localeRedirect.toString()})();</script>`
+            : ''
+        );
+
+        out = out.replace(/\{\{\s*([\w.:-]+)\s*\}\}/g, (_, marker: string) => {
+          const value = markerValue(locale, marker);
+          if (value === undefined) {
+            throw new Error(`${ctx.path}: unknown marker {{${marker}}}`);
+          }
+          return escapeHtml(value);
+        });
+        const unfilled = out.match(/\{\{[^}]*\}\}/g);
+        if (unfilled) {
+          throw new Error(
+            `${ctx.path}: unfilled markers: ${unfilled.join(', ')}`
+          );
+        }
 
         out = out.replace(
           EXTERNAL_ANCHOR,

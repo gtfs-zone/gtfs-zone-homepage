@@ -35,11 +35,17 @@ body {
 }
 
 /* Sits above both the background network and the page content. */
-.theme-toggle {
+.page-controls {
   position: fixed;
   top: 1rem;
   right: 1rem;
   z-index: 2;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.theme-toggle,
+.locale-toggle {
   padding: 0.5rem;
   border-radius: var(--corner-radius);
   border: 1px solid var(--grid);
@@ -48,7 +54,19 @@ body {
   backdrop-filter: blur(6px);
 }
 
-.theme-toggle:hover {
+/* Same box as the theme toggle's 24px glyph. */
+.locale-toggle {
+  display: grid;
+  place-items: center;
+  min-width: calc(1.5rem + 1rem + 2px);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+}
+
+.theme-toggle:hover,
+.locale-toggle:hover {
   border-color: var(--accent);
 }
 

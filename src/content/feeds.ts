@@ -18,8 +18,9 @@ export interface RealtimeTriple {
 }
 
 export interface FeedChip {
+  /** Key of the feed's descriptor in the catalogs' `feeds` section. */
+  id: 'mbta' | 'amtrak' | 'columbiaCounty';
   name: string;
-  descriptor: string;
   feedUrl: string;
   realtime: RealtimeTriple;
   /** Proxy the scheduled source. */
@@ -42,8 +43,8 @@ function ours(feed: string): RealtimeTriple {
 
 export const feeds: FeedChip[] = [
   {
+    id: 'mbta',
     name: 'MBTA',
-    descriptor: 'Large and complete. Exercises nearly every GTFS feature.',
     feedUrl: 'https://cdn.mbta.com/MBTA_GTFS.zip',
     realtime: {
       vehiclePositions: 'https://cdn.mbta.com/realtime/VehiclePositions.pb',
@@ -54,16 +55,16 @@ export const feeds: FeedChip[] = [
     realtimeCors: true,
   },
   {
+    id: 'amtrak',
     name: 'Amtrak',
-    descriptor: 'A national network, and a genuinely messy feed.',
     feedUrl: 'https://content.amtrak.com/content/gtfs/GTFS.zip',
     realtime: ours('amtrak'),
     scheduledCors: true,
     realtimeCors: true,
   },
   {
+    id: 'columbiaCounty',
     name: 'Columbia County',
-    descriptor: "What a small rural agency's feed actually looks like.",
     feedUrl:
       'https://raw.githubusercontent.com/columbia-county-ny-transit/gtfs-generator/refs/heads/main/columbia_county_gtfs.zip',
     realtime: ours('columbia-county'),

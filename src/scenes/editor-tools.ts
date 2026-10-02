@@ -3,8 +3,10 @@
 
 import { select, type Selection } from 'd3-selection';
 import { subRange } from '../engine/section-progress';
-import { copy } from '../content/copy';
+import { pageCopy } from '../i18n/catalogs';
 import type { Scene, SceneContext, SceneProgress } from '../engine/scene';
+
+const copy = pageCopy();
 
 const VB_W = 720;
 const VB_H = 400;
@@ -21,8 +23,9 @@ const BLADES = copy.editor.blades.map((label, i) => ({
   label,
   angle: OPEN_FROM + i * OPEN_STEP,
   // Alternating lengths keep neighbouring labels off each other. The shapes
-  // blade gets extra reach so its longer label sits clear of its neighbours.
-  length: (i % 2 === 0 ? 186 : 152) + (label === 'Generate shapes' ? 18 : 0),
+  // blade (index 3) gets extra reach so its longer label sits clear of its
+  // neighbours.
+  length: (i % 2 === 0 ? 186 : 152) + (i === 3 ? 18 : 0),
 }));
 
 const DEG = Math.PI / 180;

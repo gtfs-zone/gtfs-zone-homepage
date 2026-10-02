@@ -1,5 +1,7 @@
-<!-- Body markup. Inlined into index.html at build time. All copy is present as
-     real text, so the page reads fine with JS disabled.
+<!-- Body markup. Inlined into index.html at build time and rendered once per
+     locale: every string is a catalog marker filled from src/content/copy.ts
+     or copy.fr.ts, every URL an href marker filled from src/content/links.ts.
+     The output is real text, so the page reads fine with JS disabled.
 
      `@feeds` is expanded from src/content/feeds.ts by the vite plugin, so the
      editor chips and the visualizer chips are built from one feed list.
@@ -9,11 +11,24 @@
 
 <div class="stage" data-scene="hero-map"></div>
 
+<div class="page-controls">
+<!-- A plain link to the other locale's page, so it works with JS off; with JS
+     it also stores the choice (src/i18n/preference.ts). -->
+<a
+  class="locale-toggle"
+  href="{{page:otherPath}}"
+  hreflang="{{page:otherLang}}"
+  lang="{{page:otherLang}}"
+  title="{{controls.otherLocale}}"
+  data-locale-toggle="{{page:otherLang}}"
+  ><span aria-hidden="true">{{controls.otherLocaleCode}}</span
+  ><span class="sr-only-desc">{{controls.otherLocale}}</span></a
+>
 <!-- Same swap markup as the editor and the visualizer, so the control reads the
      same across all three sites. Checked means light. -->
-<label class="theme-toggle swap swap-rotate" title="Toggle light and dark">
+<label class="theme-toggle swap swap-rotate" title="{{controls.theme}}">
   <input type="checkbox" class="theme-controller" value="light" />
-  <span class="sr-only-desc">Toggle light and dark</span>
+  <span class="sr-only-desc">{{controls.theme}}</span>
   <svg class="swap-on h-6 w-6 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
     <path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z" />
   </svg>
@@ -21,6 +36,7 @@
     <path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z" />
   </svg>
 </label>
+</div>
 
 <main class="page">
   <!-- Section 0: hero -->
@@ -32,71 +48,69 @@
           <span class="text-2xl font-semibold tracking-tight">gtfs.zone</span>
         </div>
         <h1 class="mt-6 text-3xl md:text-5xl font-semibold tracking-tight leading-tight">
-          Simple, open source tools for transit data.
+          {{hero.heading}}
         </h1>
         <p class="lede mt-4 text-base md:text-lg max-w-xl">
-          Built by riders and operators, for riders and operators.
+          {{hero.body}}
         </p>
         <div class="mt-8 flex flex-wrap items-center gap-3">
-          <a class="btn btn-primary" href="https://list.gtfs.zone">Explore the feed map</a>
-          <a class="btn btn-outline" href="https://edit.gtfs.zone">Open the editor</a>
+          <a class="btn btn-primary" href="{{href:feedMap}}">{{links.feedMap}}</a>
+          <a class="btn btn-outline" href="{{href:editor}}">{{links.editor}}</a>
         </div>
       </div>
-      <p id="scroll-cue" class="mono mt-10 text-xs tracking-[0.3em] uppercase lede">Scroll</p>
+      <p id="scroll-cue" class="mono mt-10 text-xs tracking-[0.3em] uppercase lede">{{hero.scrollCue}}</p>
     </div>
   </section>
 
   <!-- Section 1: what is GTFS -->
   <section id="what-is-gtfs" class="section py-32">
     <div class="mx-auto w-full max-w-3xl px-6 reveal">
-      <p class="eyebrow">What is GTFS?</p>
+      <p class="eyebrow">{{whatIsGtfs.eyebrow}}</p>
       <h2 class="mt-4 text-2xl md:text-4xl font-semibold tracking-tight">
-        A community-driven open standard for rider-facing transit information.
+        {{whatIsGtfs.heading}}
       </h2>
       <p class="lede mt-5 text-base md:text-lg">
-        Over 10,000 agencies in 100+ countries publish GTFS. It is a simple data structure that any
-        app developer can consume, which is why adopting it puts an agency&rsquo;s service in front
-        of a wide audience without a custom integration per app.
+        {{whatIsGtfs.body}}
       </p>
       <p class="mt-6 flex flex-wrap gap-x-6 gap-y-2">
-        <a class="link" href="https://gtfs.org">Learn more at gtfs.org</a>
-        <a class="link" href="https://list.gtfs.zone">See them on the feed map</a>
+        <a class="link" href="{{href:gtfs}}">{{links.gtfs}}</a>
+        <a class="link" href="{{href:feedMap}}">{{whatIsGtfs.feedMapLink}}</a>
       </p>
       <dl class="mt-10 grid gap-6 sm:grid-cols-2">
         <div>
           <dt class="glyph-term font-semibold">
             <!-- @icon rider-experience -->
-            Improved rider experience
+            {{whatIsGtfs.reasons.0.title}}
           </dt>
           <dd class="glyph-desc lede mt-1 text-sm">
-            Accurate schedules and real-time updates, so riders wait less and decide better.
+            {{whatIsGtfs.reasons.0.body}}
           </dd>
         </div>
         <div>
           <dt class="glyph-term font-semibold">
             <!-- @icon globe -->
-            Global reach
+            {{whatIsGtfs.reasons.1.title}}
           </dt>
           <dd class="glyph-desc lede mt-1 text-sm">
-            Consistent data across agencies and regions makes multi-agency trips work.
+            {{whatIsGtfs.reasons.1.body}}
           </dd>
         </div>
         <div>
           <dt class="glyph-term font-semibold">
             <!-- @icon data-structure -->
-            Simple to use
+            {{whatIsGtfs.reasons.2.title}}
           </dt>
           <dd class="glyph-desc lede mt-1 text-sm">
-            A plain data structure, easy to produce and to consume.
+            {{whatIsGtfs.reasons.2.body}}
           </dd>
         </div>
         <div>
           <dt class="glyph-term font-semibold">
             <!-- @icon people -->
-            Open source community
+            {{whatIsGtfs.reasons.3.title}}
           </dt>
           <dd class="glyph-desc lede mt-1 text-sm">
-            The standard keeps evolving through community collaboration.
+            {{whatIsGtfs.reasons.3.body}}
           </dd>
         </div>
       </dl>
@@ -108,56 +122,53 @@
     <div class="pin">
       <div class="mx-auto w-full max-w-6xl px-6 grid gap-10 md:grid-cols-2 items-center">
         <div>
-          <p class="eyebrow">GTFS Schedule</p>
+          <p class="eyebrow">{{scheduled.eyebrow}}</p>
           <h2 class="mt-4 text-2xl md:text-4xl font-semibold tracking-tight">
-            The foundation: the schedule riders plan their trips against.
+            {{scheduled.heading}}
           </h2>
           <p class="lede mt-4">
-            GTFS Schedule describes the service an agency runs, in a form every major mapping app
-            already reads.
+            {{scheduled.body}}
           </p>
           <ul class="mt-6 space-y-3">
             <li class="flex gap-3">
               <!-- @icon routes-stops -->
               <div>
-                <span class="font-semibold">Routes and stops:</span>
-                <span class="lede"> exactly where to catch the bus or the train.</span>
+                <span class="font-semibold">{{scheduled.features.0.term}}</span>
+                <span class="lede">{{scheduled.features.0.body}}</span>
               </div>
             </li>
             <li class="flex gap-3">
               <!-- @icon schedule -->
               <div>
-                <span class="font-semibold">Schedules and frequencies:</span>
-                <span class="lede"> clear timetables riders can plan against.</span>
+                <span class="font-semibold">{{scheduled.features.1.term}}</span>
+                <span class="lede">{{scheduled.features.1.body}}</span>
               </div>
             </li>
             <li class="flex gap-3">
               <!-- @icon fares -->
               <div>
-                <span class="font-semibold">Fares:</span>
-                <span class="lede"> journey costs shown upfront in apps.</span>
+                <span class="font-semibold">{{scheduled.features.2.term}}</span>
+                <span class="lede">{{scheduled.features.2.body}}</span>
               </div>
             </li>
             <li class="flex gap-3">
               <!-- @icon flexible -->
               <div>
-                <span class="font-semibold">Flexible services:</span>
-                <span class="lede"> demand-responsive transportation.</span>
+                <span class="font-semibold">{{scheduled.features.3.term}}</span>
+                <span class="lede">{{scheduled.features.3.body}}</span>
               </div>
             </li>
             <li class="flex gap-3">
               <!-- @icon pathways -->
               <div>
-                <span class="font-semibold">Pathways:</span>
-                <span class="lede">
-                  station interiors, down to which elevator reaches which platform.</span
-                >
+                <span class="font-semibold">{{scheduled.features.4.term}}</span>
+                <span class="lede">{{scheduled.features.4.body}}</span>
               </div>
             </li>
           </ul>
           <p class="mt-8">
-            <a class="btn btn-outline" href="https://gtfs.org/documentation/schedule/reference/"
-              >View the Schedule spec</a
+            <a class="btn btn-outline" href="{{href:scheduleReference}}"
+              >{{links.scheduleReference}}</a
             >
           </p>
         </div>
@@ -171,46 +182,39 @@
     <div class="pin">
       <div class="mx-auto w-full max-w-6xl px-6 grid gap-8 md:grid-cols-2 items-center">
         <div>
-          <p class="eyebrow">GTFS Realtime</p>
+          <p class="eyebrow">{{realtime.eyebrow}}</p>
           <h2 class="mt-4 text-2xl md:text-4xl font-semibold tracking-tight">
-            Live updates that keep riders informed.
+            {{realtime.heading}}
           </h2>
           <p class="lede mt-4">
-            GTFS Realtime covers the parts of transit that change during the day.
+            {{realtime.body}}
           </p>
           <ul class="mt-6 space-y-3">
             <li class="flex gap-3">
               <!-- @icon vehicle-position -->
               <div>
-                <span class="font-semibold">Vehicle positions:</span>
-                <span class="lede">
-                  where the vehicle actually is right now, so nobody stands at a stop
-                  wondering.</span
-                >
+                <span class="font-semibold">{{realtime.beats.0.term}}</span>
+                <span class="lede">{{realtime.beats.0.body}}</span>
               </div>
             </li>
             <li class="flex gap-3">
               <!-- @icon trip-update -->
               <div>
-                <span class="font-semibold">Trip updates:</span>
-                <span class="lede">
-                  a more accurate arrival time, so connections are not missed.</span
-                >
+                <span class="font-semibold">{{realtime.beats.1.term}}</span>
+                <span class="lede">{{realtime.beats.1.body}}</span>
               </div>
             </li>
             <li class="flex gap-3">
               <!-- @icon service-alert -->
               <div>
-                <span class="font-semibold">Service alerts:</span>
-                <span class="lede">
-                  notice of disruptions on the network, in time to change plans.</span
-                >
+                <span class="font-semibold">{{realtime.beats.2.term}}</span>
+                <span class="lede">{{realtime.beats.2.body}}</span>
               </div>
             </li>
           </ul>
           <p class="mt-8">
-            <a class="btn btn-outline" href="https://gtfs.org/documentation/realtime/reference/"
-              >View the Realtime spec</a
+            <a class="btn btn-outline" href="{{href:realtimeReference}}"
+              >{{links.realtimeReference}}</a
             >
           </p>
         </div>
@@ -224,13 +228,12 @@
   <section id="editor" class="section pin-track pin-track-long">
     <div class="pin">
       <div class="mx-auto w-full max-w-3xl px-6">
-        <p class="eyebrow">The editor</p>
+        <p class="eyebrow">{{editor.eyebrow}}</p>
         <h2 class="mt-4 text-2xl md:text-4xl font-semibold tracking-tight">
-          Upload, inspect, fix, export.
+          {{editor.heading}}
         </h2>
         <p class="lede mt-4">
-          Runs in the browser. Nothing is uploaded anywhere, and there is no account. Fast enough
-          for even the largest big-city feeds.
+          {{editor.body}}
         </p>
         <div class="mt-8" data-scene="editor-cta"></div>
       </div>
@@ -241,19 +244,18 @@
   <section id="editor-operations" class="section py-32">
     <div class="mx-auto w-full max-w-4xl px-6">
       <div class="reveal">
-        <p class="eyebrow">The editor</p>
+        <p class="eyebrow">{{editor.eyebrow}}</p>
         <h2 class="mt-4 text-2xl md:text-4xl font-semibold tracking-tight">
-          Allowing your GTFS to power your operations.
+          {{editor.operationsHeading}}
         </h2>
         <p class="lede mt-4">
-          The Swiss army knife of GTFS: everything needed to keep a feed accurate as the service
-          it describes keeps changing.
+          {{editor.operationsBody}}
         </p>
       </div>
       <div class="mt-10" data-scene="editor-tools"></div>
       <div class="mt-10">
-        <a class="btn btn-primary btn-lg" href="https://edit.gtfs.zone">Open the editor</a>
-        <p class="lede mt-8 text-sm">Or open a real feed straight away</p>
+        <a class="btn btn-primary btn-lg" href="{{href:editor}}">{{links.editor}}</a>
+        <p class="lede mt-8 text-sm">{{editor.chipsLabel}}</p>
         <!-- @feeds editor -->
       </div>
     </div>
@@ -263,44 +265,40 @@
   <section id="visualizer" class="section py-32">
     <div class="mx-auto w-full max-w-4xl px-6">
       <div class="reveal">
-        <p class="eyebrow">The visualizer</p>
+        <p class="eyebrow">{{visualizer.eyebrow}}</p>
         <h2 class="mt-4 text-2xl md:text-4xl font-semibold tracking-tight">
-          Inspect any GTFS Realtime feed on a map.
+          {{visualizer.heading}}
         </h2>
         <p class="lede mt-4">
-          Point it at a scheduled feed and its realtime endpoints and watch vehicle positions, trip
-          updates, and service alerts against the schedule they claim to follow. Any agency&rsquo;s
-          feed, not just ours. Nothing to install.
+          {{visualizer.body}}
         </p>
         <ul class="lede mt-6 space-y-3">
           <li class="flex gap-3">
             <!-- @icon map-vehicles -->
-            <div>Vehicles on a live map, matched to their route and trip.</div>
+            <div>{{visualizer.features.0}}</div>
           </li>
           <li class="flex gap-3">
             <!-- @icon trip-update -->
-            <div>Trip updates read against the scheduled feed.</div>
+            <div>{{visualizer.features.1}}</div>
           </li>
           <li class="flex gap-3">
             <!-- @icon service-alert -->
-            <div>Service alerts, with the entities they affect.</div>
+            <div>{{visualizer.features.2}}</div>
           </li>
           <li class="flex gap-3">
             <!-- @icon catalog -->
-            <div>
-              A catalog of ready-to-load example feeds, and a shareable link that reproduces a whole
-              session.
-            </div>
+            <div>{{visualizer.features.3}}</div>
           </li>
         </ul>
       </div>
       <div class="mt-10" data-scene="visualizer-inspector"></div>
       <div class="mt-10">
-        <a class="btn btn-primary btn-lg" href="https://viz.rt.gtfs.zone">Browse realtime feeds</a>
-        <p class="lede mt-8 text-sm">Or open a real feed straight away</p>
+        <a class="btn btn-primary btn-lg" href="{{href:visualizer}}">{{links.visualizer}}</a>
+        <p class="lede mt-8 text-sm">{{visualizer.chipsLabel}}</p>
         <!-- @feeds visualizer -->
         <p class="lede mt-6 text-sm">
-          Or pick any feed from the <a class="link" href="https://list.gtfs.zone">feed map</a>
+          {{visualizer.pickBefore}}
+          <a class="link" href="{{href:feedMap}}">{{visualizer.pickLink}}</a>
         </p>
       </div>
     </div>
@@ -311,98 +309,77 @@
     <div class="pin">
       <div class="mx-auto w-full max-w-6xl px-6 grid gap-10 md:grid-cols-2 items-center">
         <div>
-          <p class="eyebrow">The manager</p>
+          <p class="eyebrow">{{manager.eyebrow}}</p>
           <h2 class="mt-4 text-2xl md:text-4xl font-semibold tracking-tight">
-            Management software for running a realtime feed.
+            {{manager.heading}}
           </h2>
           <p class="lede mt-4">
-            <span class="mono">manage.rt.gtfs.zone</span> is where an agency runs its feed: define
-            feeds, register trackers, watch vehicles, and publish service alerts. The public GTFS-RT
-            endpoints update from it directly.
+            <span class="mono">manage.rt.gtfs.zone</span> {{manager.body}}
           </p>
           <ul class="mt-6 space-y-3 text-sm">
             <li class="flex gap-3">
               <!-- @icon feeds -->
               <div>
-                <span class="font-semibold">Feeds:</span>
-                <span class="lede">
-                  one agency, one or many feeds, each with its scheduled source and its public
-                  endpoints.</span
-                >
+                <span class="font-semibold">{{manager.features.0.term}}</span>
+                <span class="lede">{{manager.features.0.body}}</span>
               </div>
             </li>
             <li class="flex gap-3">
               <!-- @icon service-alert -->
               <div>
-                <span class="font-semibold">Service alerts:</span>
-                <span class="lede">
-                  header, description, cause, effect, severity, active period, and the
-                  routes or stops affected. Published to the alerts feed.</span
-                >
+                <span class="font-semibold">{{manager.features.1.term}}</span>
+                <span class="lede">{{manager.features.1.body}}</span>
               </div>
             </li>
             <li class="flex gap-3">
               <!-- @icon vehicle-tracking -->
               <div>
-                <span class="font-semibold">Vehicle tracking:</span>
-                <span class="lede">
-                  one tracker per vehicle, provisioned by scanning a QR code. Positions arrive
-                  from a phone or a GPS unit and are served as vehicle positions.</span
-                >
+                <span class="font-semibold">{{manager.features.2.term}}</span>
+                <span class="lede">{{manager.features.2.body}}</span>
               </div>
             </li>
             <li class="flex gap-3">
               <!-- @icon trip-update -->
               <div>
-                <span class="font-semibold">Trip updates:</span>
-                <span class="lede">
-                  delay against the scheduled trip, derived from those positions. A tracker can be
-                  tied to its trip by a day and time rule, so the match happens on the server.</span
-                >
+                <span class="font-semibold">{{manager.features.3.term}}</span>
+                <span class="lede">{{manager.features.3.body}}</span>
               </div>
             </li>
             <li class="flex gap-3">
               <!-- @icon people -->
               <div>
-                <span class="font-semibold">Shared feeds:</span>
-                <span class="lede">
-                  hand a colleague a feed by email address. They sign in as themselves and see the
-                  same feeds, trackers, and alerts.</span
-                >
+                <span class="font-semibold">{{manager.features.4.term}}</span>
+                <span class="lede">{{manager.features.4.body}}</span>
               </div>
             </li>
           </ul>
           <div class="mt-8">
-            <a class="btn btn-primary" href="https://manage.rt.gtfs.zone">Sign in to the manager</a>
+            <a class="btn btn-primary" href="{{href:manager}}">{{links.manager}}</a>
           </div>
         </div>
         <div>
           <div data-scene="alert-broadcast"></div>
           <div class="mt-6">
-            <p class="eyebrow">Tracking hardware</p>
+            <p class="eyebrow">{{manager.hardwareLabel}}</p>
             <ul class="lede mt-3 space-y-3 text-sm">
               <li class="flex gap-3">
                 <!-- @icon satellite -->
                 <div>
-                  Built on <a class="link" href="https://www.traccar.org/">Traccar</a>, the open
-                  source GPS tracking platform.
+                  {{manager.builtOn}}
+                  <a class="link" href="{{href:traccar}}">Traccar</a>{{manager.builtOnAfter}}
                 </div>
               </li>
               <li class="flex gap-3">
                 <!-- @icon tracker -->
                 <div>
-                  Compatible with a vast array of GPS trackers, from low-cost units to premium
-                  brands;
-                  <a class="link" href="https://www.traccar.org/devices/"
-                    >see the supported device list</a
-                  >.
+                  {{manager.devices}}
+                  <a class="link" href="{{href:traccarDevices}}">{{links.traccarDevices}}</a>.
                 </div>
               </li>
               <li class="flex gap-3">
                 <!-- @icon phone -->
                 <div>
-                  A phone running the Traccar Client app works too, so an agency can start with no
-                  hardware at all.
+                  {{manager.phone}}
                 </div>
               </li>
             </ul>
@@ -416,21 +393,21 @@
   <section id="publish" class="section py-32">
     <div class="mx-auto w-full max-w-5xl px-6">
       <div class="reveal max-w-2xl">
-        <p class="eyebrow">Publish</p>
+        <p class="eyebrow">{{publish.eyebrow}}</p>
         <h2 class="mt-4 text-2xl md:text-4xl font-semibold tracking-tight">
-          Deliver to millions of pockets.
+          {{publish.heading}}
         </h2>
         <p class="lede mt-4">
-          One feed reaches every major mapping app, and drops straight into your own site.
+          {{publish.body}}
         </p>
       </div>
       <div class="mt-10" data-scene="publish"></div>
-      <p class="eyebrow mt-10">Where the feed ends up</p>
+      <p class="eyebrow mt-10">{{publish.destinationsLabel}}</p>
       <ul class="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm">
-        <li><a class="link" href="https://www.google.com/maps">Google Maps</a></li>
-        <li><a class="link" href="https://maps.apple.com">Apple Maps</a></li>
-        <li><a class="link" href="https://transitapp.com">Transit</a></li>
-        <li><a class="link" href="https://motis-project.de">Motis</a></li>
+        <li><a class="link" href="{{href:googleMaps}}">Google Maps</a></li>
+        <li><a class="link" href="{{href:appleMaps}}">Apple Maps</a></li>
+        <li><a class="link" href="{{href:transitApp}}">Transit</a></li>
+        <li><a class="link" href="{{href:motis}}">Motis</a></li>
       </ul>
     </div>
   </section>
@@ -439,9 +416,9 @@
   <section id="open-source" class="section py-32">
     <div class="mx-auto w-full max-w-5xl px-6">
       <div class="reveal max-w-2xl">
-        <p class="eyebrow">Open source</p>
+        <p class="eyebrow">{{openSource.eyebrow}}</p>
         <h2 class="mt-4 text-2xl md:text-4xl font-semibold tracking-tight">
-          Open source from the start.
+          {{openSource.heading}}
         </h2>
       </div>
       <ul class="mt-10 grid gap-8 md:grid-cols-3">
@@ -461,8 +438,8 @@
             <path d="M16 3 5 7v9c0 6.2 4.5 11.1 11 13 6.5-1.9 11-6.8 11-13V7Z" />
             <path d="m11 16 3.5 3.5L21 13" />
           </svg>
-          <p class="mt-4 font-semibold">Secure</p>
-          <p class="lede mt-1 text-sm">Audited in the open.</p>
+          <p class="mt-4 font-semibold">{{openSource.points.0.title}}</p>
+          <p class="lede mt-1 text-sm">{{openSource.points.0.body}}</p>
         </li>
         <li>
           <svg
@@ -481,8 +458,8 @@
             <rect x="4" y="18" width="24" height="9" rx="2" />
             <path d="M9 9.5h.01M9 22.5h.01M13 9.5h6M13 22.5h6" />
           </svg>
-          <p class="mt-4 font-semibold">Own your feed</p>
-          <p class="lede mt-1 text-sm">Run it yourself. There is no vendor to lock you in.</p>
+          <p class="mt-4 font-semibold">{{openSource.points.1.title}}</p>
+          <p class="lede mt-1 text-sm">{{openSource.points.1.body}}</p>
         </li>
         <li>
           <svg
@@ -502,19 +479,19 @@
             <path d="M4 25c0-4.4 3.6-7 8-7s8 2.6 8 7" />
             <path d="M22 19c3.4 0 6 2 6 5.5" />
           </svg>
-          <p class="mt-4 font-semibold">Community-oriented</p>
-          <p class="lede mt-1 text-sm">Communal software for communal transit.</p>
+          <p class="mt-4 font-semibold">{{openSource.points.2.title}}</p>
+          <p class="lede mt-1 text-sm">{{openSource.points.2.body}}</p>
         </li>
       </ul>
       <p class="mt-10">
-        <a class="btn btn-outline" href="https://github.com/gtfs-zone">
+        <a class="btn btn-outline" href="{{href:source}}">
           <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" fill="currentColor">
             <path
               fill-rule="evenodd"
               d="M11.75 2.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm-2.25.75a2.25 2.25 0 1 1 3 2.122V6A2.5 2.5 0 0 1 10 8.5H6a1 1 0 0 0-1 1v1.128a2.251 2.251 0 1 1-1.5 0V5.372a2.25 2.25 0 1 1 1.5 0v1.836A2.492 2.492 0 0 1 6 7h4a1 1 0 0 0 1-1v-.628A2.25 2.25 0 0 1 9.5 3.25ZM4.25 12a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM3.5 3.25a.75.75 0 1 1 1.5 0 .75.75 0 0 1-1.5 0Z"
             />
           </svg>
-          View the source
+          {{links.source}}
         </a>
       </p>
     </div>
@@ -523,28 +500,28 @@
   <!-- Section 9: get in touch -->
   <section id="contact" class="section py-32">
     <div class="mx-auto w-full max-w-3xl px-6">
-      <p class="eyebrow">Get in touch</p>
-      <h2 class="mt-4 text-2xl md:text-4xl font-semibold tracking-tight">Get in touch.</h2>
-      <p class="lede mt-4">If you run transit and want your riders to see it, write to us.</p>
+      <p class="eyebrow">{{contact.eyebrow}}</p>
+      <h2 class="mt-4 text-2xl md:text-4xl font-semibold tracking-tight">{{contact.heading}}</h2>
+      <p class="lede mt-4">{{contact.body}}</p>
       <p class="mt-6 text-xl md:text-2xl">
-        <a class="mono" href="mailto:inquiry@gtfs.zone">inquiry@gtfs.zone</a>
+        <a class="mono" href="{{href:contact}}">inquiry@gtfs.zone</a>
       </p>
       <p class="lede mt-4">
-        Found a bug?
-        <a href="https://github.com/gtfs-zone/gtfs-zone-homepage/issues/new">Report it on the tracker</a>, or write to the address above.
+        {{contact.bug}}
+        <a href="{{href:newIssue}}">{{contact.bugLink}}</a>{{contact.bugAfter}}
       </p>
     </div>
   </section>
 
   <footer class="section border-t px-6 py-10" style="border-color: var(--grid)">
     <div class="mx-auto flex w-full max-w-3xl flex-wrap items-center gap-6 text-sm">
-      <a href="https://edit.gtfs.zone">Editor</a>
-      <a href="https://viz.rt.gtfs.zone">Visualizer</a>
-      <a href="https://list.gtfs.zone">Feed map</a>
-      <a href="https://manage.rt.gtfs.zone">Manager</a>
-      <a href="https://github.com/gtfs-zone">Source</a>
-      <a href="https://gtfs.org">gtfs.org</a>
-      <a href="https://github.com/gtfs-zone/gtfs-zone-homepage/issues/new">Report a bug</a>
+      <a href="{{href:editor}}">{{footer.editor}}</a>
+      <a href="{{href:visualizer}}">{{footer.visualizer}}</a>
+      <a href="{{href:feedMap}}">{{footer.feedMap}}</a>
+      <a href="{{href:manager}}">{{footer.manager}}</a>
+      <a href="{{href:source}}">{{footer.source}}</a>
+      <a href="{{href:gtfs}}">gtfs.org</a>
+      <a href="{{href:newIssue}}">{{links.newIssue}}</a>
       <span class="lede ml-auto">gtfs.zone <span class="mono">v<!-- @version --></span></span>
     </div>
   </footer>

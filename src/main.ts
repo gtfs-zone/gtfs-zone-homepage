@@ -6,6 +6,7 @@
 
 import { initPage, mountScenes } from './bootstrap';
 import type { VariantConfig } from './engine/scene';
+import { initLocaleToggle } from './i18n/preference';
 import { GeoSource } from './net/geo-source';
 import { ThemeController, type ThemeName } from './theme/theme-controller';
 
@@ -45,9 +46,10 @@ async function start(): Promise<void> {
   mountScenes(VARIANTS[theme.getCurrentTheme()], network);
 }
 
-// The toggle must work even if geometry never loads, so it initializes first
+// The toggles must work even if geometry never loads, so they initialize first
 // and independently of the scenes.
 theme.initialize();
+initLocaleToggle();
 
 start().catch((err) => {
   // The page is fully readable without the scenes, so a geometry failure is not fatal.

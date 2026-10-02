@@ -1,33 +1,31 @@
 <!doctype html>
-<html lang="en" data-theme="night">
+<html lang="{{page:lang}}" data-theme="night">
   <head>
     <meta charset="utf-8" />
+    <!-- @locale-redirect -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <title>gtfs.zone: open source GTFS and GTFS Realtime tools</title>
-    <meta
-      name="description"
-      content="Open source software for building, checking, and publishing GTFS Schedule and GTFS Realtime feeds."
-    />
+    <title>{{meta.title}}</title>
+    <meta name="description" content="{{meta.description}}" />
     <!-- The site ships its own dark theme, so dark-mode extensions have nothing to add
          and their per-frame retinting fights the scenes. -->
     <meta name="darkreader-lock" content="" />
     <meta name="color-scheme" content="dark light" />
-    <link rel="canonical" href="https://gtfs.zone/" />
+    <link rel="canonical" href="{{page:url}}" />
+    <!-- @alternates -->
     <link rel="icon" href="/logo.svg" type="image/svg+xml" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://gtfs.zone/" />
+    <meta property="og:url" content="{{page:url}}" />
+    <meta property="og:locale" content="{{page:ogLocale}}" />
+    <meta property="og:locale:alternate" content="{{page:otherOgLocale}}" />
     <meta property="og:site_name" content="gtfs.zone" />
-    <meta property="og:title" content="gtfs.zone: open source GTFS and GTFS Realtime tools" />
-    <meta
-      property="og:description"
-      content="Open source software for building, checking, and publishing GTFS Schedule and GTFS Realtime feeds."
-    />
+    <meta property="og:title" content="{{meta.title}}" />
+    <meta property="og:description" content="{{meta.description}}" />
     <meta property="og:image" content="https://gtfs.zone/og.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="gtfs.zone: open source GTFS and GTFS Realtime tools" />
+    <meta property="og:image:alt" content="{{meta.title}}" />
     <meta name="twitter:card" content="summary_large_image" />
 
     <!-- @jsonld -->

@@ -4,9 +4,11 @@
 import { select, type Selection } from 'd3-selection';
 import { line, curveCatmullRom } from 'd3-shape';
 import { subRange } from '../engine/section-progress';
-import { copy } from '../content/copy';
+import { pageCopy } from '../i18n/catalogs';
 import type { Scene, SceneContext, SceneProgress } from '../engine/scene';
 import { buildFleet, simulate, type Vehicle } from '../net/vehicle-sim';
+
+const copy = pageCopy();
 
 const VB_W = 760;
 const VB_H = 470;
@@ -114,7 +116,7 @@ export class PublishScene implements Scene {
       .attr('text-anchor', 'middle')
       .attr('font-size', 11)
       .attr('fill', palette.inkMuted)
-      .text('One feed');
+      .text(copy.publish.scene.oneFeed);
 
     const frames = this.svg
       .selectAll('g.pb-frame')
@@ -172,7 +174,7 @@ export class PublishScene implements Scene {
         d.i === 2 ? 'ui-monospace, monospace' : 'inherit'
       )
       .attr('fill', (d) => (d.i === 2 ? palette.inkMuted : palette.ink))
-      .text((d) => (d.i === 2 ? 'your-agency.gov' : d.name));
+      .text((d) => (d.i === 2 ? copy.publish.scene.siteDomain : d.name));
     frames
       .filter((d) => d.i === 2)
       .append('text')
@@ -181,7 +183,7 @@ export class PublishScene implements Scene {
       .attr('text-anchor', 'end')
       .attr('font-size', 10)
       .attr('fill', palette.inkMuted)
-      .text('Your website');
+      .text(copy.publish.destinations[2]);
     // Each frame instances the one live map. The clip lives on a wrapper group:
     // x/y on <use> shifts only the referenced content, not the element's own
     // clip, so clipping the <use> directly would crop every frame to the first.

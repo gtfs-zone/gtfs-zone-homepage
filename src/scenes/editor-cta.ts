@@ -4,8 +4,10 @@
 
 import { select, type Selection } from 'd3-selection';
 import { subRange } from '../engine/section-progress';
-import { copy } from '../content/copy';
+import { pageCopy } from '../i18n/catalogs';
 import type { Scene, SceneContext, SceneProgress } from '../engine/scene';
+
+const copy = pageCopy();
 
 const VB_W = 640;
 // Tall enough that the type survives a 360px viewport, where the 640-unit
@@ -309,7 +311,7 @@ export class EditorCtaScene implements Scene {
       .attr('font-size', 12)
       .attr('font-family', mono)
       .attr('fill', palette.routes[3])
-      .text('2 issues');
+      .text(copy.editor.scene.issuesOpen);
     badge
       .append('text')
       .attr('class', 'ed-badge-clear')
@@ -319,7 +321,7 @@ export class EditorCtaScene implements Scene {
       .attr('font-size', 12)
       .attr('font-family', mono)
       .attr('fill', palette.accent)
-      .text('0 issues');
+      .text(copy.editor.scene.issuesClear);
 
     // Act 4: the export mark.
     const out = this.svg.append('g').attr('class', 'ed-export');

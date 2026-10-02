@@ -3,6 +3,9 @@
 import { select, type Selection } from 'd3-selection';
 import { clamp01, subRange } from '../engine/section-progress';
 import type { Scene, SceneContext, SceneProgress } from '../engine/scene';
+import { fill, pageCopy } from '../i18n/catalogs';
+
+const copy = pageCopy();
 
 const VB_W = 520;
 const VB_H = 360;
@@ -81,7 +84,7 @@ export class TimetableScene implements Scene {
       .attr('font-size', 10)
       .attr('font-family', 'ui-monospace, monospace')
       .attr('fill', palette.inkMuted)
-      .text((d) => `TRIP ${101 + d}`);
+      .text((d) => fill(copy.scheduled.scene.trip, { n: 101 + d }));
 
     this.svg
       .append('line')

@@ -2,8 +2,10 @@
 
 import { select, type Selection } from 'd3-selection';
 import { clamp01, subRange } from '../engine/section-progress';
-import { copy } from '../content/copy';
+import { pageCopy } from '../i18n/catalogs';
 import type { Scene, SceneContext, SceneProgress } from '../engine/scene';
+
+const copy = pageCopy();
 
 const VB_W = 800;
 const VB_H = 420;
@@ -78,7 +80,7 @@ export class AlertBroadcastScene implements Scene {
       .attr('font-family', 'ui-monospace, monospace')
       .attr('letter-spacing', '0.12em')
       .attr('fill', palette.accentText)
-      .text('NEW SERVICE ALERT');
+      .text(copy.manager.scene.newAlert);
     op.append('g')
       .attr('class', 'ab-fields')
       .selectAll('rect')
@@ -112,7 +114,7 @@ export class AlertBroadcastScene implements Scene {
       .attr('font-family', 'ui-monospace, monospace')
       .attr('letter-spacing', '0.1em')
       .attr('fill', palette.accentText)
-      .text('PUBLISH');
+      .text(copy.manager.scene.publish);
 
     // The wire the alert travels.
     this.svg
@@ -188,7 +190,7 @@ export class AlertBroadcastScene implements Scene {
       .attr('font-size', 8)
       .attr('font-family', 'ui-monospace, monospace')
       .attr('fill', palette.bg)
-      .text('ALERT');
+      .text(copy.manager.scene.alert);
 
     this.svg
       .append('g')

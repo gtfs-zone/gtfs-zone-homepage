@@ -4,9 +4,11 @@
 import { select, type Selection } from 'd3-selection';
 import { line, curveCatmullRom } from 'd3-shape';
 import { clamp01, subRange } from '../engine/section-progress';
-import { copy } from '../content/copy';
+import { fill, pageCopy } from '../i18n/catalogs';
 import type { Scene, SceneContext, SceneProgress } from '../engine/scene';
 import { buildFleet, simulate, type Vehicle } from '../net/vehicle-sim';
+
+const copy = pageCopy();
 
 const VB_W = 680;
 const VB_H = 440;
@@ -24,6 +26,36 @@ const PANEL = { x: 400, y: 110, w: 250, h: 150 };
 const SEARCH = { x: SCREEN.x + 8, y: SCREEN.y + 8, w: SCREEN.w - 16, h: 26 };
 const SHEET_H = 168;
 const SHEET_TOP = SCREEN.y + SCREEN.h - SHEET_H;
+
+// One example message per beat. GTFS-RT field names and enum values, so never
+// translated.
+const BEATS = [
+  {
+    type: 'VehiclePosition',
+    fields: [
+      'latitude 42.24671',
+      'longitude -73.79052',
+      'bearing 118',
+      'timestamp 1755188400',
+    ],
+  },
+  {
+    type: 'TripUpdate',
+    fields: [
+      'stop_sequence 12',
+      'arrival.delay +120s',
+      'schedule_relationship SCHEDULED',
+    ],
+  },
+  {
+    type: 'Alert',
+    fields: [
+      'cause CONSTRUCTION',
+      'effect DETOUR',
+      'informed_entity route_id A',
+    ],
+  },
+];
 
 const ARRIVALS = [
   { route: 'A', dest: 'Hudson Amtrak', base: 4 },
@@ -274,7 +306,7 @@ export class RealtimePhoneScene implements Scene {
       .attr('font-size', 11)
       .attr('font-weight', 600)
       .attr('fill', palette.ink)
-      .text('Next departures');
+      .text(copy.realtime.scene.nextDepartures);
 
     const rows = g
       .selectAll('g.rt-row')
@@ -344,7 +376,7 @@ export class RealtimePhoneScene implements Scene {
       .attr('font-size', 8)
       .attr('font-family', 'ui-monospace, monospace')
       .attr('fill', palette.accentText)
-      .text('+2 MIN');
+      .text(copy.realtime.scene.delay);
   }
 
   private buildAlert(): void {
@@ -373,13 +405,13 @@ export class RealtimePhoneScene implements Scene {
       .attr('font-size', 10)
       .attr('font-weight', 700)
       .attr('fill', palette.accentText)
-      .text('Detour in effect');
+      .text(copy.realtime.scene.detour);
     g.append('text')
       .attr('x', SCREEN.x + 22)
       .attr('y', top + 38)
       .attr('font-size', 9)
       .attr('fill', palette.ink)
-      .text('Route A via Fairview Ave');
+      .text(copy.realtime.scene.detourRoute);
   }
 
   resize(): void {
@@ -455,7 +487,7 @@ export class RealtimePhoneScene implements Scene {
   render(p: SceneProgress): void {
     const t = p.pinProgress;
     const { palette, reducedMotion } = this.ctx;
-    const beats = copy.realtime.beats;
+    const beats = BEATS;
 
     const beat1 = subRange(t, 0, 0.33);
     const beat2 = subRange(t, 0.33, 0.66);
@@ -499,7 +531,9 @@ export class RealtimePhoneScene implements Scene {
       .selectAll<SVGTextElement, (typeof ARRIVALS)[number]>('.rt-eta')
       .each((d, i, nodes) => {
         const minutes = i === 0 ? Math.round(d.base + slip * 2) : d.base;
-        nodes[i].textContent = `${minutes} min`;
+        nodes[i].textContent = fill(copy.realtime.scene.minutes, {
+          n: minutes,
+        });
         nodes[i].setAttribute(
           'fill',
           i === 0 && slip > 0.5 ? palette.accentText : palette.ink
