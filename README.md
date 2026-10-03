@@ -1,5 +1,7 @@
 # gtfs-zone-homepage
 
+[![CI](https://img.shields.io/github/actions/workflow/status/gtfs-zone/gtfs-zone-homepage/check.yml?branch=main&label=CI)](https://github.com/gtfs-zone/gtfs-zone-homepage/actions/workflows/check.yml?query=branch%3Amain) [![License: AGPL-3.0-or-later](https://img.shields.io/badge/license-AGPL--3.0--or--later-blue)](LICENSE.txt) [![gtfs.zone](https://img.shields.io/website?url=https%3A%2F%2Fgtfs.zone&label=gtfs.zone)](https://gtfs.zone)
+
 The gtfs.zone homepage. Deployed to `https://gtfs.zone`.
 
 A scroll-driven single page: Vite, TypeScript, Tailwind v4, DaisyUI, and d3 for
