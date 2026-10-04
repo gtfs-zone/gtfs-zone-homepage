@@ -1,6 +1,7 @@
 <!-- Body markup. Inlined into index.html at build time and rendered once per
-     locale: every string is a catalog marker filled from src/content/copy.ts
-     or copy.fr.ts, every URL an href marker filled from src/content/links.ts.
+     locale: every string is a catalog marker filled from the locale's
+     catalog in src/content/, every URL an href marker filled from
+     src/content/links.ts.
      The output is real text, so the page reads fine with JS disabled.
 
      `@feeds` is expanded from src/content/feeds.ts by the vite plugin, so the
@@ -12,18 +13,18 @@
 <div class="stage" data-scene="hero-map"></div>
 
 <div class="page-controls">
-<!-- A plain link to the other locale's page, so it works with JS off; with JS
-     it also stores the choice (src/i18n/preference.ts). -->
-<a
-  class="locale-toggle"
-  href="{{page:otherPath}}"
-  hreflang="{{page:otherLang}}"
-  lang="{{page:otherLang}}"
-  title="{{controls.otherLocale}}"
-  data-locale-toggle="{{page:otherLang}}"
-  ><span aria-hidden="true">{{controls.otherLocaleCode}}</span
-  ><span class="sr-only-desc">{{controls.otherLocale}}</span></a
->
+<!-- Plain links to every locale's page (@locales, from src/i18n/catalogs.ts),
+     so switching works with JS off; with JS a click also stores the choice
+     (src/i18n/preference.ts). -->
+<details class="locale-switcher">
+  <summary title="{{controls.language}}"
+    ><span aria-hidden="true">{{page:localeCode}}</span
+    ><span class="sr-only-desc">{{controls.language}}</span></summary
+  >
+  <ul>
+    <!-- @locales -->
+  </ul>
+</details>
 <!-- Same swap markup as the editor and the visualizer, so the control reads the
      same across all three sites. Checked means light. -->
 <label class="theme-toggle swap swap-rotate" title="{{controls.theme}}">

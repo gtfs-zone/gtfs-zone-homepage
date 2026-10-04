@@ -1,5 +1,7 @@
 // The English catalog: every string the page shows, in one typed object. It is
-// the source of truth for the page's keys; copy.fr.ts is typed against it.
+// the source of truth for the page's keys; copy.fr.ts and copy.de.ts are typed
+// against it, and the regional catalogs (copy.fr-ca.ts, copy.de-ch.ts) derive
+// from those.
 //
 // page.html reads a string with `{{section.key}}` (array items by index, e.g.
 // `{{scheduled.features.0.term}}`); scenes read it through pageCopy() in
@@ -28,9 +30,8 @@ export const copy = {
   },
   controls: {
     theme: 'Toggle light and dark',
-    // Names the other locale's page, in that locale.
-    otherLocale: 'Version française',
-    otherLocaleCode: 'FR',
+    // Labels the language switcher.
+    language: 'Language',
   },
   // Link labels. Distinct labels: two links with the same text and different
   // targets read as one destination to a screen reader running a link list.

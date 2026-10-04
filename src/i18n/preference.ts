@@ -21,7 +21,10 @@ function storeLocale(locale: Locale): void {
   }
 }
 
-/** Store the toggle's target locale before it navigates there. */
+/**
+ * Store the switcher's target locale before its link navigates there, and close
+ * the open switcher on Escape or a click outside it.
+ */
 export function initLocaleToggle(): void {
   document
     .querySelectorAll<HTMLAnchorElement>('[data-locale-toggle]')
@@ -30,33 +33,70 @@ export function initLocaleToggle(): void {
         storeLocale(a.dataset.localeToggle as Locale);
       });
     });
+
+  const switcher = document.querySelector<HTMLDetailsElement>(
+    'details.locale-switcher'
+  );
+  if (!switcher) {
+    return;
+  }
+  document.addEventListener('click', (e) => {
+    if (switcher.open && !switcher.contains(e.target as Node)) {
+      switcher.open = false;
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && switcher.open) {
+      switcher.open = false;
+      switcher.querySelector('summary')?.focus();
+    }
+  });
 }
 
 /**
- * Sends a visit to `/` on to `/fr/` when the stored preference, or with none
- * stored the browser's first supported language, is French. Inlined as a
- * classic script at the top of the English page's head (vite.config.ts), so it
- * must not reference anything outside its own body. No-JS visitors stay on
- * the page they asked for.
+ * Sends a visit to `/` on to the page of the stored preference, or with none
+ * stored, of the browser's first supported language. A browser tag matches a
+ * locale exactly (`fr-CA`), through `aliases` (`de-LI`), or by its primary
+ * subtag (`fr-BE` to `fr`). `paths` maps each locale to its page, `aliases`
+ * maps lowercase tags to locales.
+ *
+ * Inlined as a classic script at the top of the English page's head
+ * (vite.config.ts) with both maps passed as literals, so it must not reference
+ * anything outside its own body. No-JS visitors stay on the page they asked
+ * for.
  */
-export function localeRedirect(): void {
-  const supported = ['en', 'fr'];
-  let preferred: string | null =
-    /(?:^|;\s*)locale=([^;]*)/.exec(document.cookie)?.[1] ?? null;
-  if (!preferred || !supported.includes(preferred)) {
+export function localeRedirect(
+  paths: Record<string, string>,
+  aliases: Record<string, string>
+): void {
+  const byTag: Record<string, string> = {};
+  Object.keys(paths).forEach((l) => {
+    byTag[l.toLowerCase()] = l;
+  });
+  const exact = (tag: string | null): string | null =>
+    (tag && byTag[tag.toLowerCase()]) || null;
+
+  let preferred = exact(
+    /(?:^|;\s*)locale=([^;]*)/.exec(document.cookie)?.[1] ?? null
+  );
+  if (!preferred) {
     try {
-      preferred = localStorage.getItem('locale');
+      preferred = exact(localStorage.getItem('locale'));
     } catch {
       preferred = null;
     }
   }
-  if (!preferred || !supported.includes(preferred)) {
-    preferred =
-      (navigator.languages ?? [navigator.language])
-        .map((tag) => tag.toLowerCase().split('-')[0])
-        .find((primary) => supported.includes(primary)) ?? null;
+  if (!preferred) {
+    for (const raw of navigator.languages ?? [navigator.language]) {
+      const tag = raw.toLowerCase();
+      preferred =
+        exact(tag) ?? aliases[tag] ?? exact(tag.split('-')[0]) ?? null;
+      if (preferred) {
+        break;
+      }
+    }
   }
-  if (preferred === 'fr') {
-    location.replace('/fr/' + location.search + location.hash);
+  if (preferred && paths[preferred] !== '/') {
+    location.replace(paths[preferred] + location.search + location.hash);
   }
 }

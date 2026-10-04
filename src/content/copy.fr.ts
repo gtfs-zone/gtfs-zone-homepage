@@ -19,8 +19,7 @@ export const copy: Copy = {
   },
   controls: {
     theme: 'Basculer entre clair et sombre',
-    otherLocale: 'English version',
-    otherLocaleCode: 'EN',
+    language: 'Langue',
   },
   links: {
     editor: 'Ouvrir l’éditeur',

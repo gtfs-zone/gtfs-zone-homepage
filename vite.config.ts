@@ -10,8 +10,9 @@ import { structuredData } from './src/content/structured-data';
 import {
   catalogs,
   DEFAULT_LOCALE,
+  LOCALE_ALIASES,
+  localeInfo,
   LOCALES,
-  localePath,
   type Locale,
 } from './src/i18n/catalogs';
 import { localeRedirect } from './src/i18n/preference';
@@ -20,27 +21,27 @@ import { localeRedirect } from './src/i18n/preference';
 // are generated from feeds.ts so the editor list and the visualizer list cannot
 // drift from each other.
 //
-// index.html is rendered once per locale: `/` (English) and `/fr/` (French).
-// The French page has no file of its own; it is index.html served under
-// fr/index.html, and the passes below pick the locale from the page's path.
+// index.html is rendered once per locale: `/` (English), `/fr/`, `/fr-ca/`,
+// `/de/` and `/de-ch/` (see src/i18n/catalogs.ts). The other locales' pages have
+// no file of their own; each is index.html served under <path>/index.html, and
+// the passes below pick the locale from the page's path.
 //
-// Nine passes, in order:
+// Ten passes, in order:
 //   1. @include:         inline the body markup
 //   2. @feeds:           expand the generated feed chip lists
 //   3. @icon:            expand a list glyph from icons.ts, so a mark is defined once
 //   4. @version:         stamp the build version from git tags
 //   5. @jsonld:          emit the schema.org JSON-LD from structured-data.ts
-//   6. @alternates:      emit the hreflang links to every locale's page
-//   7. @locale-redirect: on the default locale's page, send a French preference to /fr/
-//   8. {{...}}:          fill copy from the locale's catalog, URLs from links.ts and
+//   6. @alternates:      emit the hreflang links and og:locale:alternate tags
+//   7. @locale-redirect: on the default locale's page, send another preference to its page
+//   8. @locales:         emit the language switcher's links
+//   9. {{...}}:          fill copy from the locale's catalog, URLs from links.ts and
 //                          per-page values, then assert no marker is left
-//   9. new-tab:          stamp target/rel on every external anchor, then assert none
+//  10. new-tab:          stamp target/rel on every external anchor, then assert none
 //                          were missed. This is what makes the rule unforgettable: no
 //                          author has to remember it per-anchor.
 
 const SITE = 'https://gtfs.zone';
-
-const OG_LOCALE: Record<Locale, string> = { en: 'en_US', fr: 'fr_FR' };
 
 const EXTERNAL_ANCHOR =
   /<a\s([^>]*?)href="((?:https?:|mailto:)[^"]*)"([^>]*?)>/g;
@@ -118,7 +119,7 @@ const version = buildVersion();
 function localeOf(path: string): Locale {
   return (
     LOCALES.find(
-      (l) => l !== DEFAULT_LOCALE && path.startsWith(localePath[l])
+      (l) => l !== DEFAULT_LOCALE && path.startsWith(localeInfo[l].path)
     ) ?? DEFAULT_LOCALE
   );
 }
@@ -145,28 +146,65 @@ function markerValue(locale: Locale, marker: string): string | undefined {
     return (links as Record<string, string>)[name];
   }
   if (ns === 'page') {
-    const other = LOCALES.find((l) => l !== locale) ?? DEFAULT_LOCALE;
     const page: Record<string, string> = {
       lang: locale,
-      url: SITE + localePath[locale],
-      ogLocale: OG_LOCALE[locale],
-      otherLang: other,
-      otherPath: localePath[other],
-      otherOgLocale: OG_LOCALE[other],
+      url: SITE + localeInfo[locale].path,
+      ogLocale: localeInfo[locale].ogLocale,
+      localeCode: localeInfo[locale].code,
     };
     return page[name];
   }
   return ns === '' ? catalogString(catalogs[locale], name) : undefined;
 }
 
-function alternates(): string {
+function alternates(locale: Locale): string {
   return [
     ...LOCALES.map(
       (l) =>
-        `<link rel="alternate" hreflang="${l}" href="${SITE}${localePath[l]}" />`
+        `<link rel="alternate" hreflang="${l}" href="${SITE}${localeInfo[l].path}" />`
     ),
-    `<link rel="alternate" hreflang="x-default" href="${SITE}${localePath[DEFAULT_LOCALE]}" />`,
+    `<link rel="alternate" hreflang="x-default" href="${SITE}${localeInfo[DEFAULT_LOCALE].path}" />`,
+    ...LOCALES.filter((l) => l !== locale).map(
+      (l) =>
+        `<meta property="og:locale:alternate" content="${localeInfo[l].ogLocale}" />`
+    ),
   ].join('\n    ');
+}
+
+// One plain link per locale, so switching works with JS off. Names are
+// endonyms, the same on every page, so they come from the locale table.
+function localeLinks(locale: Locale): string {
+  return LOCALES.map((l) => {
+    const { path, name } = localeInfo[l];
+    const current = l === locale ? ' aria-current="page"' : '';
+    return `<li><a href="${path}" hreflang="${l}" lang="${l}" data-locale-toggle="${l}"${current}>${escapeHtml(name)}</a></li>`;
+  }).join('\n    ');
+}
+
+/** sitemap.xml: every locale's page with its alternates, then the apps. */
+function sitemap(): string {
+  const links = LOCALES.map(
+    (l) =>
+      `    <xhtml:link rel="alternate" hreflang="${l}" href="${SITE}${localeInfo[l].path}" />`
+  ).join('\n');
+  const pages = LOCALES.map(
+    (l) =>
+      `  <url>\n    <loc>${SITE}${localeInfo[l].path}</loc>\n${links}\n  </url>`
+  );
+  const apps = [
+    'https://edit.gtfs.zone/',
+    'https://viz.rt.gtfs.zone/',
+    'https://list.gtfs.zone/',
+  ].map((url) => `  <url>\n    <loc>${url}</loc>\n  </url>`);
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<!-- The apps live on their own hosts and ship their own sitemaps; these
+     cross-domain entries are the extra signal, and are only honored because
+     every host here is verified in Search Console. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+${[...pages, ...apps].join('\n')}
+</urlset>
+`;
 }
 
 function buildPage(): Plugin {
@@ -174,7 +212,7 @@ function buildPage(): Plugin {
   // Entry ids of the non-default locales' pages, e.g. <root>/fr/index.html.
   const localePages = new Map(
     LOCALES.filter((l) => l !== DEFAULT_LOCALE).map((l) => [
-      resolve(root, `.${localePath[l]}index.html`),
+      resolve(root, `.${localeInfo[l].path}index.html`),
       l,
     ])
   );
@@ -192,6 +230,13 @@ function buildPage(): Plugin {
         },
       };
     },
+    generateBundle() {
+      this.emitFile({
+        type: 'asset',
+        fileName: 'sitemap.xml',
+        source: sitemap(),
+      });
+    },
     resolveId(id) {
       return localePages.has(id) ? id : null;
     },
@@ -206,9 +251,9 @@ function buildPage(): Plugin {
           (l) =>
             l !== DEFAULT_LOCALE &&
             [
-              localePath[l],
-              localePath[l].replace(/\/$/, ''),
-              `${localePath[l]}index.html`,
+              localeInfo[l].path,
+              localeInfo[l].path.replace(/\/$/, ''),
+              `${localeInfo[l].path}index.html`,
             ].includes(path)
         );
         if (!locale) {
@@ -216,11 +261,11 @@ function buildPage(): Plugin {
           return;
         }
         if (!path.endsWith('/') && !path.endsWith('.html')) {
-          res.writeHead(301, { Location: localePath[locale] }).end();
+          res.writeHead(301, { Location: localeInfo[locale].path }).end();
           return;
         }
         const html = await server.transformIndexHtml(
-          `${localePath[locale]}index.html`,
+          `${localeInfo[locale].path}index.html`,
           template(),
           req.originalUrl
         );
@@ -257,13 +302,19 @@ function buildPage(): Plugin {
             `<script type="application/ld+json">${JSON.stringify(structuredData(copy, locale)).replace(/</g, '\\u003c')}</script>`
         );
 
-        out = out.replace(/<!--\s*@alternates\s*-->/g, alternates);
-
-        out = out.replace(/<!--\s*@locale-redirect\s*-->/g, () =>
-          locale === DEFAULT_LOCALE
-            ? `<script>(${localeRedirect.toString()})();</script>`
-            : ''
+        out = out.replace(/<!--\s*@alternates\s*-->/g, () =>
+          alternates(locale)
         );
+
+        out = out.replace(/<!--\s*@locale-redirect\s*-->/g, () => {
+          if (locale !== DEFAULT_LOCALE) return '';
+          const paths = Object.fromEntries(
+            LOCALES.map((l) => [l, localeInfo[l].path])
+          );
+          return `<script>(${localeRedirect.toString()})(${JSON.stringify(paths)}, ${JSON.stringify(LOCALE_ALIASES)});</script>`;
+        });
+
+        out = out.replace(/<!--\s*@locales\s*-->/g, () => localeLinks(locale));
 
         out = out.replace(/\{\{\s*([\w.:-]+)\s*\}\}/g, (_, marker: string) => {
           const value = markerValue(locale, marker);
