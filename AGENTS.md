@@ -17,13 +17,16 @@ anchor lacks `target="_blank" rel="noopener noreferrer"`. Sections, scenes and
 themes are described in [README.md](README.md).
 
 - All copy lives in the catalogs, `src/content/copy.ts` (English, source of the
-  keys) and `src/content/copy.fr.ts`; `src/page.html` reads it through
-  `{{key}}` markers that the build fills with real text, so each locale's page
-  must read with JS disabled. A new string goes in both catalogs.
+  keys) and its translations in `src/content/copy.*.ts`; `src/page.html` reads
+  it through `{{key}}` markers that the build fills with real text, so each
+  locale's page must read with JS disabled. A new string goes in `copy.ts`, `copy.fr.ts` and
+  `copy.de.ts`; the regional catalogs (`copy.fr-ca.ts`, `copy.de-ch.ts`) only
+  hold overrides where the region's wording differs.
 - Product URLs come from `src/content/links.ts` (`{{href:name}}` in
   `page.html`). Never hardcode one elsewhere.
 - One HTML template (`index.html` + `src/page.html`), rendered once per locale
-  (`/`, `/fr/`). Do not add a second template without a reason.
+  (`/`, `/fr/`, `/fr-ca/`, `/de/`, `/de-ch/`). Do not add a second template
+  without a reason.
 - A scene's `render(p)` is idempotent and depends only on `p`.
 - Scenes never hardcode copy: read it from `pageCopy()` (`src/i18n/catalogs.ts`).
   GTFS field names and enum values stay literal.

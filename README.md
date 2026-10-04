@@ -72,11 +72,25 @@ The page treats the first two as peers, and links both everywhere.
 
 ## Languages
 
-The page is built once per locale: English at `/`, French at `/fr/`. Both come
-from the same `index.html` and `src/page.html`; the build fills them from
-`src/content/copy.ts` (English, the source of truth for the keys) or
-`src/content/copy.fr.ts`, which is typed against it, so a missing or extra French
-key is a type error.
+The page is built once per locale, all from the same `index.html` and
+`src/page.html`. Locales, paths and switcher labels are listed in
+`src/i18n/catalogs.ts`:
+
+| Locale | Path | Catalog |
+|---|---|---|
+| `en` | `/` | `src/content/copy.ts` (source of truth for the keys) |
+| `fr` | `/fr/` | `src/content/copy.fr.ts` |
+| `fr-CA` | `/fr-ca/` | `src/content/copy.fr-ca.ts`, derived from `fr` |
+| `de` | `/de/` | `src/content/copy.de.ts` |
+| `de-CH` | `/de-ch/` | `src/content/copy.de-ch.ts`, derived from `de` |
+
+`copy.fr.ts` and `copy.de.ts` are typed against `copy.ts`, so a missing or
+extra key is a type error. A regional catalog is its base with a string
+transform applied to every value (`src/i18n/regional.ts`: Quebec typography for
+`fr-CA`; `ss` for `ß` and guillemets for `de-CH`) plus explicit overrides for
+the words that differ. A region only gets its own page when its text differs:
+Belgium, Switzerland (French) and Austria read `/fr/` and `/de/`, which carry
+the generic `fr` and `de` hreflang.
 
 `page.html` uses three markers, and the build fails on an unknown or unfilled
 one:
@@ -84,17 +98,21 @@ one:
 - `{{section.key}}`: a catalog string, HTML-escaped. Array items by index, e.g.
   `{{scheduled.features.0.term}}`.
 - `{{href:name}}`: a URL from `links.ts`.
-- `{{page:name}}`: a per-locale value (`lang`, `url`, `otherPath`, ...).
+- `{{page:name}}`: a per-locale value (`lang`, `url`, `ogLocale`, `localeCode`).
 
 Scenes read their strings from the catalog matching `<html lang>`
 (`pageCopy()` in `src/i18n/catalogs.ts`). GTFS field names and enum values are
 never translated.
 
-The `EN`/`FR` control next to the theme toggle is a plain link to the other
-page. With JS it also stores the choice in a `locale` cookie on `.gtfs.zone`,
-the same preference the apps read. A visit to `/` whose stored preference, or
-with none stored whose browser language, is French is redirected to `/fr/` by
-a small inline script; without JS every page stays where it is.
+The language control next to the theme toggle is a `<details>` list of plain
+links to every locale's page, so it works without JS. With JS a click also
+stores the choice in a `locale` cookie on `.gtfs.zone`, the same preference the
+apps read (they resolve `fr-CA` to `fr` and fall back to the browser language
+for a locale they lack). A visit to `/` is redirected by a small inline script
+to the stored preference's page or, with none stored, to the first browser
+language that matches a locale exactly (`fr-CA`), through an alias (`de-LI` to
+`de-CH`) or by its primary subtag (`de-AT` to `de`); without JS every page
+stays where it is. `sitemap.xml` is generated from the same locale list.
 
 ## Sections and scenes
 
