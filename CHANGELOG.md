@@ -1,3 +1,10 @@
+## v0.9.0 (2026-10-04)
+
+### Feat
+
+- add German, Canadian French and Swiss German pages
+- build the page once per locale, with French at /fr/
+
 ## v0.8.4 (2026-10-02)
 
 ## v0.8.3 (2026-10-01)
