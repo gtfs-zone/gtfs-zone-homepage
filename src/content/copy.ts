@@ -17,15 +17,15 @@
 
 export const copy = {
   meta: {
-    title: 'gtfs.zone: open source GTFS and GTFS Realtime tools',
+    title: 'gtfs.zone: fast, free, open source GTFS and GTFS Realtime tools',
     description:
-      'Open source software for building, checking, and publishing GTFS Schedule and GTFS Realtime feeds.',
+      'Fast, free, and open source software for building, checking, and publishing GTFS Schedule and GTFS Realtime feeds.',
     editorName: 'GTFS editor',
     editorDescription:
-      'Browser-based GTFS Schedule editor. Load, inspect, edit, validate, and export a GTFS feed on a map, with no server and no account.',
+      'Fast, free, and open source GTFS Schedule editor. Load, inspect, edit, validate, and export a GTFS feed on a map, right in your browser, with no account and no server.',
     visualizerName: 'GTFS Realtime visualizer',
     visualizerDescription:
-      'Browser-based GTFS Realtime visualizer. Vehicle positions, trip updates, and service alerts from any feed on a live map.',
+      'Fast, free, and open source GTFS Realtime visualizer. Vehicle positions, trip updates, and service alerts from any feed on a live map.',
     requiresJs: 'Requires JavaScript and WebGL',
   },
   controls: {

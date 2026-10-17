@@ -6,15 +6,16 @@ import type { Copy } from './copy';
 
 export const copy: Copy = {
   meta: {
-    title: 'gtfs.zone: Open-Source-Werkzeuge für GTFS und GTFS Realtime',
+    title:
+      'gtfs.zone: schnelle, kostenlose Open-Source-Werkzeuge für GTFS und GTFS Realtime',
     description:
-      'Open-Source-Software zum Erstellen, Prüfen und Veröffentlichen von GTFS-Schedule- und GTFS-Realtime-Feeds.',
+      'Schnelle, kostenlose Open-Source-Software zum Erstellen, Prüfen und Veröffentlichen von GTFS-Schedule- und GTFS-Realtime-Feeds.',
     editorName: 'GTFS-Editor',
     editorDescription:
-      'GTFS-Schedule-Editor im Browser. Einen GTFS-Feed auf einer Karte laden, untersuchen, bearbeiten, validieren und exportieren, ohne Server und ohne Konto.',
+      'Schneller, kostenloser Open-Source-GTFS-Schedule-Editor im Browser. Einen GTFS-Feed auf einer Karte laden, untersuchen, bearbeiten, validieren und exportieren, ohne Server und ohne Konto.',
     visualizerName: 'GTFS-Realtime-Viewer',
     visualizerDescription:
-      'GTFS-Realtime-Viewer im Browser. Fahrzeugpositionen, Fahrtaktualisierungen und Servicemeldungen aus jedem Feed auf einer Live-Karte.',
+      'Schneller, kostenloser Open-Source-GTFS-Realtime-Viewer im Browser. Fahrzeugpositionen, Fahrtaktualisierungen und Servicemeldungen aus jedem Feed auf einer Live-Karte.',
     requiresJs: 'Erfordert JavaScript und WebGL',
   },
   controls: {
