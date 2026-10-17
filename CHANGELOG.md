@@ -1,3 +1,9 @@
+## v0.10.0 (2026-10-17)
+
+### Feat
+
+- **seo**: lead the meta copy with fast, free, and open source
+
 ## v0.9.0 (2026-10-04)
 
 ### Feat
