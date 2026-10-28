@@ -1,6 +1,6 @@
 {
   "name": "gtfs-zone-homepage",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Marketing homepage for gtfs.zone",
   "type": "module",
   "packageManager": "pnpm@11.20.0",
