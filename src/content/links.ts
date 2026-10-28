@@ -34,6 +34,7 @@ export const links = {
   motis: 'https://motis-project.de',
 
   source: 'https://github.com/gtfs-zone',
+  homepageRepo: 'https://github.com/gtfs-zone/gtfs-zone-homepage',
 
   // Filing an issue needs a GitHub account; the contact address does not.
   newIssue: 'https://github.com/gtfs-zone/gtfs-zone-homepage/issues/new',

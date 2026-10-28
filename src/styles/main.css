@@ -44,6 +44,7 @@ body {
   gap: 0.5rem;
 }
 
+.github-link,
 .theme-toggle,
 .locale-switcher > summary,
 .locale-switcher ul {
@@ -54,9 +55,15 @@ body {
   backdrop-filter: blur(6px);
 }
 
+.github-link,
 .theme-toggle,
 .locale-switcher > summary {
   padding: 0.5rem;
+}
+
+.github-link {
+  display: grid;
+  place-items: center;
 }
 
 .locale-switcher {

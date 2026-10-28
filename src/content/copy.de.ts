@@ -21,6 +21,7 @@ export const copy: Copy = {
   controls: {
     theme: 'Zwischen hell und dunkel wechseln',
     language: 'Sprache',
+    github: 'Quellcode auf GitHub',
   },
   links: {
     editor: 'Editor öffnen',

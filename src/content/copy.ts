@@ -32,6 +32,7 @@ export const copy = {
     theme: 'Toggle light and dark',
     // Labels the language switcher.
     language: 'Language',
+    github: 'Source code on GitHub',
   },
   // Link labels. Distinct labels: two links with the same text and different
   // targets read as one destination to a screen reader running a link list.
