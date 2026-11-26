@@ -139,8 +139,8 @@ gh workflow run release.yml
 ```
 
 The Release workflow runs `cz bump` on `main` (updates `package.json` and
-`CHANGELOG.md`, commits, tags `vX.Y.Z`), pushes the commit and the tag, then
-dispatches `.github/workflows/pages.yml` on the tag, which typechecks, builds and
+`CHANGELOG.md`, commits, tags `vX.Y.Z`) and pushes the commit and the tag. The
+tag push starts `.github/workflows/pages.yml`, which typechecks, builds and
 publishes `dist/` to GitHub Pages.
 
 ## History
