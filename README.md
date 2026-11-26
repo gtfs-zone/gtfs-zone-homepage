@@ -131,17 +131,17 @@ stays where it is. `sitemap.xml` is generated from the same locale list.
 
 ## Releasing
 
-Deploys are triggered by tags, not by pushes to `main`. Push to `main` freely;
-nothing ships until a tag exists.
+Deploys are triggered by tags, not by merges to `main`; nothing ships until a
+tag exists.
 
-```
-cz bump          # updates package.json + CHANGELOG.md, commits, tags vX.Y.Z
-git push origin main --tags
+```bash
+gh workflow run release.yml
 ```
 
-`cz bump` refuses to run off `main`. The `v*` tag fires
-`.github/workflows/pages.yml`, which typechecks, builds and publishes `dist/` to
-GitHub Pages.
+The Release workflow runs `cz bump` on `main` (updates `package.json` and
+`CHANGELOG.md`, commits, tags `vX.Y.Z`), pushes the commit and the tag, then
+dispatches `.github/workflows/pages.yml` on the tag, which typechecks, builds and
+publishes `dist/` to GitHub Pages.
 
 ## History
 

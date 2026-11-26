@@ -65,24 +65,22 @@ This project uses [Commitizen](https://commitizen-tools.github.io/commitizen/) (
 
 ### Creating Releases
 
-When you're ready to release, run on `main`:
+When you're ready to release, run the Release workflow on `main`, from the
+Actions tab or with:
 
 ```bash
-cz bump
+gh workflow run release.yml
 ```
 
-This will:
-- Bump the version in `package.json` based on commit history
-- Update `CHANGELOG.md`
-- Create a git tag
+It runs `cz bump`, which:
+- Bumps the version in `package.json` based on commit history
+- Updates `CHANGELOG.md`
+- Creates a git tag
 
-Then push the commit and the tag:
+then pushes the commit and the tag. `main` only takes pull requests, so a
+local `cz bump` cannot be pushed; the workflow bypasses that rule.
 
-```bash
-git push --follow-tags origin main
-```
-
-Pushing a version tag triggers `.github/workflows/pages.yml`, which builds the site and publishes it to GitHub Pages at <https://gtfs.zone>.
+It then dispatches `.github/workflows/pages.yml` on the tag, which builds the site and publishes it to GitHub Pages at <https://gtfs.zone>.
 
 ## Development Workflow
 
@@ -90,7 +88,7 @@ Pushing a version tag triggers `.github/workflows/pages.yml`, which builds the s
 2. Make your changes
 3. Commit using `pnpm commit` (this ensures proper commit format)
 4. Push your branch and create a pull request
-5. After merge to `main`, run `cz bump` for releases when ready
+5. After merge to `main`, run the Release workflow when ready
 
 ## Git Hooks
 
